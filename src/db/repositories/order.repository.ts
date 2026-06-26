@@ -44,6 +44,8 @@ export interface IOrderRepository {
   findPendingBuyByTokenId(tokenId: string): Promise<PaperOrder | null>;
   findPendingBuyByTokenIdLive(tokenId: string): Promise<LiveOrder | null>;
   countPendingPaperOrders(): Promise<number>;
+  countOpenPaperOrders(): Promise<number>;
+  countOpenLiveOrders(): Promise<number>;
   updatePaperStatus(
     id: string,
     status: OrderStatus,
@@ -149,6 +151,22 @@ export function createOrderRepository(prisma: PrismaClient): IOrderRepository {
       return prisma.paperOrder.count({
         where: {
           status: { in: ["PENDING", "PARTIALLY_FILLED"] },
+        },
+      });
+    },
+
+    countOpenPaperOrders() {
+      return prisma.paperOrder.count({
+        where: {
+          status: { in: ["PENDING", "OPEN", "PARTIALLY_FILLED"] },
+        },
+      });
+    },
+
+    countOpenLiveOrders() {
+      return prisma.liveOrder.count({
+        where: {
+          status: { in: ["PENDING", "OPEN", "PARTIALLY_FILLED"] },
         },
       });
     },

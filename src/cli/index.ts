@@ -1,12 +1,14 @@
 import { Command } from "commander";
 
 import type { AppContainer } from "../container.js";
+import { formatTerminalDashboard } from "../report/reportFormatter.js";
 import { runBacktest } from "./backtest.js";
 import { formatEntryPaperSummary, runEntryPaper } from "./entryPaper.js";
 import { formatExitPaperSummary, runExitPaper } from "./exitPaper.js";
 import { runHealthCheck } from "./health.js";
 import { formatPaperRunSummary, runPaperTrading } from "./paperRun.js";
 import { formatPositionsUpdateSummary, runPositionsUpdate } from "./positionsUpdate.js";
+import { formatReportPaths, runReport } from "./report.js";
 import { formatScanSummary, runScan } from "./scan.js";
 import { runScheduler } from "./scheduler.js";
 import { runWorker } from "./worker.js";
@@ -113,6 +115,28 @@ export function createCli(container: AppContainer): Command {
       try {
         const summary = await runPositionsUpdate(container);
         console.log(formatPositionsUpdateSummary(summary));
+        await container.shutdown();
+        process.exit(0);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(message);
+        await container.shutdown();
+        process.exit(1);
+      }
+    });
+
+  program
+    .command("report")
+    .description("Print portfolio dashboard and write reports/latest.{md,json} plus trades.csv")
+    .option("--output-dir <path>", "Output directory for report files", "reports")
+    .action(async (options: { outputDir: string }) => {
+      try {
+        const { snapshot, paths } = await runReport(container, {
+          outputDir: options.outputDir,
+        });
+        console.log(formatTerminalDashboard(snapshot));
+        console.log("");
+        console.log(formatReportPaths(paths));
         await container.shutdown();
         process.exit(0);
       } catch (error) {

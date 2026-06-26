@@ -19,6 +19,7 @@ export interface ISignalRepository {
   findByStatus(status: SignalStatus): Promise<Signal[]>;
   findByTokenId(tokenId: string): Promise<Signal[]>;
   findRecentEntrySignal(tokenId: string, since: Date): Promise<Signal | null>;
+  findRecent(limit?: number): Promise<Signal[]>;
   hasPaperOrder(signalId: string): Promise<boolean>;
   updateStatus(id: string, status: SignalStatus): Promise<Signal>;
 }
@@ -68,6 +69,13 @@ export function createSignalRepository(prisma: PrismaClient): ISignalRepository 
           createdAt: { gte: since },
         },
         orderBy: { createdAt: "desc" },
+      });
+    },
+
+    findRecent(limit = 20) {
+      return prisma.signal.findMany({
+        orderBy: { createdAt: "desc" },
+        take: limit,
       });
     },
 

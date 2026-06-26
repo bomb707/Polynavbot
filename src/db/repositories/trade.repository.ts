@@ -34,6 +34,7 @@ export interface ITradeRepository {
     since: Date,
   ): Promise<number>;
   sumRealizedPnl(): Promise<number>;
+  findAllOrdered(): Promise<Trade[]>;
 }
 
 function toNumber(value: Decimal | number | null | undefined): number {
@@ -106,6 +107,12 @@ export function createTradeRepository(prisma: PrismaClient): ITradeRepository {
       });
 
       return toNumber(result._sum.realizedPnlUsd);
+    },
+
+    findAllOrdered() {
+      return prisma.trade.findMany({
+        orderBy: { timestamp: "desc" },
+      });
     },
   };
 }

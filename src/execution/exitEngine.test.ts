@@ -199,3 +199,54 @@ describe("createExitEngine.evaluateExit", () => {
     expect(result.sellSizeShares).toBeLessThanOrEqual(10);
   });
 });
+
+describe("createExitEngine.previewExits", () => {
+  it("returns non-hold actions without executing orders", async () => {
+    const placeSellLimitOrder = vi.fn();
+    const updateExitState = vi.fn();
+
+    const engine = createExitEngine({
+      config,
+      repositories: {
+        position: {
+          findOpen: vi.fn().mockResolvedValue([makePosition()]),
+          sumRealizedPnlSince: vi.fn().mockResolvedValue(0),
+          updateExitState,
+        },
+        market: {
+          findById: vi.fn().mockResolvedValue(makeMarket()),
+        },
+        outcome: {
+          findByTokenId: vi.fn().mockResolvedValue({
+            tokenId: "token-1",
+            liquidity: { toNumber: () => 5000 },
+          }),
+        },
+        trade: {
+          findByTokenId: vi.fn().mockResolvedValue([]),
+        },
+      } as never,
+      publicClient: {
+        getOrderBook: vi.fn().mockResolvedValue(orderBook),
+      } as never,
+      executionEngine: {
+        initialize: vi.fn(),
+        placeSellLimitOrder,
+      } as never,
+      paperTradingEngine: {
+        initialize: vi.fn(),
+        markToMarket: vi.fn(),
+      } as never,
+      riskEngine: {} as never,
+      logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
+    });
+
+    const pending = await engine.previewExits();
+
+    expect(pending).toHaveLength(1);
+    expect(pending[0]?.action).toBe("sell_partial");
+    expect(pending[0]?.reason).toBe("milestone_5x");
+    expect(placeSellLimitOrder).not.toHaveBeenCalled();
+    expect(updateExitState).not.toHaveBeenCalled();
+  });
+});

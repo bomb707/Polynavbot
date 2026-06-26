@@ -22,7 +22,8 @@
     "backtest": "tsx src/index.ts backtest",
     "worker": "tsx src/index.ts worker",
     "scheduler": "tsx src/index.ts scheduler",
-    "ws:monitor": "tsx src/index.ts ws:monitor"
+    "ws:monitor": "tsx src/index.ts ws:monitor",
+    "report": "tsx src/index.ts report"
   },
   "dependencies": {
     "@polymarket/clob-client-v2": "^1.0.6",

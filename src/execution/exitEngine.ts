@@ -285,6 +285,58 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
     await repositories.position.updateExitState(positionId, exitState);
   }
 
+  async function previewPositionExit(position: Position): Promise<ExitActionRecord | null> {
+    const market = await repositories.market.findById(position.marketId);
+    const outcome = await repositories.outcome.findByTokenId(position.tokenId);
+    if (!market || !outcome) {
+      return null;
+    }
+
+    const orderBook = await publicClient.getOrderBook(position.tokenId);
+    if (!orderBook) {
+      return null;
+    }
+
+    const currentPrice =
+      midPrice(orderBook) ??
+      orderBook.bestBid ??
+      orderBook.bestAsk ??
+      toNumber(position.currentPrice) ??
+      toNum(position.avgEntryPrice);
+
+    const exitState = await resolveExitState(position, currentPrice);
+    const liquidityUsd = toNumber(outcome.liquidity);
+
+    const todayPnl = await repositories.position.sumRealizedPnlSince(
+      new Date(Date.now() - 24 * 60 * 60 * 1000),
+    );
+    const riskForced = todayPnl < -config.MAX_DAILY_LOSS_USD;
+
+    const evaluation = evaluateExit({
+      position,
+      exitState,
+      currentPrice,
+      orderBook,
+      market,
+      liquidityUsd,
+      riskForced,
+    });
+
+    if (evaluation.action === "hold") {
+      return null;
+    }
+
+    return {
+      tokenId: position.tokenId,
+      question: market.question,
+      action: evaluation.action,
+      reason: evaluation.reason,
+      sellSizeShares: evaluation.sellSizeShares,
+      sellPrice: evaluation.sellPrice,
+      filled: false,
+    };
+  }
+
   async function evaluatePositionExit(position: Position): Promise<ExitActionRecord | null> {
     const market = await repositories.market.findById(position.marketId);
     const outcome = await repositories.outcome.findByTokenId(position.tokenId);
@@ -394,6 +446,20 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
       }
 
       return action;
+    },
+
+    async previewExits() {
+      const positions = await repositories.position.findOpen();
+      const pending: ExitActionRecord[] = [];
+
+      for (const position of positions) {
+        const action = await previewPositionExit(position);
+        if (action) {
+          pending.push(action);
+        }
+      }
+
+      return pending;
     },
 
     async run() {
