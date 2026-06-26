@@ -24,11 +24,13 @@ export interface CreatePositionInput {
 }
 
 export interface UpdatePositionInput {
+  avgEntryPrice?: Decimal | number;
   currentPrice?: Decimal | number | null;
   size?: Decimal | number;
   costBasisUsd?: Decimal | number;
   currentValueUsd?: Decimal | number | null;
   unrealizedPnlUsd?: Decimal | number | null;
+  realizedPnlUsd?: Decimal | number;
   status?: PositionStatus;
 }
 
@@ -41,6 +43,7 @@ export interface IPositionRepository {
   create(data: CreatePositionInput): Promise<Position>;
   findById(id: string): Promise<Position | null>;
   findOpen(): Promise<Position[]>;
+  findOpenByTokenId(tokenId: string): Promise<Position | null>;
   findByTokenId(tokenId: string): Promise<Position[]>;
   update(id: string, data: UpdatePositionInput): Promise<Position>;
   close(id: string, data: ClosePositionInput): Promise<Position>;
@@ -77,6 +80,13 @@ export function createPositionRepository(
     findOpen() {
       return prisma.position.findMany({
         where: { status: "OPEN" },
+        orderBy: { openedAt: "desc" },
+      });
+    },
+
+    findOpenByTokenId(tokenId) {
+      return prisma.position.findFirst({
+        where: { tokenId, status: "OPEN" },
         orderBy: { openedAt: "desc" },
       });
     },

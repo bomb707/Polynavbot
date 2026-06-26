@@ -14,7 +14,8 @@
     "prisma:studio": "prisma studio",
     "lint": "eslint src --max-warnings 0",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "paper:run": "tsx src/index.ts paper:run"
   },
   "dependencies": {
     "@prisma/client": "^6.9.0",

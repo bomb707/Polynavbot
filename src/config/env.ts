@@ -43,6 +43,7 @@ export const envSchema = z
     MIN_LIQUIDITY_USD: z.coerce.number().positive().default(1000),
     MAX_SPREAD: z.coerce.number().positive().default(0.03),
     PAPER_STARTING_BALANCE_USD: z.coerce.number().positive().default(500),
+    PAPER_PASSIVE_FILL_ON_CROSS: z.coerce.boolean().default(true),
 
     PRIVATE_KEY: z.string().min(1).optional(),
     DEPOSIT_WALLET_ADDRESS: z.string().min(1).optional(),

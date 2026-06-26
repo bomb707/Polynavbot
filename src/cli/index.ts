@@ -2,6 +2,7 @@ import { Command } from "commander";
 
 import type { AppContainer } from "../container.js";
 import { runHealthCheck } from "./health.js";
+import { formatPaperRunSummary, runPaperTrading } from "./paperRun.js";
 import { formatScanSummary, runScan } from "./scan.js";
 
 export function createCli(container: AppContainer): Command {
@@ -35,6 +36,28 @@ export function createCli(container: AppContainer): Command {
       console.log(formatScanSummary(summary));
       await container.shutdown();
       process.exit(0);
+    });
+
+  program
+    .command("paper:run")
+    .description("Scan, score, place paper orders, simulate fills, and print summary")
+    .option("--limit-per-page <n>", "markets per page", "100")
+    .option("--max-pages <n>", "maximum pages to scan", "50")
+    .action(async (options: { limitPerPage: string; maxPages: string }) => {
+      try {
+        const summary = await runPaperTrading(container, {
+          limitPerPage: Number(options.limitPerPage),
+          maxPages: Number(options.maxPages),
+        });
+        console.log(formatPaperRunSummary(summary));
+        await container.shutdown();
+        process.exit(0);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(message);
+        await container.shutdown();
+        process.exit(1);
+      }
     });
 
   program.action(async () => {

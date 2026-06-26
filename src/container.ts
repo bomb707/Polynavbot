@@ -10,7 +10,9 @@ import type { IRedisConnection } from "./jobs/types.js";
 import { createLogger } from "./logger/index.js";
 import type { ILogger } from "./logger/types.js";
 import { createPaperTrader } from "./paper/index.js";
+import { createPaperTradingEngine } from "./paper/paperTradingEngine.js";
 import type { IPaperTrader } from "./paper/types.js";
+import type { IPaperTradingEngine } from "./paper/paperTypes.js";
 import { createPolymarketClient } from "./polymarket/index.js";
 import type { IPolymarketClient } from "./polymarket/types.js";
 import { createPublicClient } from "./polymarket/publicClient.js";
@@ -21,8 +23,9 @@ import { createRiskManager } from "./risk/index.js";
 import type { IRiskManager } from "./risk/types.js";
 import { createMarketScanner } from "./scanner/marketScanner.js";
 import type { IMarketScanner } from "./scanner/types.js";
-import { createStrategy } from "./strategy/index.js";
+import { createStrategy, createLongshotScorer } from "./strategy/index.js";
 import type { IStrategy } from "./strategy/types.js";
+import type { ILongshotScorer } from "./strategy/longshotScorer.js";
 
 export class AppContainer {
   private _logger?: ILogger;
@@ -36,8 +39,10 @@ export class AppContainer {
   private _riskManager?: IRiskManager;
   private _execution?: IExecutionService;
   private _paperTrader?: IPaperTrader;
+  private _paperTradingEngine?: IPaperTradingEngine;
   private _positionStore?: IPositionStore;
   private _repositories?: IRepositories;
+  private _longshotScorer?: ILongshotScorer;
 
   constructor(readonly config: Config) {}
 
@@ -121,6 +126,24 @@ export class AppContainer {
       this._paperTrader = createPaperTrader(this.logger);
     }
     return this._paperTrader;
+  }
+
+  get paperTradingEngine(): IPaperTradingEngine {
+    if (!this._paperTradingEngine) {
+      this._paperTradingEngine = createPaperTradingEngine({
+        config: this.config,
+        repositories: this.repositories,
+        logger: this.logger,
+      });
+    }
+    return this._paperTradingEngine;
+  }
+
+  get longshotScorer(): ILongshotScorer {
+    if (!this._longshotScorer) {
+      this._longshotScorer = createLongshotScorer(this.config);
+    }
+    return this._longshotScorer;
   }
 
   get positionStore(): IPositionStore {

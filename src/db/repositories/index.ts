@@ -38,6 +38,11 @@ export {
   type CreateSnapshotInput,
   type IMarketSnapshotRepository,
 } from "./snapshot.repository.js";
+export {
+  createTradeRepository,
+  type CreateTradeInput,
+  type ITradeRepository,
+} from "./trade.repository.js";
 
 import type { PrismaClient } from "@prisma/client";
 
@@ -48,6 +53,7 @@ import { createOrderRepository, type IOrderRepository } from "./order.repository
 import { createPositionRepository, type IPositionRepository } from "./position.repository.js";
 import { createRiskEventRepository, type IRiskEventRepository } from "./risk-event.repository.js";
 import { createSignalRepository, type ISignalRepository } from "./signal.repository.js";
+import { createTradeRepository, type ITradeRepository } from "./trade.repository.js";
 
 export interface IRepositories {
   market: IMarketRepository;
@@ -57,6 +63,7 @@ export interface IRepositories {
   position: IPositionRepository;
   riskEvent: IRiskEventRepository;
   snapshot: IMarketSnapshotRepository;
+  trade: ITradeRepository;
 }
 
 export function createRepositories(prisma: PrismaClient): IRepositories {
@@ -68,5 +75,6 @@ export function createRepositories(prisma: PrismaClient): IRepositories {
     position: createPositionRepository(prisma),
     riskEvent: createRiskEventRepository(prisma),
     snapshot: createMarketSnapshotRepository(prisma),
+    trade: createTradeRepository(prisma),
   };
 }
