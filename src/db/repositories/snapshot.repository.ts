@@ -12,8 +12,20 @@ export interface CreateSnapshotInput {
   volume?: number | null;
 }
 
+export interface SnapshotTokenRef {
+  tokenId: string;
+  marketId: string;
+  outcomeId: string;
+}
+
 export interface IMarketSnapshotRepository {
   create(data: CreateSnapshotInput): Promise<MarketSnapshot>;
+  findByTokenInRange(
+    tokenId: string,
+    start: Date,
+    end: Date,
+  ): Promise<MarketSnapshot[]>;
+  findDistinctTokensInRange(start: Date, end: Date): Promise<SnapshotTokenRef[]>;
 }
 
 export function createMarketSnapshotRepository(
@@ -34,6 +46,31 @@ export function createMarketSnapshotRepository(
       };
 
       return prisma.marketSnapshot.create({ data: createData });
+    },
+
+    findByTokenInRange(tokenId, start, end) {
+      return prisma.marketSnapshot.findMany({
+        where: {
+          tokenId,
+          timestamp: { gte: start, lte: end },
+        },
+        orderBy: { timestamp: "asc" },
+      });
+    },
+
+    async findDistinctTokensInRange(start, end) {
+      const rows = await prisma.marketSnapshot.findMany({
+        where: {
+          timestamp: { gte: start, lte: end },
+        },
+        distinct: ["tokenId"],
+        select: {
+          tokenId: true,
+          marketId: true,
+          outcomeId: true,
+        },
+      });
+      return rows;
     },
   };
 }

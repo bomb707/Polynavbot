@@ -19,6 +19,7 @@
     "entry:paper": "tsx src/index.ts entry:paper",
     "exit:paper": "tsx src/index.ts exit:paper",
     "positions:update": "tsx src/index.ts positions:update",
+    "backtest": "tsx src/index.ts backtest",
     "worker": "tsx src/index.ts worker",
     "scheduler": "tsx src/index.ts scheduler"
   },

@@ -64,6 +64,15 @@ export const envSchema = z
     JOB_ATTEMPTS: z.coerce.number().int().positive().default(3),
     JOB_BACKOFF_MS: z.coerce.number().int().positive().default(5000),
 
+    BACKTEST_INTERVAL: z.string().default("1h"),
+    BACKTEST_SLIPPAGE_BPS: z.coerce.number().int().nonnegative().default(50),
+    BACKTEST_FILL_PROBABILITY: z.coerce.number().positive().max(1).default(0.7),
+    BACKTEST_ASSUMED_SPREAD: z.coerce.number().positive().default(0.02),
+    BACKTEST_TOP_OF_BOOK_DEPTH_USD: z.coerce.number().positive().default(25),
+    BACKTEST_MIN_LIQUIDITY_FOR_EXIT: z.coerce.number().positive().default(1000),
+    BACKTEST_STARTING_CAPITAL_USD: z.coerce.number().positive().default(500),
+    BACKTEST_SEED: z.coerce.number().int().default(42),
+
     PRIVATE_KEY: z.string().min(1).optional(),
     DEPOSIT_WALLET_ADDRESS: z.string().min(1).optional(),
     POLY_API_KEY: z.string().min(1).optional(),

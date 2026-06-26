@@ -1,6 +1,7 @@
 import { Command } from "commander";
 
 import type { AppContainer } from "../container.js";
+import { runBacktest } from "./backtest.js";
 import { formatEntryPaperSummary, runEntryPaper } from "./entryPaper.js";
 import { formatExitPaperSummary, runExitPaper } from "./exitPaper.js";
 import { runHealthCheck } from "./health.js";
@@ -111,6 +112,25 @@ export function createCli(container: AppContainer): Command {
       try {
         const summary = await runPositionsUpdate(container);
         console.log(formatPositionsUpdateSummary(summary));
+        await container.shutdown();
+        process.exit(0);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(message);
+        await container.shutdown();
+        process.exit(1);
+      }
+    });
+
+  program
+    .command("backtest")
+    .description("Run longshot strategy backtest over historical price data")
+    .requiredOption("--start <date>", "Start date (YYYY-MM-DD)")
+    .requiredOption("--end <date>", "End date (YYYY-MM-DD)")
+    .option("--output-dir <path>", "Output directory for reports")
+    .action(async (options: { start: string; end: string; outputDir?: string }) => {
+      try {
+        await runBacktest(container, options);
         await container.shutdown();
         process.exit(0);
       } catch (error) {
