@@ -10,7 +10,15 @@ import type { IPublicClient } from "../polymarket/publicClient.js";
 import type { IRiskEngine } from "../risk/riskTypes.js";
 import type { CandidateOutcome, IMarketScanner } from "../scanner/types.js";
 import type { ILongshotScorer } from "../strategy/longshotScorer.js";
-import { buildScoreInput, roundDownShares, toNumber } from "./entryHelpers.js";
+import type { ITailNoScorer } from "../strategy/tailNoScorer.js";
+import {
+  buildLongshotScoreInput,
+  buildTailNoScoreInput,
+  entrySignalTypeForSide,
+  resolveYesCounterpartPrice,
+  roundDownShares,
+  toNumber,
+} from "./entryHelpers.js";
 import type { IExecutionEngine } from "./executionEngineTypes.js";
 import type {
   AcceptedEntry,
@@ -25,7 +33,8 @@ import { computePassiveBidPrice } from "./passiveBid.js";
 export interface EntryEngineDeps {
   config: Config;
   scanner: IMarketScanner;
-  scorer: ILongshotScorer;
+  longshotScorer: ILongshotScorer;
+  tailNoScorer: ITailNoScorer;
   riskEngine: IRiskEngine;
   executionEngine: IExecutionEngine;
   publicClient: IPublicClient;
@@ -39,7 +48,8 @@ export function createEntryEngine(deps: EntryEngineDeps): IEntryEngine {
   const {
     config,
     scanner,
-    scorer,
+    longshotScorer,
+    tailNoScorer,
     executionEngine,
     publicClient,
     repositories,
@@ -78,6 +88,7 @@ export function createEntryEngine(deps: EntryEngineDeps): IEntryEngine {
     score: number,
     reasons: string[],
   ): Promise<Signal | null> {
+    const signalType = entrySignalTypeForSide(candidate.side);
     const pendingBuy = await findPendingBuy(candidate.tokenId);
     if (pendingBuy) {
       return null;
@@ -86,6 +97,7 @@ export function createEntryEngine(deps: EntryEngineDeps): IEntryEngine {
     const recentSignal = await repositories.signal.findRecentEntrySignal(
       candidate.tokenId,
       dedupSince(),
+      signalType,
     );
 
     if (recentSignal) {
@@ -100,7 +112,7 @@ export function createEntryEngine(deps: EntryEngineDeps): IEntryEngine {
       marketId: candidate.marketId,
       outcomeId: candidate.outcomeId,
       tokenId: candidate.tokenId,
-      signalType: "LONGSHOT_ENTRY",
+      signalType,
       score,
       reason: reasons.join("; "),
       entryPrice: bidPrice,
@@ -144,9 +156,11 @@ export function createEntryEngine(deps: EntryEngineDeps): IEntryEngine {
           continue;
         }
 
+        const signalType = entrySignalTypeForSide(candidate.side);
         const recentSignal = await repositories.signal.findRecentEntrySignal(
           candidate.tokenId,
           dedupSince(),
+          signalType,
         );
         if (recentSignal && (await repositories.signal.hasPaperOrder(recentSignal.id))) {
           reject(
@@ -177,9 +191,20 @@ export function createEntryEngine(deps: EntryEngineDeps): IEntryEngine {
           continue;
         }
 
-        const scoreResult = scorer.score(
-          buildScoreInput(market, outcome, candidate, orderBook),
-        );
+        const scoreResult =
+          candidate.side === "NO"
+            ? tailNoScorer.score(
+                buildTailNoScoreInput(
+                  market,
+                  outcome,
+                  candidate,
+                  orderBook,
+                  await resolveYesCounterpartPrice(repositories, candidate.marketId),
+                ),
+              )
+            : longshotScorer.score(
+                buildLongshotScoreInput(market, outcome, candidate, orderBook),
+              );
 
         candidates.push({
           tokenId: candidate.tokenId,

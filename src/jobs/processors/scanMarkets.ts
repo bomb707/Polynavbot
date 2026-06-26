@@ -17,7 +17,9 @@ export function createScanMarketsProcessor(container: AppContainer) {
         logger,
         job,
         async () => {
-          const summary = await scanner.scanMarkets();
+          const summary = await scanner.scanMarkets({
+            maxPages: container.config.SCAN_MAX_PAGES,
+          });
           const scanRunId = jobId;
           const evaluateQueue = queueManager.getQueue(QUEUE_NAMES.EVALUATE_ENTRY);
           const evaluateJobId = sanitizeBullMqJobId(`evaluate-entry__${scanRunId}`);

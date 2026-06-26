@@ -24,6 +24,7 @@ export interface ExitEvaluationInput {
   market: Pick<Market, "active" | "closed" | "endDate">;
   liquidityUsd: number | null;
   riskForced?: boolean;
+  outcomeSide?: "YES" | "NO";
 }
 
 export interface ExitEvaluation {

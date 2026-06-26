@@ -2,7 +2,9 @@ import type { Config } from "../config/index.js";
 import { computePassiveBidPrice } from "../execution/passiveBid.js";
 import { roundDownShares } from "../execution/entryHelpers.js";
 import { createLongshotScorer } from "../strategy/longshotScorer.js";
+import { createTailNoScorer } from "../strategy/tailNoScorer.js";
 import type { LongshotScoreInput } from "../strategy/longshotTypes.js";
+import type { TailNoScoreInput } from "../strategy/tailNoTypes.js";
 import type { PriceHistoryPoint } from "../polymarket/publicTypes.js";
 import { applyBacktestRiskCaps } from "./positionSizer.js";
 import type { BacktestPortfolio } from "./portfolio.js";
@@ -17,6 +19,7 @@ export interface EntryEvaluation {
   placed: boolean;
   reason?: string;
   order?: BacktestOrder;
+  leg?: "YES" | "NO";
 }
 
 export function buildPriceHistory(bars: PriceBar[], currentIndex: number): PriceHistoryPoint[] {
@@ -24,6 +27,16 @@ export function buildPriceHistory(bars: PriceBar[], currentIndex: number): Price
     timestamp: bar.timestamp,
     price: bar.price,
   }));
+}
+
+function resolveYesCounterpartPrice(meta: BacktestMarketMeta, barPrice: number): number | null {
+  if (meta.outcomeCount !== 2) {
+    return null;
+  }
+  if (meta.outcomeSide === "NO") {
+    return Math.max(0, Math.min(1, 1 - barPrice));
+  }
+  return barPrice;
 }
 
 export function buildScoreInputFromBar(
@@ -64,6 +77,26 @@ export function buildScoreInputFromBar(
   };
 }
 
+export function buildTailNoScoreInputFromBar(
+  meta: BacktestMarketMeta,
+  bar: PriceBar,
+  priceHistory: PriceHistoryPoint[],
+  asOf: Date,
+): TailNoScoreInput {
+  const base = buildScoreInputFromBar(meta, bar, priceHistory, asOf);
+  return {
+    asOf: base.asOf,
+    market: {
+      ...base.market,
+      liquidityUsd: base.market.liquidityUsd ?? null,
+      volumeUsd: base.market.volumeUsd ?? null,
+    },
+    outcome: base.outcome,
+    yesCounterpartPrice: resolveYesCounterpartPrice(meta, bar.price),
+    pricing: base.pricing,
+  };
+}
+
 export function evaluateEntry(
   config: Config,
   backtestConfig: BacktestConfig,
@@ -73,26 +106,42 @@ export function evaluateEntry(
   priceHistory: PriceHistoryPoint[],
   feeService: IFeeService,
 ): EntryEvaluation {
-  if (bar.price < config.MIN_ENTRY_PRICE || bar.price > config.MAX_ENTRY_PRICE) {
-    return { placed: false, reason: "price_out_of_band" };
+  const leg = meta.outcomeSide;
+
+  if (leg === "YES") {
+    if (bar.price < config.MIN_ENTRY_PRICE || bar.price > config.MAX_ENTRY_PRICE) {
+      return { placed: false, reason: "yes:price_out_of_band", leg };
+    }
+  } else if (leg === "NO") {
+    if (!config.NO_ENTRY_ENABLED) {
+      return { placed: false, reason: "no:disabled", leg };
+    }
+    if (bar.price < config.NO_MIN_ENTRY_PRICE || bar.price > config.NO_MAX_ENTRY_PRICE) {
+      return { placed: false, reason: "no:price_out_of_band", leg };
+    }
   }
 
   if (portfolio.hasOpenPosition(meta.tokenId) || portfolio.hasPendingBuy(meta.tokenId)) {
-    return { placed: false, reason: "duplicate_token" };
+    return { placed: false, reason: `${leg.toLowerCase()}:duplicate_token`, leg };
   }
 
-  const scorer = createLongshotScorer(config);
-  const scoreInput = buildScoreInputFromBar(meta, bar, priceHistory, bar.timestamp);
-  const scoreResult = scorer.score(scoreInput);
+  const scoreResult =
+    leg === "NO"
+      ? createTailNoScorer(config).score(
+          buildTailNoScoreInputFromBar(meta, bar, priceHistory, bar.timestamp),
+        )
+      : createLongshotScorer(config).score(
+          buildScoreInputFromBar(meta, bar, priceHistory, bar.timestamp),
+        );
 
   if (scoreResult.decision !== "entry_candidate") {
-    return { placed: false, reason: `score_${scoreResult.decision}` };
+    return { placed: false, reason: `${leg.toLowerCase()}:score_${scoreResult.decision}`, leg };
   }
 
   const orderBook = buildSyntheticOrderBook(bar, backtestConfig);
   const bidResult = computePassiveBidPrice(orderBook, config);
   if ("rejected" in bidResult) {
-    return { placed: false, reason: bidResult.reason };
+    return { placed: false, reason: `${leg.toLowerCase()}:${bidResult.reason}`, leg };
   }
 
   const cappedSizeUsd = applyBacktestRiskCaps(config, portfolio.getState(), {
@@ -104,12 +153,12 @@ export function evaluateEntry(
   });
 
   if (cappedSizeUsd == null) {
-    return { placed: false, reason: "risk_rejected" };
+    return { placed: false, reason: `${leg.toLowerCase()}:risk_rejected`, leg };
   }
 
   const shares = roundDownShares(cappedSizeUsd / bidResult.bidPrice);
   if (shares <= 0 || shares * bidResult.bidPrice < config.MIN_ORDER_SIZE_USD) {
-    return { placed: false, reason: "size_too_small" };
+    return { placed: false, reason: `${leg.toLowerCase()}:size_too_small`, leg };
   }
 
   const feeParams = resolveBacktestFeeParams(meta.feeParams);
@@ -123,7 +172,7 @@ export function evaluateEntry(
   });
 
   if (buyEconomics.totalCostUsd > portfolio.cashUsd) {
-    return { placed: false, reason: "insufficient_cash" };
+    return { placed: false, reason: `${leg.toLowerCase()}:insufficient_cash`, leg };
   }
 
   const order: BacktestOrder = {
@@ -136,8 +185,8 @@ export function evaluateEntry(
     sizeShares: shares,
     filledShares: 0,
     createdAt: bar.timestamp,
-    reason: "entry_candidate",
+    reason: leg === "NO" ? "tail_no_entry" : "longshot_entry",
   };
 
-  return { placed: true, order };
+  return { placed: true, order, leg };
 }

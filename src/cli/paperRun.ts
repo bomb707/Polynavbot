@@ -1,6 +1,6 @@
 import type { AppContainer } from "../container.js";
 import { isPaperMode } from "../config/index.js";
-import { buildScoreInput, toNumber } from "../execution/entryHelpers.js";
+import { buildLongshotScoreInput, buildTailNoScoreInput, entrySignalTypeForSide, resolveYesCounterpartPrice, toNumber } from "../execution/entryHelpers.js";
 import type { ScanOptions } from "../scanner/types.js";
 import { midPrice } from "../polymarket/orderBookPricing.js";
 import type { OrderBook } from "../polymarket/publicTypes.js";
@@ -57,8 +57,12 @@ export async function runPaperTrading(
   const engine = container.paperTradingEngine;
   await engine.initialize();
 
-  const scan = await container.scanner.scanMarkets(options);
-  const scorer = container.longshotScorer;
+  const scan = await container.scanner.scanMarkets({
+    maxPages: container.config.SCAN_MAX_PAGES,
+    ...options,
+  });
+  const longshotScorer = container.longshotScorer;
+  const tailNoScorer = container.tailNoScorer;
 
   let signalsCreated = 0;
   let entryCandidates = 0;
@@ -93,8 +97,20 @@ export async function runPaperTrading(
     const price = midPrice(orderBook) ?? candidate.price;
     markPrices.set(candidate.tokenId, price);
 
-    const scoreInput = buildScoreInput(market, outcome, candidate, orderBook);
-    const scoreResult = scorer.score(scoreInput);
+    const scoreResult =
+      candidate.side === "NO"
+        ? tailNoScorer.score(
+            buildTailNoScoreInput(
+              market,
+              outcome,
+              candidate,
+              orderBook,
+              await resolveYesCounterpartPrice(container.repositories, candidate.marketId),
+            ),
+          )
+        : longshotScorer.score(
+            buildLongshotScoreInput(market, outcome, candidate, orderBook),
+          );
 
     if (scoreResult.decision !== "entry_candidate") {
       continue;
@@ -106,7 +122,7 @@ export async function runPaperTrading(
       marketId: candidate.marketId,
       outcomeId: candidate.outcomeId,
       tokenId: candidate.tokenId,
-      signalType: "LONGSHOT_ENTRY",
+      signalType: entrySignalTypeForSide(candidate.side),
       score: scoreResult.score,
       reason: scoreResult.reasons.join("; "),
       entryPrice: scoreResult.suggestedEntryPrice,

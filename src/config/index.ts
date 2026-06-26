@@ -13,6 +13,12 @@ export {
   isDryRunMode,
 } from "./env.js";
 export {
+  applyStrategyProfile,
+  isNyetriskProfile,
+  NYETRISK_MIRROR_WALLET,
+  type StrategyProfile,
+} from "./strategyProfile.js";
+export {
   LIVE_TRADING_CONFIRMATION_PHRASE,
   assertLiveTradingEnabled,
   assertLiveOrderPlacementAllowed,

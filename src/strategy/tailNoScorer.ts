@@ -1,9 +1,9 @@
 import type { Config } from "../config/index.js";
 import type {
-  LongshotDecision,
-  LongshotScoreInput,
-  LongshotScoreResult,
-} from "./longshotTypes.js";
+  TailNoDecision,
+  TailNoScoreInput,
+  TailNoScoreResult,
+} from "./tailNoTypes.js";
 
 const FAVORABLE_CATEGORY_KEYWORDS = [
   "politics",
@@ -14,24 +14,25 @@ const FAVORABLE_CATEGORY_KEYWORDS = [
   "leader",
   "governor",
   "senate",
+  "sports",
   "tournament",
   "champion",
   "winner",
   "world cup",
   "super bowl",
   "olympics",
+  "nba",
+  "nfl",
+  "mlb",
 ] as const;
 
 const COIN_FLIP_LOW = 0.4;
 const COIN_FLIP_HIGH = 0.6;
-const SWEET_SPOT_LOW = 0.01;
-const SWEET_SPOT_HIGH = 0.03;
-const PUMP_MULTIPLIER = 5;
 const WATCHLIST_THRESHOLD = 45;
 const HARD_REJECT_MAX_SCORE = 25;
 
-export interface ILongshotScorer {
-  score(input: LongshotScoreInput): LongshotScoreResult;
+export interface ITailNoScorer {
+  score(input: TailNoScoreInput): TailNoScoreResult;
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -51,9 +52,7 @@ function matchesFavorableCategory(category: string | null, question: string): bo
   return FAVORABLE_CATEGORY_KEYWORDS.some((keyword) => haystack.includes(keyword));
 }
 
-function resolveSpread(
-  pricing: LongshotScoreInput["pricing"],
-): number | null {
+function resolveSpread(pricing: TailNoScoreInput["pricing"]): number | null {
   if (pricing.spread !== null && pricing.spread !== undefined) {
     return pricing.spread;
   }
@@ -63,87 +62,56 @@ function resolveSpread(
   return null;
 }
 
-function hasRecentPump(
-  price: number,
-  priceHistory: LongshotScoreInput["pricing"]["priceHistory"],
-): boolean {
-  if (!priceHistory || priceHistory.length < 2) {
-    return false;
-  }
-  const localLow = Math.min(...priceHistory.map((p) => p.price));
-  if (localLow <= 0) {
-    return false;
-  }
-  return price >= PUMP_MULTIPLIER * localLow;
-}
-
-function isUnclearResolution(category: string | null, question: string): boolean {
-  if (question.trim().length < 15) {
-    return true;
-  }
-  if (!category && !matchesFavorableCategory(category, question)) {
-    return true;
-  }
-  return false;
-}
-
 function computeSuggestedSizeUsd(
   config: Pick<Config, "MAX_POSITION_SIZE_USD" | "MIN_LIQUIDITY_USD" | "MAX_SPREAD">,
-  input: LongshotScoreInput,
+  input: TailNoScoreInput,
   spread: number | null,
-  favorableCategory: boolean,
 ): number {
   const liquidityUsd = input.market.liquidityUsd ?? 0;
   let size = config.MAX_POSITION_SIZE_USD;
 
   if (spread !== null && spread > config.MAX_SPREAD * 0.5) {
-    size *= 0.7;
+    size *= 0.75;
   }
   if (liquidityUsd < config.MIN_LIQUIDITY_USD * 2) {
     size *= 0.6;
-  }
-  if (input.market.outcomeCount === 2) {
-    size *= 0.8;
-  }
-  if (!favorableCategory) {
-    size *= 0.85;
   }
 
   return round2(Math.min(size, config.MAX_POSITION_SIZE_USD));
 }
 
-export function createLongshotScorer(
+export function createTailNoScorer(
   config: Pick<
     Config,
-    | "MIN_ENTRY_PRICE"
-    | "MAX_ENTRY_PRICE"
+    | "NO_MIN_ENTRY_PRICE"
+    | "NO_MAX_ENTRY_PRICE"
     | "MIN_DAYS_TO_EXPIRY"
     | "MIN_LIQUIDITY_USD"
     | "MAX_SPREAD"
     | "MAX_POSITION_SIZE_USD"
-    | "LONGSHOT_ENTRY_THRESHOLD"
+    | "MIN_ENTRY_PRICE"
+    | "MAX_ENTRY_PRICE"
+    | "TAIL_NO_ENTRY_THRESHOLD"
   >,
-): ILongshotScorer {
-  const score = (input: LongshotScoreInput): LongshotScoreResult => {
+): ITailNoScorer {
+  const score = (input: TailNoScoreInput): TailNoScoreResult => {
     const { market, outcome, pricing } = input;
     const reasons: string[] = [];
     const price = outcome.price;
     const spread = resolveSpread(pricing);
     const liquidityUsd = market.liquidityUsd ?? 0;
-    const favorableCategory = matchesFavorableCategory(market.category, market.question);
 
-    const suggestedEntryPrice =
-      pricing.orderBook?.bestAsk ?? price ?? 0;
+    const suggestedEntryPrice = pricing.orderBook?.bestAsk ?? price ?? 0;
 
     const buildResult = (
       scoreValue: number,
-      decision: LongshotDecision,
-    ): LongshotScoreResult => ({
+      decision: TailNoDecision,
+    ): TailNoScoreResult => ({
       score: clamp(scoreValue, 0, 100),
       decision,
       reasons,
       suggestedEntryPrice,
-      suggestedSizeUsd: computeSuggestedSizeUsd(config, input, spread, favorableCategory),
+      suggestedSizeUsd: computeSuggestedSizeUsd(config, input, spread),
     });
 
     if (!market.active || market.closed || market.archived) {
@@ -161,8 +129,8 @@ export function createLongshotScorer(
       return buildResult(HARD_REJECT_MAX_SCORE, "reject");
     }
 
-    if (outcome.side !== "YES") {
-      reasons.push("Only YES outcomes are eligible for longshot basket");
+    if (outcome.side !== "NO") {
+      reasons.push("Only NO outcomes are eligible for tail-fade");
       return buildResult(HARD_REJECT_MAX_SCORE, "reject");
     }
 
@@ -171,16 +139,16 @@ export function createLongshotScorer(
       return buildResult(HARD_REJECT_MAX_SCORE, "reject");
     }
 
-    if (price > config.MAX_ENTRY_PRICE) {
+    if (price > config.NO_MAX_ENTRY_PRICE) {
       reasons.push(
-        `Price ${(price * 100).toFixed(1)}¢ exceeds max entry ${(config.MAX_ENTRY_PRICE * 100).toFixed(1)}¢`,
+        `Price ${(price * 100).toFixed(1)}¢ exceeds max NO entry ${(config.NO_MAX_ENTRY_PRICE * 100).toFixed(1)}¢`,
       );
       return buildResult(HARD_REJECT_MAX_SCORE, "reject");
     }
 
-    if (price < config.MIN_ENTRY_PRICE) {
+    if (price < config.NO_MIN_ENTRY_PRICE) {
       reasons.push(
-        `Price ${(price * 100).toFixed(1)}¢ below min entry ${(config.MIN_ENTRY_PRICE * 100).toFixed(1)}¢`,
+        `Price ${(price * 100).toFixed(1)}¢ below min NO entry ${(config.NO_MIN_ENTRY_PRICE * 100).toFixed(1)}¢`,
       );
       return buildResult(HARD_REJECT_MAX_SCORE, "reject");
     }
@@ -188,9 +156,21 @@ export function createLongshotScorer(
     if (
       market.outcomeCount === 2 &&
       price >= COIN_FLIP_LOW &&
-      price <= COIN_FLIP_HIGH
+      price <= COIN_FLIP_HIGH &&
+      input.yesCounterpartPrice !== null &&
+      input.yesCounterpartPrice >= COIN_FLIP_LOW &&
+      input.yesCounterpartPrice <= COIN_FLIP_HIGH
     ) {
-      reasons.push("Binary coin-flip market around 40–60¢");
+      reasons.push("Binary coin-flip market around 40–60¢ on both sides");
+      return buildResult(HARD_REJECT_MAX_SCORE, "reject");
+    }
+
+    if (
+      input.yesCounterpartPrice !== null &&
+      input.yesCounterpartPrice >= config.MIN_ENTRY_PRICE &&
+      input.yesCounterpartPrice <= config.MAX_ENTRY_PRICE
+    ) {
+      reasons.push("YES counterpart already in longshot band");
       return buildResult(HARD_REJECT_MAX_SCORE, "reject");
     }
 
@@ -221,25 +201,16 @@ export function createLongshotScorer(
       return buildResult(HARD_REJECT_MAX_SCORE, "reject");
     }
 
-    if (hasRecentPump(price, pricing.priceHistory)) {
-      reasons.push("Price history shows recent pump above 5x from local low");
-      return buildResult(HARD_REJECT_MAX_SCORE, "reject");
-    }
-
-    if (isUnclearResolution(market.category, market.question)) {
-      reasons.push("Market has unclear resolution criteria");
+    if (!matchesFavorableCategory(market.category, market.question)) {
+      reasons.push("Market category not favorable for tail-fade");
       return buildResult(HARD_REJECT_MAX_SCORE, "reject");
     }
 
     let softScore = 50;
 
-    if (price >= config.MIN_ENTRY_PRICE && price <= config.MAX_ENTRY_PRICE) {
+    if (price >= config.NO_MIN_ENTRY_PRICE && price <= config.NO_MAX_ENTRY_PRICE) {
       softScore += 15;
-      reasons.push("Price within longshot entry band");
-      if (price >= SWEET_SPOT_LOW && price <= SWEET_SPOT_HIGH) {
-        softScore += 5;
-        reasons.push("Price in 1¢–3¢ sweet spot");
-      }
+      reasons.push("Price within NO tail-fade band");
     }
 
     const expiryBonus = clamp(
@@ -250,12 +221,6 @@ export function createLongshotScorer(
     if (expiryBonus > 0) {
       softScore += expiryBonus;
       reasons.push("Long time to expiry");
-    }
-
-    if (market.outcomeCount >= 3) {
-      const outcomeBonus = Math.min(10, (market.outcomeCount - 2) * 2);
-      softScore += outcomeBonus;
-      reasons.push("Market has multiple related outcomes");
     }
 
     const liquidityBonus = clamp(
@@ -280,20 +245,13 @@ export function createLongshotScorer(
       reasons.push("Active volume");
     }
 
-    if (favorableCategory) {
-      softScore += 10;
-      reasons.push("Favorable market category");
-    }
-
-    if (pricing.priceHistory && pricing.priceHistory.length >= 2) {
-      softScore += 5;
-      reasons.push("No recent pump detected in price history");
-    }
+    softScore += 10;
+    reasons.push("Favorable market category");
 
     softScore = clamp(softScore, 0, 100);
 
-    let decision: LongshotDecision;
-    if (softScore >= config.LONGSHOT_ENTRY_THRESHOLD) {
+    let decision: TailNoDecision;
+    if (softScore >= config.TAIL_NO_ENTRY_THRESHOLD) {
       decision = "entry_candidate";
     } else if (softScore >= WATCHLIST_THRESHOLD) {
       decision = "watchlist";

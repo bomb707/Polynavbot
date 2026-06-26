@@ -1,3 +1,4 @@
+import type { Config } from "../config/index.js";
 import type { IRepositories } from "../db/repositories/index.js";
 import type { SnapshotTokenRef } from "../db/repositories/snapshot.repository.js";
 import type { ILogger } from "../logger/types.js";
@@ -19,6 +20,7 @@ export interface DataLoaderDeps {
   publicClient: IPublicClient;
   logger: ILogger;
   config: BacktestConfig;
+  appConfig: Config;
 }
 
 function snapshotToBar(snapshot: {
@@ -90,20 +92,24 @@ async function resolveTokenRefs(
   start: Date,
   end: Date,
   loadOptions?: BacktestLoadOptions,
+  appConfig?: Config,
 ): Promise<{ refs: SnapshotTokenRef[]; source: BacktestDataSource }> {
   const { repositories, publicClient, logger, config } = deps;
 
   if (loadOptions?.mirrorWallet) {
+    const includeNoTokens =
+      loadOptions.includeNoTokens ?? appConfig?.NO_ENTRY_ENABLED ?? false;
     const walletResult = await resolveWalletTokenRefs(
       publicClient,
       repositories,
       logger,
       loadOptions.mirrorWallet,
-      loadOptions.mirrorMaxItems ?? 1000,
+      loadOptions.mirrorMaxItems ?? appConfig?.MIRROR_MAX_ITEMS ?? 1000,
+      { includeNoTokens },
     );
     if (walletResult.refs.length === 0) {
       throw new Error(
-        `No YES tokens resolved from wallet ${loadOptions.mirrorWallet} (skipped NO: ${walletResult.skippedNoTokens}, missing slug: ${walletResult.skippedMissingSlug})`,
+        `No tokens resolved from wallet ${loadOptions.mirrorWallet} (skipped NO: ${walletResult.skippedNoTokens}, missing slug: ${walletResult.skippedMissingSlug})`,
       );
     }
     return { refs: walletResult.refs, source: "wallet" };
@@ -157,7 +163,7 @@ export function createDataLoader(deps: DataLoaderDeps) {
       end: Date,
       loadOptions?: BacktestLoadOptions,
     ): Promise<BacktestDataset> {
-      const { refs: tokenRefs, source } = await resolveTokenRefs(deps, start, end, loadOptions);
+      const { refs: tokenRefs, source } = await resolveTokenRefs(deps, start, end, loadOptions, deps.appConfig);
       const series: BacktestTokenSeries[] = [];
 
       for (const ref of tokenRefs) {
@@ -194,7 +200,12 @@ export function createDataLoader(deps: DataLoaderDeps) {
         }
 
         if (outcome.side !== "YES") {
-          continue;
+          const includeNo =
+            loadOptions?.includeNoTokens ??
+            deps.appConfig.NO_ENTRY_ENABLED;
+          if (!includeNo) {
+            continue;
+          }
         }
 
         const assumedLiquidity = toNumber(outcome.liquidity) ?? config.minLiquidityUsd;

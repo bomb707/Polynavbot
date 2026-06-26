@@ -43,6 +43,10 @@ import type { IMarketScanner } from "./scanner/types.js";
 import { createStrategy, createLongshotScorer } from "./strategy/index.js";
 import type { IStrategy } from "./strategy/types.js";
 import type { ILongshotScorer } from "./strategy/longshotScorer.js";
+import type { ITailNoScorer } from "./strategy/tailNoScorer.js";
+import { createTailNoScorer } from "./strategy/tailNoScorer.js";
+import { createCompositeScanner } from "./scanner/compositeScanner.js";
+import { createWalletMirrorScanner } from "./scanner/walletMirrorScanner.js";
 import { createFeeService } from "./fees/index.js";
 import type { IFeeService } from "./fees/feeTypes.js";
 import { stopWorkers } from "./jobs/worker.js";
@@ -66,6 +70,7 @@ export class AppContainer {
   private _positionStore?: IPositionStore;
   private _repositories?: IRepositories;
   private _longshotScorer?: ILongshotScorer;
+  private _tailNoScorer?: ITailNoScorer;
   private _entryEngine?: IEntryEngine;
   private _exitEngine?: IExitEngine;
   private _positionMonitor?: IPositionMonitor;
@@ -141,12 +146,27 @@ export class AppContainer {
 
   get scanner(): IMarketScanner {
     if (!this._scanner) {
-      this._scanner = createMarketScanner({
+      const gammaScanner = createMarketScanner({
         publicClient: this.publicClient,
         repositories: this.repositories,
         config: this.config,
         logger: this.logger,
       });
+
+      if (this.config.MIRROR_ENABLED && this.config.MIRROR_WALLET) {
+        const walletScanner = createWalletMirrorScanner({
+          publicClient: this.publicClient,
+          repositories: this.repositories,
+          config: this.config,
+          logger: this.logger,
+        });
+        this._scanner = createCompositeScanner({
+          gammaScanner,
+          walletScanner,
+        });
+      } else {
+        this._scanner = gammaScanner;
+      }
     }
     return this._scanner;
   }
@@ -217,12 +237,20 @@ export class AppContainer {
     return this._longshotScorer;
   }
 
+  get tailNoScorer(): ITailNoScorer {
+    if (!this._tailNoScorer) {
+      this._tailNoScorer = createTailNoScorer(this.config);
+    }
+    return this._tailNoScorer;
+  }
+
   get entryEngine(): IEntryEngine {
     if (!this._entryEngine) {
       this._entryEngine = createEntryEngine({
         config: this.config,
         scanner: this.scanner,
-        scorer: this.longshotScorer,
+        longshotScorer: this.longshotScorer,
+        tailNoScorer: this.tailNoScorer,
         riskEngine: this.riskEngine,
         executionEngine: this.executionEngine,
         publicClient: this.publicClient,

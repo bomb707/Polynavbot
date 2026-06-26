@@ -207,7 +207,7 @@ describe("createMarketScanner", () => {
 
     const result = scanner.evaluateMarket(validRawMarket());
     expect(result.candidates).toHaveLength(0);
-    expect(result.skips.not_yes).toBe(1);
+    expect(result.skips.not_no).toBe(1);
   });
 
   it("evaluateMarket rejects low liquidity", () => {

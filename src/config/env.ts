@@ -33,12 +33,19 @@ export const envSchema = z
 
     TRADING_MODE: tradingModeSchema.default("paper"),
 
+    STRATEGY_PROFILE: z.enum(["default", "nyetrisk"]).default("default"),
+
     MAX_DAILY_SPEND_USD: z.coerce.number().positive().default(25),
     MAX_POSITION_SIZE_USD: z.coerce.number().positive().default(2),
     MAX_MARKET_EXPOSURE_USD: z.coerce.number().positive().default(10),
     MAX_THEME_EXPOSURE_USD: z.coerce.number().positive().default(25),
     MIN_ENTRY_PRICE: z.coerce.number().positive().default(0.005),
     MAX_ENTRY_PRICE: z.coerce.number().positive().default(0.04),
+    NO_MIN_ENTRY_PRICE: z.coerce.number().positive().default(0.35),
+    NO_MAX_ENTRY_PRICE: z.coerce.number().positive().default(0.65),
+    NO_ENTRY_ENABLED: z.coerce.boolean().default(false),
+    LONGSHOT_ENTRY_THRESHOLD: z.coerce.number().int().min(0).max(100).default(70),
+    TAIL_NO_ENTRY_THRESHOLD: z.coerce.number().int().min(0).max(100).default(60),
     MIN_DAYS_TO_EXPIRY: z.coerce.number().positive().default(30),
     MIN_LIQUIDITY_USD: z.coerce.number().positive().default(1000),
     MAX_SPREAD: z.coerce.number().positive().default(0.03),
@@ -54,6 +61,11 @@ export const envSchema = z
     ALLOW_BOTH_SIDES_SAME_MARKET: z.coerce.boolean().default(false),
     MAX_DAILY_LOSS_USD: z.coerce.number().positive().default(10),
     DATA_STALE_SECONDS: z.coerce.number().int().positive().default(300),
+
+    MIRROR_ENABLED: z.coerce.boolean().default(false),
+    MIRROR_WALLET: z.string().min(1).optional(),
+    MIRROR_MAX_ITEMS: z.coerce.number().int().positive().default(1000),
+    SCAN_MAX_PAGES: z.coerce.number().int().positive().default(50),
 
     EXIT_NEAR_EXPIRY_HOURS: z.coerce.number().positive().default(48),
     EXIT_TRAILING_STOP_PCT: z.coerce.number().positive().max(1).default(0.6),
@@ -107,6 +119,14 @@ export const envSchema = z
       });
     }
 
+    if (data.NO_MIN_ENTRY_PRICE >= data.NO_MAX_ENTRY_PRICE) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["NO_MAX_ENTRY_PRICE"],
+        message: "NO_MIN_ENTRY_PRICE must be less than NO_MAX_ENTRY_PRICE",
+      });
+    }
+
     if (data.TRADING_MODE !== "live") {
       return;
     }
@@ -121,6 +141,8 @@ export const envSchema = z
       }
     }
   });
+
+import { applyStrategyProfile } from "./strategyProfile.js";
 
 export type Env = z.infer<typeof envSchema>;
 
@@ -182,5 +204,5 @@ export function parseEnv(
     throw new Error(formatValidationErrors(result.error.issues));
   }
 
-  return result.data;
+  return applyStrategyProfile(result.data);
 }

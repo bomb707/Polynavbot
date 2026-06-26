@@ -7,6 +7,7 @@ import { PublicApiError } from "../polymarket/http.js";
 import type { IPublicClient } from "../polymarket/publicClient.js";
 import type { NormalizedMarket, NormalizedOutcome } from "../polymarket/publicTypes.js";
 import { extractLiquidity } from "../polymarket/schemas.js";
+import { saveMarketAndOutcomes, syncMarketFeeParams } from "./marketPersist.js";
 import type {
   CandidateOutcome,
   IMarketScanner,
@@ -17,9 +18,11 @@ import type {
 import { SKIP_REASONS } from "./types.js";
 
 const DEFAULT_PAGE_SIZE = 100;
-const DEFAULT_MAX_PAGES = 50;
 /** Gamma /markets offset pagination limit; use keyset API beyond this. */
 export const GAMMA_MARKETS_MAX_OFFSET = 2000;
+
+const COIN_FLIP_LOW = 0.4;
+const COIN_FLIP_HIGH = 0.6;
 
 function isGammaOffsetLimitError(error: unknown): boolean {
   return (
@@ -38,6 +41,7 @@ export interface MarketScannerDeps {
 
 export interface EvaluatedCandidate {
   outcome: NormalizedOutcome;
+  side: "YES" | "NO";
 }
 
 export interface EvaluateMarketResult {
@@ -119,13 +123,11 @@ export function createMarketScanner(deps: MarketScannerDeps): IMarketScanner {
     }
 
     const candidates: EvaluatedCandidate[] = [];
+    const yesPrices = normalized.outcomes
+      .filter((o) => o.side === "YES" && o.price !== null)
+      .map((o) => o.price as number);
 
     for (const outcome of normalized.outcomes) {
-      if (outcome.side !== "YES") {
-        incrementSkip(skips, "not_yes");
-        continue;
-      }
-
       if (!outcome.tokenId) {
         incrementSkip(skips, "missing_token");
         continue;
@@ -136,99 +138,76 @@ export function createMarketScanner(deps: MarketScannerDeps): IMarketScanner {
         continue;
       }
 
-      if (
-        outcome.price < config.MIN_ENTRY_PRICE ||
-        outcome.price > config.MAX_ENTRY_PRICE
-      ) {
-        incrementSkip(skips, "price_out_of_range");
+      if (outcome.side === "YES") {
+        if (
+          outcome.price < config.MIN_ENTRY_PRICE ||
+          outcome.price > config.MAX_ENTRY_PRICE
+        ) {
+          incrementSkip(skips, "price_out_of_range");
+          continue;
+        }
+        candidates.push({ outcome, side: "YES" });
         continue;
       }
 
-      candidates.push({ outcome });
+      if (outcome.side === "NO") {
+        if (!config.NO_ENTRY_ENABLED) {
+          incrementSkip(skips, "not_no");
+          continue;
+        }
+
+        if (
+          outcome.price < config.NO_MIN_ENTRY_PRICE ||
+          outcome.price > config.NO_MAX_ENTRY_PRICE
+        ) {
+          incrementSkip(skips, "no_price_out_of_range");
+          continue;
+        }
+
+        if (
+          normalized.outcomes.length === 2 &&
+          outcome.price >= COIN_FLIP_LOW &&
+          outcome.price <= COIN_FLIP_HIGH &&
+          yesPrices.some((p) => p >= COIN_FLIP_LOW && p <= COIN_FLIP_HIGH)
+        ) {
+          incrementSkip(skips, "no_price_out_of_range");
+          continue;
+        }
+
+        candidates.push({ outcome, side: "NO" });
+        continue;
+      }
+
+      incrementSkip(skips, "not_yes");
     }
 
     return { normalized, candidates, skips };
   };
 
-  const saveMarketAndOutcomes = async (
+  const saveMarketAndOutcomesWithFees = async (
     normalized: NormalizedMarket,
     feeCache: Map<string, Date>,
   ): Promise<{ market: Market; outcomes: Outcome[] }> => {
-    const market = await repositories.market.upsertByPolymarketId({
-      polymarketMarketId: normalized.polymarketMarketId,
-      conditionId: normalized.conditionId,
-      question: normalized.question,
-      slug: normalized.slug,
-      category: normalized.category,
-      active: normalized.active,
-      closed: normalized.closed,
-      archived: normalized.archived,
-      enableOrderBook: normalized.enableOrderBook,
-      endDate: normalized.endDate,
-    });
-
-    await syncMarketFeeParams(market, normalized.conditionId, feeCache);
-
-    const outcomes: Outcome[] = [];
-    for (const outcome of normalized.outcomes) {
-      const saved = await repositories.outcome.upsertByTokenId({
-        marketId: market.id,
-        tokenId: outcome.tokenId,
-        name: outcome.name,
-        side: outcome.side,
-        currentPrice: outcome.price,
-      });
-      outcomes.push(saved);
-    }
-
-    return { market, outcomes };
-  };
-
-  const feeRefreshMs = config.FEE_PARAMS_REFRESH_HOURS * 60 * 60 * 1000;
-
-  const syncMarketFeeParams = async (
-    market: Market,
-    conditionId: string,
-    feeCache: Map<string, Date>,
-  ): Promise<void> => {
-    const cachedAt = feeCache.get(conditionId);
-    if (cachedAt && Date.now() - cachedAt.getTime() < feeRefreshMs) {
-      return;
-    }
-
-    if (
-      market.feeLastFetchedAt &&
-      Date.now() - market.feeLastFetchedAt.getTime() < feeRefreshMs
-    ) {
-      feeCache.set(conditionId, market.feeLastFetchedAt);
-      return;
-    }
-
+    const result = await saveMarketAndOutcomes(repositories, normalized);
     try {
-      const info = await publicClient.getClobMarketInfo(conditionId);
-      if (!info) {
-        return;
-      }
-
-      await repositories.market.updateFeeParams(market.id, {
-        feesEnabled: info.feesEnabled,
-        feeRate: info.feeDetails?.feeRate ?? 0,
-        feeExponent: info.feeDetails?.feeExponent ?? null,
-        takerOnly: info.feeDetails?.takerOnly ?? true,
-        makerBaseFeeBps: info.makerBaseFeeBps,
-        takerBaseFeeBps: info.takerBaseFeeBps,
-        feeCategory: info.feeCategory,
-        feeLastFetchedAt: new Date(),
-      });
-
-      feeCache.set(conditionId, new Date());
+      await syncMarketFeeParams(
+        repositories,
+        publicClient,
+        result.market,
+        normalized.conditionId,
+        feeCache,
+        feeRefreshMs,
+      );
     } catch (error) {
       logger.warn(
-        { conditionId, err: error instanceof Error ? error.message : String(error) },
+        { conditionId: normalized.conditionId, err: error instanceof Error ? error.message : String(error) },
         "Failed to sync market fee params",
       );
     }
+    return result;
   };
+
+  const feeRefreshMs = config.FEE_PARAMS_REFRESH_HOURS * 60 * 60 * 1000;
 
   const createSnapshot = async (
     marketId: string,
@@ -290,7 +269,7 @@ export function createMarketScanner(deps: MarketScannerDeps): IMarketScanner {
 
   const scanMarkets = async (options: ScanOptions = {}): Promise<ScanSummary> => {
     const limitPerPage = options.limitPerPage ?? DEFAULT_PAGE_SIZE;
-    const maxPages = options.maxPages ?? DEFAULT_MAX_PAGES;
+    const maxPages = options.maxPages ?? config.SCAN_MAX_PAGES;
 
     const skipped = emptySkipCounts();
     const candidates: CandidateOutcome[] = [];
@@ -331,14 +310,14 @@ export function createMarketScanner(deps: MarketScannerDeps): IMarketScanner {
             continue;
           }
 
-          const { market, outcomes } = await saveMarketAndOutcomes(
+          const { market, outcomes } = await saveMarketAndOutcomesWithFees(
             evaluation.normalized,
             feeCache,
           );
 
           const outcomeCount = evaluation.normalized.outcomes.length;
 
-          for (const { outcome } of evaluation.candidates) {
+          for (const { outcome, side } of evaluation.candidates) {
             const dbOutcome = outcomes.find((o) => o.tokenId === outcome.tokenId);
             if (!dbOutcome || outcome.price === null) {
               continue;
@@ -360,6 +339,8 @@ export function createMarketScanner(deps: MarketScannerDeps): IMarketScanner {
               price: outcome.price,
               endDate: evaluation.normalized.endDate,
               outcomeCount,
+              side,
+              source: "gamma",
             });
           }
         } catch (error) {

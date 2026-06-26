@@ -16,6 +16,38 @@ const config = {
   ENTRY_SIGNAL_DEDUP_MINUTES: 10,
 } as Config;
 
+const defaultCandidate = {
+  marketId: "market-1",
+  outcomeId: "outcome-1",
+  tokenId: "token-1",
+  question: "Will X win?",
+  outcomeName: "Yes",
+  price: 0.02,
+  endDate: null,
+  outcomeCount: 2,
+  side: "YES" as const,
+  source: "gamma" as const,
+};
+
+function makeScorers(longshotResult: object, tailNoResult?: object) {
+  return {
+    longshotScorer: {
+      score: vi.fn().mockReturnValue(longshotResult),
+    },
+    tailNoScorer: {
+      score: vi.fn().mockReturnValue(
+        tailNoResult ?? {
+          score: 40,
+          decision: "watchlist",
+          reasons: ["Low score"],
+          suggestedEntryPrice: 0.5,
+          suggestedSizeUsd: 1.5,
+        },
+      ),
+    },
+  };
+}
+
 const orderBook: OrderBook = {
   tokenId: "token-1",
   bids: [{ price: 0.02, size: 100 }],
@@ -61,29 +93,16 @@ describe("createEntryEngine", () => {
           outcomesScanned: 2,
           candidatesFound: 1,
           skipped: {},
-          candidates: [
-            {
-              marketId: "market-1",
-              outcomeId: "outcome-1",
-              tokenId: "token-1",
-              question: "Will X win?",
-              outcomeName: "Yes",
-              price: 0.02,
-              endDate: null,
-              outcomeCount: 2,
-            },
-          ],
+          candidates: [defaultCandidate],
         }),
       },
-      scorer: {
-        score: vi.fn().mockReturnValue({
-          score: 40,
-          decision: "watchlist",
-          reasons: ["Low score"],
-          suggestedEntryPrice: 0.022,
-          suggestedSizeUsd: 1.5,
-        }),
-      },
+      ...makeScorers({
+        score: 40,
+        decision: "watchlist",
+        reasons: ["Low score"],
+        suggestedEntryPrice: 0.022,
+        suggestedSizeUsd: 1.5,
+      }),
       riskEngine: { checkOrder: vi.fn() },
       executionEngine: {
         initialize: vi.fn(),
@@ -147,29 +166,16 @@ describe("createEntryEngine", () => {
           outcomesScanned: 2,
           candidatesFound: 1,
           skipped: {},
-          candidates: [
-            {
-              marketId: "market-1",
-              outcomeId: "outcome-1",
-              tokenId: "token-1",
-              question: "Will X win?",
-              outcomeName: "Yes",
-              price: 0.02,
-              endDate: null,
-              outcomeCount: 2,
-            },
-          ],
+          candidates: [defaultCandidate],
         }),
       },
-      scorer: {
-        score: vi.fn().mockReturnValue({
-          score: 80,
-          decision: "entry_candidate",
-          reasons: ["Good longshot"],
-          suggestedEntryPrice: 0.022,
-          suggestedSizeUsd: 1.5,
-        }),
-      },
+      ...makeScorers({
+        score: 80,
+        decision: "entry_candidate",
+        reasons: ["Good longshot"],
+        suggestedEntryPrice: 0.022,
+        suggestedSizeUsd: 1.5,
+      }),
       riskEngine: { checkOrder: vi.fn() },
       executionEngine: {
         initialize: vi.fn(),
@@ -245,29 +251,16 @@ describe("createEntryEngine", () => {
           outcomesScanned: 2,
           candidatesFound: 1,
           skipped: {},
-          candidates: [
-            {
-              marketId: "market-1",
-              outcomeId: "outcome-1",
-              tokenId: "token-1",
-              question: "Will X win?",
-              outcomeName: "Yes",
-              price: 0.02,
-              endDate: null,
-              outcomeCount: 2,
-            },
-          ],
+          candidates: [defaultCandidate],
         }),
       },
-      scorer: {
-        score: vi.fn().mockReturnValue({
-          score: 80,
-          decision: "entry_candidate",
-          reasons: ["Good longshot"],
-          suggestedEntryPrice: 0.022,
-          suggestedSizeUsd: 1.5,
-        }),
-      },
+      ...makeScorers({
+        score: 80,
+        decision: "entry_candidate",
+        reasons: ["Good longshot"],
+        suggestedEntryPrice: 0.022,
+        suggestedSizeUsd: 1.5,
+      }),
       riskEngine: { checkOrder: vi.fn() },
       executionEngine: {
         initialize: vi.fn(),
@@ -334,15 +327,13 @@ describe("createEntryEngine", () => {
     const engine = createEntryEngine({
       config,
       scanner: { scanMarkets },
-      scorer: {
-        score: vi.fn().mockReturnValue({
-          score: 40,
-          decision: "watchlist",
-          reasons: ["Low score"],
-          suggestedEntryPrice: 0.022,
-          suggestedSizeUsd: 1.5,
-        }),
-      },
+      ...makeScorers({
+        score: 40,
+        decision: "watchlist",
+        reasons: ["Low score"],
+        suggestedEntryPrice: 0.022,
+        suggestedSizeUsd: 1.5,
+      }),
       riskEngine: { checkOrder: vi.fn() },
       executionEngine: {
         initialize: vi.fn(),
@@ -397,18 +388,7 @@ describe("createEntryEngine", () => {
       outcomesScanned: 10,
       candidatesFound: 1,
       skipped: {},
-      candidates: [
-        {
-          marketId: "market-1",
-          outcomeId: "outcome-1",
-          tokenId: "token-1",
-          question: "Will X win?",
-          outcomeName: "Yes",
-          price: 0.02,
-          endDate: null,
-          outcomeCount: 2,
-        },
-      ],
+      candidates: [defaultCandidate],
     };
 
     await engine.run({ scan });
@@ -426,21 +406,10 @@ describe("createEntryEngine", () => {
           outcomesScanned: 2,
           candidatesFound: 1,
           skipped: {},
-          candidates: [
-            {
-              marketId: "market-1",
-              outcomeId: "outcome-1",
-              tokenId: "token-1",
-              question: "Will X win?",
-              outcomeName: "Yes",
-              price: 0.02,
-              endDate: null,
-              outcomeCount: 2,
-            },
-          ],
+          candidates: [defaultCandidate],
         }),
       },
-      scorer: { score: vi.fn() },
+      ...makeScorers({ score: 80, decision: "entry_candidate", reasons: [], suggestedEntryPrice: 0.5, suggestedSizeUsd: 1 }),
       riskEngine: { checkOrder: vi.fn() },
       executionEngine: {
         initialize: vi.fn(),
@@ -472,5 +441,103 @@ describe("createEntryEngine", () => {
     expect(summary.rejected).toHaveLength(1);
     expect(summary.rejected[0]?.stage).toBe("idempotency");
     expect(placeBuyLimitOrder).not.toHaveBeenCalled();
+  });
+
+  it("routes NO candidates to tailNoScorer", async () => {
+    const tailNoScorer = {
+      score: vi.fn().mockReturnValue({
+        score: 75,
+        decision: "entry_candidate",
+        reasons: ["Tail fade"],
+        suggestedEntryPrice: 0.49,
+        suggestedSizeUsd: 10,
+      }),
+    };
+    const longshotScorer = { score: vi.fn() };
+
+    const engine = createEntryEngine({
+      config,
+      scanner: {
+        scanMarkets: vi.fn().mockResolvedValue({
+          marketsScanned: 1,
+          outcomesScanned: 2,
+          candidatesFound: 1,
+          skipped: {},
+          candidates: [
+            {
+              ...defaultCandidate,
+              tokenId: "token-no",
+              outcomeName: "No",
+              price: 0.5,
+              side: "NO",
+            },
+          ],
+        }),
+      },
+      longshotScorer,
+      tailNoScorer,
+      riskEngine: { checkOrder: vi.fn() },
+      executionEngine: {
+        initialize: vi.fn(),
+        placeBuyLimitOrder: vi.fn().mockResolvedValue({
+          orderId: "order-no",
+          status: "placed",
+          sizeShares: 20,
+          notionalUsd: 10,
+        }),
+        placeSellLimitOrder: vi.fn(),
+        cancelOrder: vi.fn(),
+        getOpenOrders: vi.fn(),
+        syncTrades: vi.fn(),
+      },
+      publicClient: {
+        getOrderBook: vi.fn().mockResolvedValue({
+          ...orderBook,
+          tokenId: "token-no",
+        }),
+      },
+      repositories: {
+        market: {
+          findById: vi.fn().mockResolvedValue({
+            id: "market-1",
+            question: "Will X win?",
+            category: "politics",
+            active: true,
+            closed: false,
+            archived: false,
+            enableOrderBook: true,
+            endDate: null,
+          }),
+        },
+        outcome: {
+          findByMarketId: vi.fn().mockResolvedValue([
+            { side: "YES", currentPrice: { toNumber: () => 0.85 } },
+          ]),
+          findByTokenId: vi.fn().mockResolvedValue({
+            id: "outcome-no",
+            tokenId: "token-no",
+            name: "No",
+            side: "NO",
+            liquidity: { toNumber: () => 5000 },
+            currentPrice: { toNumber: () => 0.5 },
+            updatedAt: new Date(),
+          }),
+        },
+        signal: {
+          create: vi.fn().mockResolvedValue({ id: "signal-no" }),
+          findRecentEntrySignal: vi.fn().mockResolvedValue(null),
+          hasPaperOrder: vi.fn().mockResolvedValue(false),
+        },
+        order: { findPendingBuyByTokenId: vi.fn().mockResolvedValue(null) },
+      } as unknown as IRepositories,
+      logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
+      ...entryEngineExtras,
+    });
+
+    const summary = await engine.run();
+
+    expect(tailNoScorer.score).toHaveBeenCalled();
+    expect(longshotScorer.score).not.toHaveBeenCalled();
+    expect(summary.accepted).toHaveLength(1);
   });
 });

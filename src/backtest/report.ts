@@ -79,6 +79,10 @@ export async function writeMarkdownSummary(
     `|--------|-------|`,
     `| Entry evaluations | ${result.diagnostics.entryEvaluations} |`,
     `| Orders placed | ${result.diagnostics.ordersPlaced} |`,
+    `| YES leg evaluations | ${result.diagnostics.legBreakdown.yes.evaluations} |`,
+    `| YES leg orders | ${result.diagnostics.legBreakdown.yes.ordersPlaced} |`,
+    `| NO leg evaluations | ${result.diagnostics.legBreakdown.no.evaluations} |`,
+    `| NO leg orders | ${result.diagnostics.legBreakdown.no.ordersPlaced} |`,
     "",
   ];
 

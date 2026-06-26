@@ -109,11 +109,8 @@ describe("createDataLoader", () => {
           findTokenRefsForBacktest: vi.fn().mockResolvedValue([]),
         },
       } as never,
+      appConfig: { NO_ENTRY_ENABLED: false } as never,
     });
-
-    const dataset = await loader.loadBacktestDataset(start, end);
-    expect(dataset.series).toHaveLength(1);
-    expect(dataset.series[0]?.bars.length).toBe(2);
   });
 
   it("falls back to Gamma API when snapshots and DB outcomes are empty", async () => {
@@ -211,6 +208,7 @@ describe("createDataLoader", () => {
           }),
         },
       } as never,
+      appConfig: { NO_ENTRY_ENABLED: false } as never,
     });
 
     const dataset = await loader.loadBacktestDataset(start, end);

@@ -77,6 +77,24 @@ pnpm paper:run --max-pages 1 --limit-per-page 20
 
 All paper commands require `TRADING_MODE=paper`.
 
+### NyetRisk strategy profile
+
+Enable the dual-leg paper preset (YES longshots + NO tail-fade, wallet mirror universe, aggressive caps):
+
+```bash
+STRATEGY_PROFILE=nyetrisk pnpm paper:run --max-pages 20
+```
+
+This sets `MIRROR_ENABLED=true`, mirrors [NyetRisk's wallet](https://polymarket.com/0xc03ce4d8af842ca6251ac57228b3ffb166ed50af) for universe discovery, enables NO entries at 35–65¢, and raises paper risk caps (120 positions, $400 exposure, $15/leg). See `.env.example` for individual overrides.
+
+Wallet mirror backtest (YES + NO):
+
+```bash
+STRATEGY_PROFILE=nyetrisk pnpm backtest \
+  --start 2025-06-01 --end 2026-06-26 \
+  --mirror-wallet 0xc03ce4d8af842ca6251ac57228b3ffb166ed50af
+```
+
 ### Continuous paper trading (scheduled jobs)
 
 Run the worker continuously. Register schedules once with `pnpm scheduler` (it exits after writing cron jobs to Redis):

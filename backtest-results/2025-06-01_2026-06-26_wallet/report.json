@@ -15,21 +15,21 @@
     "minLiquidityUsd": 1000
   },
   "metrics": {
-    "totalRoi": 0.0414,
-    "grossRoi": 0.0414,
-    "realizedPnlUsd": 10.9,
-    "grossRealizedPnlUsd": 10.9,
+    "totalRoi": 0.3127,
+    "grossRoi": 0.3127,
+    "realizedPnlUsd": 84.69,
+    "grossRealizedPnlUsd": 84.69,
     "totalFeesPaidUsd": 0,
     "unrealizedPnlUsd": 0,
-    "finalEquityUsd": 520.71,
-    "maxDrawdown": 0.0278,
+    "finalEquityUsd": 656.36,
+    "maxDrawdown": 0.1737,
     "hitRate": 0.3077,
-    "averageWinner": 4.77,
-    "averageLoser": -0.91,
-    "payoffSkew": 5.2418,
-    "capitalUtilization": 0.003,
+    "averageWinner": 37.1,
+    "averageLoser": -7.08,
+    "payoffSkew": 5.2401,
+    "capitalUtilization": 0.0238,
     "worstLosingStreak": 7,
-    "totalTrades": 42,
+    "totalTrades": 47,
     "winningTrades": 4,
     "losingTrades": 9
   },
@@ -43,12 +43,12 @@
       "question": "Will Ousmane Dembele be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "BUY",
       "price": 0.01407,
-      "sizeShares": 80,
-      "notionalUsd": 1.1256,
+      "sizeShares": 600,
+      "notionalUsd": 8.442,
       "realizedPnlUsd": 0,
       "totalFeeUsd": 0,
       "liquidityRole": "maker",
-      "reason": "entry_candidate"
+      "reason": "longshot_entry"
     },
     {
       "id": "bt-trade-2",
@@ -59,12 +59,12 @@
       "question": "Will Mohamed Salah be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "BUY",
       "price": 0.025124999999999998,
-      "sizeShares": 44.8,
-      "notionalUsd": 1.1256,
+      "sizeShares": 336,
+      "notionalUsd": 8.442,
       "realizedPnlUsd": 0,
       "totalFeeUsd": 0,
       "liquidityRole": "maker",
-      "reason": "entry_candidate"
+      "reason": "longshot_entry"
     },
     {
       "id": "bt-trade-3",
@@ -75,12 +75,12 @@
       "question": "Will Deniz Undav be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "BUY",
       "price": 0.016079999999999997,
-      "sizeShares": 70,
-      "notionalUsd": 1.1256,
+      "sizeShares": 525,
+      "notionalUsd": 8.442,
       "realizedPnlUsd": 0,
       "totalFeeUsd": 0,
       "liquidityRole": "maker",
-      "reason": "entry_candidate"
+      "reason": "longshot_entry"
     },
     {
       "id": "bt-trade-4",
@@ -91,12 +91,12 @@
       "question": "Will Luis Diaz be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "BUY",
       "price": 0.00603,
-      "sizeShares": 186.66666666,
-      "notionalUsd": 1.1256,
+      "sizeShares": 1400,
+      "notionalUsd": 8.442,
       "realizedPnlUsd": 0,
       "totalFeeUsd": 0,
       "liquidityRole": "maker",
-      "reason": "entry_candidate"
+      "reason": "longshot_entry"
     },
     {
       "id": "bt-trade-5",
@@ -107,9 +107,9 @@
       "question": "Will Luis Diaz be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "SELL",
       "price": 0.06965,
-      "sizeShares": 55.99999999,
-      "notionalUsd": 3.9004,
-      "realizedPnlUsd": 3.56272,
+      "sizeShares": 358.93754486,
+      "notionalUsd": 25,
+      "realizedPnlUsd": 22.8356066,
       "totalFeeUsd": 0,
       "liquidityRole": "taker",
       "reason": "milestone_5x"
@@ -123,9 +123,9 @@
       "question": "Will Deniz Undav be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "SELL",
       "price": 0.0796,
-      "sizeShares": 21,
-      "notionalUsd": 1.6716,
-      "realizedPnlUsd": 1.33392,
+      "sizeShares": 157.5,
+      "notionalUsd": 12.537,
+      "realizedPnlUsd": 10.0044,
       "totalFeeUsd": 0,
       "liquidityRole": "taker",
       "reason": "milestone_5x"
@@ -139,9 +139,9 @@
       "question": "Will Luis Diaz be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "SELL",
       "price": 0.06766,
-      "sizeShares": 55.99999999,
-      "notionalUsd": 3.78896,
-      "realizedPnlUsd": 3.45128,
+      "sizeShares": 369.49453148,
+      "notionalUsd": 25,
+      "realizedPnlUsd": 22.77194798,
       "totalFeeUsd": 0,
       "liquidityRole": "taker",
       "reason": "milestone_5x"
@@ -155,15 +155,63 @@
       "question": "Will Cody Gakpo be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "BUY",
       "price": 0.022109999999999998,
-      "sizeShares": 50.9090909,
-      "notionalUsd": 1.1256,
+      "sizeShares": 381.81818181,
+      "notionalUsd": 8.442,
       "realizedPnlUsd": 0,
       "totalFeeUsd": 0,
       "liquidityRole": "maker",
-      "reason": "entry_candidate"
+      "reason": "longshot_entry"
     },
     {
       "id": "bt-trade-9",
+      "timestamp": "2026-05-02T00:00:04.000Z",
+      "tokenId": "1323283843623994651720304888221920089723729788420877163031780248268968940539",
+      "marketId": "cmqvayi27008lwicjxp5p5bwi",
+      "outcomeId": "cmqvayi2b008mwicj5ljugxka",
+      "question": "Will Luis Diaz be the top goalscorer at the 2026 FIFA World Cup?",
+      "side": "SELL",
+      "price": 0.07064500000000001,
+      "sizeShares": 61.06245514,
+      "notionalUsd": 4.31375714,
+      "realizedPnlUsd": 3.94555054,
+      "totalFeeUsd": 0,
+      "liquidityRole": "taker",
+      "reason": "milestone_5x"
+    },
+    {
+      "id": "bt-trade-10",
+      "timestamp": "2026-05-02T00:00:04.000Z",
+      "tokenId": "1323283843623994651720304888221920089723729788420877163031780248268968940539",
+      "marketId": "cmqvayi27008lwicjxp5p5bwi",
+      "outcomeId": "cmqvayi2b008mwicj5ljugxka",
+      "question": "Will Luis Diaz be the top goalscorer at the 2026 FIFA World Cup?",
+      "side": "SELL",
+      "price": 0.07064500000000001,
+      "sizeShares": 50.50546852,
+      "notionalUsd": 3.56795882,
+      "realizedPnlUsd": 3.26341084,
+      "totalFeeUsd": 0,
+      "liquidityRole": "taker",
+      "reason": "milestone_5x"
+    },
+    {
+      "id": "bt-trade-11",
+      "timestamp": "2026-05-02T00:00:04.000Z",
+      "tokenId": "1323283843623994651720304888221920089723729788420877163031780248268968940539",
+      "marketId": "cmqvayi27008lwicjxp5p5bwi",
+      "outcomeId": "cmqvayi2b008mwicj5ljugxka",
+      "question": "Will Luis Diaz be the top goalscorer at the 2026 FIFA World Cup?",
+      "side": "SELL",
+      "price": 0.07064500000000001,
+      "sizeShares": 353.88208648,
+      "notionalUsd": 25,
+      "realizedPnlUsd": 22.86609102,
+      "totalFeeUsd": 0,
+      "liquidityRole": "taker",
+      "reason": "milestone_5x"
+    },
+    {
+      "id": "bt-trade-12",
       "timestamp": "2026-05-02T00:00:07.000Z",
       "tokenId": "56756505944530612456073640449852715602259285742783258289347281422394863138517",
       "marketId": "cmqvayi42008owicju9m7szjl",
@@ -171,15 +219,15 @@
       "question": "Will Deniz Undav be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "SELL",
       "price": 0.078605,
-      "sizeShares": 21,
-      "notionalUsd": 1.650705,
-      "realizedPnlUsd": 1.313025,
+      "sizeShares": 157.5,
+      "notionalUsd": 12.3802875,
+      "realizedPnlUsd": 9.8476875,
       "totalFeeUsd": 0,
       "liquidityRole": "taker",
       "reason": "milestone_5x"
     },
     {
-      "id": "bt-trade-10",
+      "id": "bt-trade-13",
       "timestamp": "2026-05-02T12:00:04.000Z",
       "tokenId": "108861992443548984267967885273449830489751895499817592445835863564072356918944",
       "marketId": "cmqvayihf0093wicj3j9krwqg",
@@ -187,31 +235,31 @@
       "question": "Will Vinicius Junior be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "BUY",
       "price": 0.031154999999999995,
-      "sizeShares": 36.12903225,
-      "notionalUsd": 1.1256,
+      "sizeShares": 270.96774193,
+      "notionalUsd": 8.442,
       "realizedPnlUsd": 0,
       "totalFeeUsd": 0,
       "liquidityRole": "maker",
-      "reason": "entry_candidate"
+      "reason": "longshot_entry"
     },
     {
-      "id": "bt-trade-11",
-      "timestamp": "2026-05-03T00:00:06.000Z",
+      "id": "bt-trade-14",
+      "timestamp": "2026-05-03T12:00:06.000Z",
       "tokenId": "1323283843623994651720304888221920089723729788420877163031780248268968940539",
       "marketId": "cmqvayi27008lwicjxp5p5bwi",
       "outcomeId": "cmqvayi2b008mwicj5ljugxka",
       "question": "Will Luis Diaz be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "SELL",
-      "price": 0.019402499999999996,
-      "sizeShares": 74.66666668,
-      "notionalUsd": 1.44872,
-      "realizedPnlUsd": 0.99848,
+      "price": 0.018904999999999998,
+      "sizeShares": 206.11791352,
+      "notionalUsd": 3.89665916,
+      "realizedPnlUsd": 2.65376814,
       "totalFeeUsd": 0,
       "liquidityRole": "taker",
       "reason": "trailing_stop"
     },
     {
-      "id": "bt-trade-12",
+      "id": "bt-trade-15",
       "timestamp": "2026-05-04T12:00:05.000Z",
       "tokenId": "56756505944530612456073640449852715602259285742783258289347281422394863138517",
       "marketId": "cmqvayi42008owicju9m7szjl",
@@ -219,15 +267,15 @@
       "question": "Will Deniz Undav be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "SELL",
       "price": 0.037809999999999996,
-      "sizeShares": 28,
-      "notionalUsd": 1.05868,
-      "realizedPnlUsd": 0.60844,
+      "sizeShares": 210,
+      "notionalUsd": 7.9401,
+      "realizedPnlUsd": 4.5633,
       "totalFeeUsd": 0,
       "liquidityRole": "taker",
       "reason": "trailing_stop"
     },
     {
-      "id": "bt-trade-13",
+      "id": "bt-trade-16",
       "timestamp": "2026-05-05T12:00:08.000Z",
       "tokenId": "56756505944530612456073640449852715602259285742783258289347281422394863138517",
       "marketId": "cmqvayi42008owicju9m7szjl",
@@ -235,111 +283,127 @@
       "question": "Will Deniz Undav be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "BUY",
       "price": 0.02814,
-      "sizeShares": 40,
-      "notionalUsd": 1.1256,
+      "sizeShares": 300,
+      "notionalUsd": 8.442,
       "realizedPnlUsd": 0,
       "totalFeeUsd": 0,
       "liquidityRole": "maker",
-      "reason": "entry_candidate"
-    },
-    {
-      "id": "bt-trade-14",
-      "timestamp": "2026-05-11T12:00:10.000Z",
-      "tokenId": "1323283843623994651720304888221920089723729788420877163031780248268968940539",
-      "marketId": "cmqvayi27008lwicjxp5p5bwi",
-      "outcomeId": "cmqvayi2b008mwicj5ljugxka",
-      "question": "Will Luis Diaz be the top goalscorer at the 2026 FIFA World Cup?",
-      "side": "BUY",
-      "price": 0.014572499999999997,
-      "sizeShares": 74.66666666,
-      "notionalUsd": 1.08808,
-      "realizedPnlUsd": 0,
-      "totalFeeUsd": 0,
-      "liquidityRole": "maker",
-      "reason": "entry_candidate"
-    },
-    {
-      "id": "bt-trade-15",
-      "timestamp": "2026-05-13T00:00:11.000Z",
-      "tokenId": "1323283843623994651720304888221920089723729788420877163031780248268968940539",
-      "marketId": "cmqvayi27008lwicjxp5p5bwi",
-      "outcomeId": "cmqvayi2b008mwicj5ljugxka",
-      "question": "Will Luis Diaz be the top goalscorer at the 2026 FIFA World Cup?",
-      "side": "SELL",
-      "price": 0.07114250000000001,
-      "sizeShares": 55.99999999,
-      "notionalUsd": 3.98398,
-      "realizedPnlUsd": 3.16792,
-      "totalFeeUsd": 0,
-      "liquidityRole": "taker",
-      "reason": "milestone_5x"
-    },
-    {
-      "id": "bt-trade-16",
-      "timestamp": "2026-05-13T00:00:11.000Z",
-      "tokenId": "1323283843623994651720304888221920089723729788420877163031780248268968940539",
-      "marketId": "cmqvayi27008lwicjxp5p5bwi",
-      "outcomeId": "cmqvayi2b008mwicj5ljugxka",
-      "question": "Will Luis Diaz be the top goalscorer at the 2026 FIFA World Cup?",
-      "side": "SELL",
-      "price": 0.07114250000000001,
-      "sizeShares": 55.99999999,
-      "notionalUsd": 3.98398,
-      "realizedPnlUsd": 3.16792,
-      "totalFeeUsd": 0,
-      "liquidityRole": "taker",
-      "reason": "milestone_5x"
+      "reason": "longshot_entry"
     },
     {
       "id": "bt-trade-17",
-      "timestamp": "2026-05-14T12:00:08.000Z",
+      "timestamp": "2026-05-10T12:00:03.000Z",
       "tokenId": "21681578411954970343236802028806118171644822229289954494018054365027453603503",
       "marketId": "cmqvayi8z008uwicjofdh5kyg",
       "outcomeId": "cmqvayi93008vwicjdu1mbjb4",
       "question": "Will Jude Bellingham be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "BUY",
-      "price": 0.0175875,
-      "sizeShares": 44.8,
-      "notionalUsd": 0.78792,
+      "price": 0.025124999999999998,
+      "sizeShares": 336,
+      "notionalUsd": 8.442,
       "realizedPnlUsd": 0,
       "totalFeeUsd": 0,
       "liquidityRole": "maker",
-      "reason": "entry_candidate"
+      "reason": "longshot_entry"
     },
     {
       "id": "bt-trade-18",
-      "timestamp": "2026-05-17T00:00:27.000Z",
-      "tokenId": "27269186948049749581184760460000364446817878078791417927906189617801131722751",
-      "marketId": "cmqvayhhh0080wicjtwtyjgsk",
-      "outcomeId": "cmqvayhho0081wicj8bewxqxo",
-      "question": "Will Ousmane Dembele be the top goalscorer at the 2026 FIFA World Cup?",
-      "side": "SELL",
-      "price": 0.064675,
-      "sizeShares": 24,
-      "notionalUsd": 1.5522,
-      "realizedPnlUsd": 1.21452,
+      "timestamp": "2026-05-12T12:00:08.000Z",
+      "tokenId": "1323283843623994651720304888221920089723729788420877163031780248268968940539",
+      "marketId": "cmqvayi27008lwicjxp5p5bwi",
+      "outcomeId": "cmqvayi2b008mwicj5ljugxka",
+      "question": "Will Luis Diaz be the top goalscorer at the 2026 FIFA World Cup?",
+      "side": "BUY",
+      "price": 0.015074999999999998,
+      "sizeShares": 560,
+      "notionalUsd": 8.442,
+      "realizedPnlUsd": 0,
       "totalFeeUsd": 0,
-      "liquidityRole": "taker",
-      "reason": "milestone_5x"
+      "liquidityRole": "maker",
+      "reason": "longshot_entry"
     },
     {
       "id": "bt-trade-19",
-      "timestamp": "2026-05-17T00:00:27.000Z",
-      "tokenId": "27269186948049749581184760460000364446817878078791417927906189617801131722751",
-      "marketId": "cmqvayhhh0080wicjtwtyjgsk",
-      "outcomeId": "cmqvayhho0081wicj8bewxqxo",
-      "question": "Will Ousmane Dembele be the top goalscorer at the 2026 FIFA World Cup?",
+      "timestamp": "2026-05-13T00:00:11.000Z",
+      "tokenId": "1323283843623994651720304888221920089723729788420877163031780248268968940539",
+      "marketId": "cmqvayi27008lwicjxp5p5bwi",
+      "outcomeId": "cmqvayi2b008mwicj5ljugxka",
+      "question": "Will Luis Diaz be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "SELL",
-      "price": 0.064675,
-      "sizeShares": 24,
-      "notionalUsd": 1.5522,
-      "realizedPnlUsd": 1.21452,
+      "price": 0.07114250000000001,
+      "sizeShares": 351.40738658,
+      "notionalUsd": 25,
+      "realizedPnlUsd": 19.70253365,
       "totalFeeUsd": 0,
       "liquidityRole": "taker",
       "reason": "milestone_5x"
     },
     {
       "id": "bt-trade-20",
+      "timestamp": "2026-05-13T00:00:11.000Z",
+      "tokenId": "1323283843623994651720304888221920089723729788420877163031780248268968940539",
+      "marketId": "cmqvayi27008lwicjxp5p5bwi",
+      "outcomeId": "cmqvayi2b008mwicj5ljugxka",
+      "question": "Will Luis Diaz be the top goalscorer at the 2026 FIFA World Cup?",
+      "side": "SELL",
+      "price": 0.07114250000000001,
+      "sizeShares": 66.11791352,
+      "notionalUsd": 4.70379366,
+      "realizedPnlUsd": 3.70706611,
+      "totalFeeUsd": 0,
+      "liquidityRole": "taker",
+      "reason": "milestone_5x"
+    },
+    {
+      "id": "bt-trade-21",
+      "timestamp": "2026-05-13T00:00:11.000Z",
+      "tokenId": "1323283843623994651720304888221920089723729788420877163031780248268968940539",
+      "marketId": "cmqvayi27008lwicjxp5p5bwi",
+      "outcomeId": "cmqvayi2b008mwicj5ljugxka",
+      "question": "Will Luis Diaz be the top goalscorer at the 2026 FIFA World Cup?",
+      "side": "SELL",
+      "price": 0.07114250000000001,
+      "sizeShares": 206.11791352,
+      "notionalUsd": 14.66374366,
+      "realizedPnlUsd": 11.55651611,
+      "totalFeeUsd": 0,
+      "liquidityRole": "taker",
+      "reason": "milestone_5x"
+    },
+    {
+      "id": "bt-trade-22",
+      "timestamp": "2026-05-16T12:00:12.000Z",
+      "tokenId": "27269186948049749581184760460000364446817878078791417927906189617801131722751",
+      "marketId": "cmqvayhhh0080wicjtwtyjgsk",
+      "outcomeId": "cmqvayhho0081wicj8bewxqxo",
+      "question": "Will Ousmane Dembele be the top goalscorer at the 2026 FIFA World Cup?",
+      "side": "SELL",
+      "price": 0.060695,
+      "sizeShares": 180,
+      "notionalUsd": 10.9251,
+      "realizedPnlUsd": 8.3925,
+      "totalFeeUsd": 0,
+      "liquidityRole": "taker",
+      "reason": "milestone_5x"
+    },
+    {
+      "id": "bt-trade-23",
+      "timestamp": "2026-05-17T12:00:11.000Z",
+      "tokenId": "27269186948049749581184760460000364446817878078791417927906189617801131722751",
+      "marketId": "cmqvayhhh0080wicjtwtyjgsk",
+      "outcomeId": "cmqvayhho0081wicj8bewxqxo",
+      "question": "Will Ousmane Dembele be the top goalscorer at the 2026 FIFA World Cup?",
+      "side": "SELL",
+      "price": 0.060695,
+      "sizeShares": 180,
+      "notionalUsd": 10.9251,
+      "realizedPnlUsd": 8.3925,
+      "totalFeeUsd": 0,
+      "liquidityRole": "taker",
+      "reason": "milestone_5x"
+    },
+    {
+      "id": "bt-trade-24",
       "timestamp": "2026-05-17T12:00:11.000Z",
       "tokenId": "27269186948049749581184760460000364446817878078791417927906189617801131722751",
       "marketId": "cmqvayhhh0080wicjtwtyjgsk",
@@ -347,15 +411,15 @@
       "question": "Will Ousmane Dembele be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "SELL",
       "price": 0.064675,
-      "sizeShares": 24,
-      "notionalUsd": 1.5522,
-      "realizedPnlUsd": 1.21452,
+      "sizeShares": 180,
+      "notionalUsd": 11.6415,
+      "realizedPnlUsd": 9.1089,
       "totalFeeUsd": 0,
       "liquidityRole": "taker",
       "reason": "milestone_5x"
     },
     {
-      "id": "bt-trade-21",
+      "id": "bt-trade-25",
       "timestamp": "2026-05-19T00:00:08.000Z",
       "tokenId": "12443507708490579267303275816299242973522539389954129092471837019475810226676",
       "marketId": "cmqvayhtg008cwicj153ghhm2",
@@ -363,47 +427,47 @@
       "question": "Will Lamine Yamal be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "BUY",
       "price": 0.031154999999999995,
-      "sizeShares": 36.12903225,
-      "notionalUsd": 1.1256,
+      "sizeShares": 270.96774193,
+      "notionalUsd": 8.442,
       "realizedPnlUsd": 0,
       "totalFeeUsd": 0,
       "liquidityRole": "maker",
-      "reason": "entry_candidate"
+      "reason": "longshot_entry"
     },
     {
-      "id": "bt-trade-22",
-      "timestamp": "2026-05-24T00:00:06.000Z",
+      "id": "bt-trade-26",
+      "timestamp": "2026-05-22T00:00:14.000Z",
       "tokenId": "6406547134039165115732762435374256806341514346422272770638775228847699459808",
       "marketId": "cmqvayhdz007xwicjsa4a7ggl",
       "outcomeId": "cmqvayhe4007ywicjfvoyxunu",
       "question": "Will Michael Olise be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "BUY",
       "price": 0.027134999999999996,
-      "sizeShares": 41.48148148,
-      "notionalUsd": 1.1256,
+      "sizeShares": 311.11111111,
+      "notionalUsd": 8.442,
       "realizedPnlUsd": 0,
       "totalFeeUsd": 0,
       "liquidityRole": "maker",
-      "reason": "entry_candidate"
+      "reason": "longshot_entry"
     },
     {
-      "id": "bt-trade-23",
-      "timestamp": "2026-06-05T12:00:07.000Z",
+      "id": "bt-trade-27",
+      "timestamp": "2026-06-06T00:00:04.000Z",
       "tokenId": "27269186948049749581184760460000364446817878078791417927906189617801131722751",
       "marketId": "cmqvayhhh0080wicjtwtyjgsk",
       "outcomeId": "cmqvayhho0081wicj8bewxqxo",
       "question": "Will Ousmane Dembele be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "SELL",
       "price": 0.018407500000000004,
-      "sizeShares": 8,
-      "notionalUsd": 0.14726,
-      "realizedPnlUsd": 0.0347,
+      "sizeShares": 60,
+      "notionalUsd": 1.10445,
+      "realizedPnlUsd": 0.26025,
       "totalFeeUsd": 0,
       "liquidityRole": "taker",
       "reason": "trailing_stop"
     },
     {
-      "id": "bt-trade-24",
+      "id": "bt-trade-28",
       "timestamp": "2026-06-13T00:00:07.000Z",
       "tokenId": "27269186948049749581184760460000364446817878078791417927906189617801131722751",
       "marketId": "cmqvayhhh0080wicjtwtyjgsk",
@@ -411,15 +475,31 @@
       "question": "Will Ousmane Dembele be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "BUY",
       "price": 0.019094999999999997,
-      "sizeShares": 58.94736842,
-      "notionalUsd": 1.1256,
+      "sizeShares": 442.10526315,
+      "notionalUsd": 8.442,
       "realizedPnlUsd": 0,
       "totalFeeUsd": 0,
       "liquidityRole": "maker",
-      "reason": "entry_candidate"
+      "reason": "longshot_entry"
     },
     {
-      "id": "bt-trade-25",
+      "id": "bt-trade-29",
+      "timestamp": "2026-06-13T12:00:10.000Z",
+      "tokenId": "27269186948049749581184760460000364446817878078791417927906189617801131722751",
+      "marketId": "cmqvayhhh0080wicjtwtyjgsk",
+      "outcomeId": "cmqvayhho0081wicj8bewxqxo",
+      "question": "Will Ousmane Dembele be the top goalscorer at the 2026 FIFA World Cup?",
+      "side": "SELL",
+      "price": 0.01791,
+      "sizeShares": 60,
+      "notionalUsd": 1.0746,
+      "realizedPnlUsd": -0.0711,
+      "totalFeeUsd": 0,
+      "liquidityRole": "taker",
+      "reason": "trailing_stop"
+    },
+    {
+      "id": "bt-trade-30",
       "timestamp": "2026-06-17T00:00:05.000Z",
       "tokenId": "99772246142493105675550102823232573763851473319148558628834685446549523161969",
       "marketId": "cmqvayik70096wicj1579tluv",
@@ -427,63 +507,63 @@
       "question": "Will Mikel Oyarzabal be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "BUY",
       "price": 0.025124999999999998,
-      "sizeShares": 44.8,
-      "notionalUsd": 1.1256,
+      "sizeShares": 336,
+      "notionalUsd": 8.442,
       "realizedPnlUsd": 0,
       "totalFeeUsd": 0,
       "liquidityRole": "maker",
-      "reason": "entry_candidate"
+      "reason": "longshot_entry"
     },
     {
-      "id": "bt-trade-26",
-      "timestamp": "2026-06-19T12:00:08.000Z",
+      "id": "bt-trade-31",
+      "timestamp": "2026-06-18T00:00:28.000Z",
       "tokenId": "47123909992795612558508429580660105830764198732527613330469156479033241951072",
       "marketId": "cmqvayibu008xwicjt53ntk7s",
       "outcomeId": "cmqvayibx008ywicjsplwdxdr",
       "question": "Will Cristiano Ronaldo be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "BUY",
-      "price": 0.028642499999999994,
-      "sizeShares": 36.12903225,
-      "notionalUsd": 1.03482581,
+      "price": 0.031154999999999995,
+      "sizeShares": 270.96774193,
+      "notionalUsd": 8.442,
       "realizedPnlUsd": 0,
       "totalFeeUsd": 0,
       "liquidityRole": "maker",
-      "reason": "entry_candidate"
+      "reason": "longshot_entry"
     },
     {
-      "id": "bt-trade-27",
-      "timestamp": "2026-06-20T12:00:04.000Z",
+      "id": "bt-trade-32",
+      "timestamp": "2026-06-22T00:00:05.000Z",
       "tokenId": "3166120750794415955145769483100546895932916257754910321491389357450012347122",
       "marketId": "cmqvayhqx0089wicj7rfhdnqj",
       "outcomeId": "cmqvayhr1008awicjx9c1agye",
       "question": "Will Folarin Balogun be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "BUY",
       "price": 0.01407,
-      "sizeShares": 80,
-      "notionalUsd": 1.1256,
+      "sizeShares": 600,
+      "notionalUsd": 8.442,
       "realizedPnlUsd": 0,
       "totalFeeUsd": 0,
       "liquidityRole": "maker",
-      "reason": "entry_candidate"
+      "reason": "longshot_entry"
     },
     {
-      "id": "bt-trade-28",
-      "timestamp": "2026-06-22T00:00:09.000Z",
+      "id": "bt-trade-33",
+      "timestamp": "2026-06-22T12:00:08.000Z",
       "tokenId": "75428844219419347840548824297431434618851036026433174170961305373847177882837",
       "marketId": "cmqvayi7v008rwicjyhyn9n71",
       "outcomeId": "cmqvayi80008swicj2z5av803",
       "question": "Will Kai Havertz be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "BUY",
-      "price": 0.026129999999999997,
-      "sizeShares": 43.07692307,
-      "notionalUsd": 1.1256,
+      "price": 0.023617499999999996,
+      "sizeShares": 323.07692307,
+      "notionalUsd": 7.63026923,
       "realizedPnlUsd": 0,
       "totalFeeUsd": 0,
       "liquidityRole": "maker",
-      "reason": "entry_candidate"
+      "reason": "longshot_entry"
     },
     {
-      "id": "bt-trade-29",
+      "id": "bt-trade-34",
       "timestamp": "2026-06-24T00:00:04.000Z",
       "tokenId": "1323283843623994651720304888221920089723729788420877163031780248268968940539",
       "marketId": "cmqvayi27008lwicjxp5p5bwi",
@@ -491,15 +571,15 @@
       "question": "Will Luis Diaz be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "BUY",
       "price": 0.005025,
-      "sizeShares": 224,
-      "notionalUsd": 1.1256,
+      "sizeShares": 1680,
+      "notionalUsd": 8.442,
       "realizedPnlUsd": 0,
       "totalFeeUsd": 0,
       "liquidityRole": "maker",
-      "reason": "entry_candidate"
+      "reason": "longshot_entry"
     },
     {
-      "id": "bt-trade-30",
+      "id": "bt-trade-35",
       "timestamp": "2026-06-25T12:00:10.000Z",
       "tokenId": "69171156533727605539752531582255202311865653375527953313192456581517055096736",
       "marketId": "cmqvayhus008fwicjj14zpinu",
@@ -507,15 +587,15 @@
       "question": "Will Mohamed Salah be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "SELL",
       "price": 0.0001,
-      "sizeShares": 44.8,
-      "notionalUsd": 0.00448,
-      "realizedPnlUsd": -1.12112,
+      "sizeShares": 336,
+      "notionalUsd": 0.0336,
+      "realizedPnlUsd": -8.4084,
       "totalFeeUsd": 0,
       "liquidityRole": "taker",
       "reason": "backtest_end_close"
     },
     {
-      "id": "bt-trade-31",
+      "id": "bt-trade-36",
       "timestamp": "2026-06-25T12:00:13.000Z",
       "tokenId": "73688069988278230674219431791309233443099848782086004607415803025316845583685",
       "marketId": "cmqvayhxm008iwicjdt641bgs",
@@ -523,15 +603,15 @@
       "question": "Will Cody Gakpo be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "SELL",
       "price": 0.0001,
-      "sizeShares": 50.9090909,
-      "notionalUsd": 0.00509091,
-      "realizedPnlUsd": -1.12050909,
+      "sizeShares": 381.81818181,
+      "notionalUsd": 0.03818182,
+      "realizedPnlUsd": -8.40381818,
       "totalFeeUsd": 0,
       "liquidityRole": "taker",
       "reason": "backtest_end_close"
     },
     {
-      "id": "bt-trade-32",
+      "id": "bt-trade-37",
       "timestamp": "2026-06-25T12:00:04.000Z",
       "tokenId": "108861992443548984267967885273449830489751895499817592445835863564072356918944",
       "marketId": "cmqvayihf0093wicj3j9krwqg",
@@ -539,15 +619,15 @@
       "question": "Will Vinicius Junior be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "SELL",
       "price": 0.0435,
-      "sizeShares": 36.12903225,
-      "notionalUsd": 1.5716129,
-      "realizedPnlUsd": 0.4460129,
+      "sizeShares": 270.96774193,
+      "notionalUsd": 11.78709677,
+      "realizedPnlUsd": 3.34509677,
       "totalFeeUsd": 0,
       "liquidityRole": "taker",
       "reason": "backtest_end_close"
     },
     {
-      "id": "bt-trade-33",
+      "id": "bt-trade-38",
       "timestamp": "2026-06-25T12:00:08.000Z",
       "tokenId": "56756505944530612456073640449852715602259285742783258289347281422394863138517",
       "marketId": "cmqvayi42008owicju9m7szjl",
@@ -555,15 +635,15 @@
       "question": "Will Deniz Undav be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "SELL",
       "price": 0.0175,
-      "sizeShares": 40,
-      "notionalUsd": 0.7,
-      "realizedPnlUsd": -0.4256,
+      "sizeShares": 300,
+      "notionalUsd": 5.25,
+      "realizedPnlUsd": -3.192,
       "totalFeeUsd": 0,
       "liquidityRole": "taker",
       "reason": "backtest_end_close"
     },
     {
-      "id": "bt-trade-34",
+      "id": "bt-trade-39",
       "timestamp": "2026-06-25T12:00:04.000Z",
       "tokenId": "21681578411954970343236802028806118171644822229289954494018054365027453603503",
       "marketId": "cmqvayi8z008uwicjofdh5kyg",
@@ -571,15 +651,15 @@
       "question": "Will Jude Bellingham be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "SELL",
       "price": 0.0001,
-      "sizeShares": 44.8,
-      "notionalUsd": 0.00448,
-      "realizedPnlUsd": -0.78344,
+      "sizeShares": 336,
+      "notionalUsd": 0.0336,
+      "realizedPnlUsd": -8.4084,
       "totalFeeUsd": 0,
       "liquidityRole": "taker",
       "reason": "backtest_end_close"
     },
     {
-      "id": "bt-trade-35",
+      "id": "bt-trade-40",
       "timestamp": "2026-06-25T12:00:08.000Z",
       "tokenId": "12443507708490579267303275816299242973522539389954129092471837019475810226676",
       "marketId": "cmqvayhtg008cwicj153ghhm2",
@@ -587,89 +667,9 @@
       "question": "Will Lamine Yamal be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "SELL",
       "price": 0.004,
-      "sizeShares": 36.12903225,
-      "notionalUsd": 0.14451613,
-      "realizedPnlUsd": -0.98108387,
-      "totalFeeUsd": 0,
-      "liquidityRole": "taker",
-      "reason": "backtest_end_close"
-    },
-    {
-      "id": "bt-trade-36",
-      "timestamp": "2026-06-25T12:00:08.000Z",
-      "tokenId": "6406547134039165115732762435374256806341514346422272770638775228847699459808",
-      "marketId": "cmqvayhdz007xwicjsa4a7ggl",
-      "outcomeId": "cmqvayhe4007ywicjfvoyxunu",
-      "question": "Will Michael Olise be the top goalscorer at the 2026 FIFA World Cup?",
-      "side": "SELL",
-      "price": 0.0001,
-      "sizeShares": 41.48148148,
-      "notionalUsd": 0.00414815,
-      "realizedPnlUsd": -1.12145185,
-      "totalFeeUsd": 0,
-      "liquidityRole": "taker",
-      "reason": "backtest_end_close"
-    },
-    {
-      "id": "bt-trade-37",
-      "timestamp": "2026-06-25T12:00:08.000Z",
-      "tokenId": "27269186948049749581184760460000364446817878078791417927906189617801131722751",
-      "marketId": "cmqvayhhh0080wicjtwtyjgsk",
-      "outcomeId": "cmqvayhho0081wicj8bewxqxo",
-      "question": "Will Ousmane Dembele be the top goalscorer at the 2026 FIFA World Cup?",
-      "side": "SELL",
-      "price": 0.0001,
-      "sizeShares": 58.94736842,
-      "notionalUsd": 0.00589474,
-      "realizedPnlUsd": -1.11970526,
-      "totalFeeUsd": 0,
-      "liquidityRole": "taker",
-      "reason": "backtest_end_close"
-    },
-    {
-      "id": "bt-trade-38",
-      "timestamp": "2026-06-25T12:00:04.000Z",
-      "tokenId": "99772246142493105675550102823232573763851473319148558628834685446549523161969",
-      "marketId": "cmqvayik70096wicj1579tluv",
-      "outcomeId": "cmqvayikb0097wicj28l9cw99",
-      "question": "Will Mikel Oyarzabal be the top goalscorer at the 2026 FIFA World Cup?",
-      "side": "SELL",
-      "price": 0.016,
-      "sizeShares": 44.8,
-      "notionalUsd": 0.7168,
-      "realizedPnlUsd": -0.4088,
-      "totalFeeUsd": 0,
-      "liquidityRole": "taker",
-      "reason": "backtest_end_close"
-    },
-    {
-      "id": "bt-trade-39",
-      "timestamp": "2026-06-25T12:00:10.000Z",
-      "tokenId": "47123909992795612558508429580660105830764198732527613330469156479033241951072",
-      "marketId": "cmqvayibu008xwicjt53ntk7s",
-      "outcomeId": "cmqvayibx008ywicjsplwdxdr",
-      "question": "Will Cristiano Ronaldo be the top goalscorer at the 2026 FIFA World Cup?",
-      "side": "SELL",
-      "price": 0.0175,
-      "sizeShares": 36.12903225,
-      "notionalUsd": 0.63225806,
-      "realizedPnlUsd": -0.40256775,
-      "totalFeeUsd": 0,
-      "liquidityRole": "taker",
-      "reason": "backtest_end_close"
-    },
-    {
-      "id": "bt-trade-40",
-      "timestamp": "2026-06-25T12:00:04.000Z",
-      "tokenId": "3166120750794415955145769483100546895932916257754910321491389357450012347122",
-      "marketId": "cmqvayhqx0089wicj7rfhdnqj",
-      "outcomeId": "cmqvayhr1008awicjx9c1agye",
-      "question": "Will Folarin Balogun be the top goalscorer at the 2026 FIFA World Cup?",
-      "side": "SELL",
-      "price": 0.0001,
-      "sizeShares": 80,
-      "notionalUsd": 0.008,
-      "realizedPnlUsd": -1.1176,
+      "sizeShares": 270.96774193,
+      "notionalUsd": 1.08387097,
+      "realizedPnlUsd": -7.35812903,
       "totalFeeUsd": 0,
       "liquidityRole": "taker",
       "reason": "backtest_end_close"
@@ -677,21 +677,101 @@
     {
       "id": "bt-trade-41",
       "timestamp": "2026-06-25T12:00:08.000Z",
-      "tokenId": "75428844219419347840548824297431434618851036026433174170961305373847177882837",
-      "marketId": "cmqvayi7v008rwicjyhyn9n71",
-      "outcomeId": "cmqvayi80008swicj2z5av803",
-      "question": "Will Kai Havertz be the top goalscorer at the 2026 FIFA World Cup?",
+      "tokenId": "6406547134039165115732762435374256806341514346422272770638775228847699459808",
+      "marketId": "cmqvayhdz007xwicjsa4a7ggl",
+      "outcomeId": "cmqvayhe4007ywicjfvoyxunu",
+      "question": "Will Michael Olise be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "SELL",
       "price": 0.0001,
-      "sizeShares": 43.07692307,
-      "notionalUsd": 0.00430769,
-      "realizedPnlUsd": -1.12129231,
+      "sizeShares": 311.11111111,
+      "notionalUsd": 0.03111111,
+      "realizedPnlUsd": -8.41088889,
       "totalFeeUsd": 0,
       "liquidityRole": "taker",
       "reason": "backtest_end_close"
     },
     {
       "id": "bt-trade-42",
+      "timestamp": "2026-06-25T12:00:08.000Z",
+      "tokenId": "27269186948049749581184760460000364446817878078791417927906189617801131722751",
+      "marketId": "cmqvayhhh0080wicjtwtyjgsk",
+      "outcomeId": "cmqvayhho0081wicj8bewxqxo",
+      "question": "Will Ousmane Dembele be the top goalscorer at the 2026 FIFA World Cup?",
+      "side": "SELL",
+      "price": 0.0001,
+      "sizeShares": 382.10526315,
+      "notionalUsd": 0.03821053,
+      "realizedPnlUsd": -7.25808947,
+      "totalFeeUsd": 0,
+      "liquidityRole": "taker",
+      "reason": "backtest_end_close"
+    },
+    {
+      "id": "bt-trade-43",
+      "timestamp": "2026-06-25T12:00:04.000Z",
+      "tokenId": "99772246142493105675550102823232573763851473319148558628834685446549523161969",
+      "marketId": "cmqvayik70096wicj1579tluv",
+      "outcomeId": "cmqvayikb0097wicj28l9cw99",
+      "question": "Will Mikel Oyarzabal be the top goalscorer at the 2026 FIFA World Cup?",
+      "side": "SELL",
+      "price": 0.016,
+      "sizeShares": 336,
+      "notionalUsd": 5.376,
+      "realizedPnlUsd": -3.066,
+      "totalFeeUsd": 0,
+      "liquidityRole": "taker",
+      "reason": "backtest_end_close"
+    },
+    {
+      "id": "bt-trade-44",
+      "timestamp": "2026-06-25T12:00:10.000Z",
+      "tokenId": "47123909992795612558508429580660105830764198732527613330469156479033241951072",
+      "marketId": "cmqvayibu008xwicjt53ntk7s",
+      "outcomeId": "cmqvayibx008ywicjsplwdxdr",
+      "question": "Will Cristiano Ronaldo be the top goalscorer at the 2026 FIFA World Cup?",
+      "side": "SELL",
+      "price": 0.0175,
+      "sizeShares": 270.96774193,
+      "notionalUsd": 4.74193548,
+      "realizedPnlUsd": -3.70006452,
+      "totalFeeUsd": 0,
+      "liquidityRole": "taker",
+      "reason": "backtest_end_close"
+    },
+    {
+      "id": "bt-trade-45",
+      "timestamp": "2026-06-25T12:00:04.000Z",
+      "tokenId": "3166120750794415955145769483100546895932916257754910321491389357450012347122",
+      "marketId": "cmqvayhqx0089wicj7rfhdnqj",
+      "outcomeId": "cmqvayhr1008awicjx9c1agye",
+      "question": "Will Folarin Balogun be the top goalscorer at the 2026 FIFA World Cup?",
+      "side": "SELL",
+      "price": 0.0001,
+      "sizeShares": 600,
+      "notionalUsd": 0.06,
+      "realizedPnlUsd": -8.382,
+      "totalFeeUsd": 0,
+      "liquidityRole": "taker",
+      "reason": "backtest_end_close"
+    },
+    {
+      "id": "bt-trade-46",
+      "timestamp": "2026-06-25T12:00:08.000Z",
+      "tokenId": "75428844219419347840548824297431434618851036026433174170961305373847177882837",
+      "marketId": "cmqvayi7v008rwicjyhyn9n71",
+      "outcomeId": "cmqvayi80008swicj2z5av803",
+      "question": "Will Kai Havertz be the top goalscorer at the 2026 FIFA World Cup?",
+      "side": "SELL",
+      "price": 0.0001,
+      "sizeShares": 323.07692307,
+      "notionalUsd": 0.03230769,
+      "realizedPnlUsd": -7.59796154,
+      "totalFeeUsd": 0,
+      "liquidityRole": "taker",
+      "reason": "backtest_end_close"
+    },
+    {
+      "id": "bt-trade-47",
       "timestamp": "2026-06-25T12:00:04.000Z",
       "tokenId": "1323283843623994651720304888221920089723729788420877163031780248268968940539",
       "marketId": "cmqvayi27008lwicjxp5p5bwi",
@@ -699,9 +779,9 @@
       "question": "Will Luis Diaz be the top goalscorer at the 2026 FIFA World Cup?",
       "side": "SELL",
       "price": 0.0001,
-      "sizeShares": 224,
-      "notionalUsd": 0.0224,
-      "realizedPnlUsd": -1.1032,
+      "sizeShares": 1680,
+      "notionalUsd": 0.168,
+      "realizedPnlUsd": -8.274,
       "totalFeeUsd": 0,
       "liquidityRole": "taker",
       "reason": "backtest_end_close"
@@ -12601,6 +12681,12 @@
       "deployedUsd": 0
     },
     {
+      "timestamp": "2026-04-18T00:00:18.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
       "timestamp": "2026-04-18T00:00:21.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
@@ -13322,3727 +13408,3737 @@
     },
     {
       "timestamp": "2026-04-26T12:00:09.000Z",
-      "equityUsd": 499.1544,
-      "cashUsd": 498.8744,
-      "deployedUsd": 0.28
+      "equityUsd": 493.658,
+      "cashUsd": 491.558,
+      "deployedUsd": 2.1
     },
     {
       "timestamp": "2026-04-26T12:00:11.000Z",
       "equityUsd": 500,
-      "cashUsd": 498.8744,
-      "deployedUsd": 1.1256
+      "cashUsd": 491.558,
+      "deployedUsd": 8.442
     },
     {
       "timestamp": "2026-04-26T12:00:13.000Z",
       "equityUsd": 500,
-      "cashUsd": 498.8744,
-      "deployedUsd": 1.1256
+      "cashUsd": 491.558,
+      "deployedUsd": 8.442
     },
     {
       "timestamp": "2026-04-27T00:00:03.000Z",
       "equityUsd": 500,
-      "cashUsd": 498.8744,
-      "deployedUsd": 1.1256
+      "cashUsd": 491.558,
+      "deployedUsd": 8.442
     },
     {
       "timestamp": "2026-04-27T00:00:04.000Z",
       "equityUsd": 500,
-      "cashUsd": 498.8744,
-      "deployedUsd": 1.1256
+      "cashUsd": 491.558,
+      "deployedUsd": 8.442
     },
     {
       "timestamp": "2026-04-27T00:00:08.000Z",
-      "equityUsd": 499.8744,
-      "cashUsd": 498.8744,
-      "deployedUsd": 1
+      "equityUsd": 499.058,
+      "cashUsd": 491.558,
+      "deployedUsd": 7.5
     },
     {
       "timestamp": "2026-04-27T00:00:11.000Z",
       "equityUsd": 500,
-      "cashUsd": 498.8744,
-      "deployedUsd": 1.1256
+      "cashUsd": 491.558,
+      "deployedUsd": 8.442
     },
     {
       "timestamp": "2026-04-27T00:00:13.000Z",
       "equityUsd": 500,
-      "cashUsd": 498.8744,
-      "deployedUsd": 1.1256
+      "cashUsd": 491.558,
+      "deployedUsd": 8.442
     },
     {
       "timestamp": "2026-04-27T00:00:14.000Z",
       "equityUsd": 500,
-      "cashUsd": 498.8744,
-      "deployedUsd": 1.1256
+      "cashUsd": 491.558,
+      "deployedUsd": 8.442
     },
     {
       "timestamp": "2026-04-27T12:00:15.000Z",
       "equityUsd": 500,
-      "cashUsd": 498.8744,
-      "deployedUsd": 1.1256
+      "cashUsd": 491.558,
+      "deployedUsd": 8.442
     },
     {
       "timestamp": "2026-04-27T12:00:20.000Z",
-      "equityUsd": 499.8344,
-      "cashUsd": 498.8744,
-      "deployedUsd": 0.96
+      "equityUsd": 498.758,
+      "cashUsd": 491.558,
+      "deployedUsd": 7.2
     },
     {
       "timestamp": "2026-04-27T12:00:22.000Z",
       "equityUsd": 500,
-      "cashUsd": 498.8744,
-      "deployedUsd": 1.1256
+      "cashUsd": 491.558,
+      "deployedUsd": 8.442
     },
     {
       "timestamp": "2026-04-27T12:00:23.000Z",
       "equityUsd": 500,
-      "cashUsd": 498.8744,
-      "deployedUsd": 1.1256
+      "cashUsd": 491.558,
+      "deployedUsd": 8.442
     },
     {
       "timestamp": "2026-04-27T12:00:25.000Z",
       "equityUsd": 500,
-      "cashUsd": 498.8744,
-      "deployedUsd": 1.1256
+      "cashUsd": 491.558,
+      "deployedUsd": 8.442
     },
     {
       "timestamp": "2026-04-28T00:00:04.000Z",
       "equityUsd": 500,
-      "cashUsd": 498.8744,
-      "deployedUsd": 1.1256
+      "cashUsd": 491.558,
+      "deployedUsd": 8.442
     },
     {
       "timestamp": "2026-04-28T00:00:09.000Z",
-      "equityUsd": 500.5944,
-      "cashUsd": 498.8744,
-      "deployedUsd": 1.72
+      "equityUsd": 504.458,
+      "cashUsd": 491.558,
+      "deployedUsd": 12.9
     },
     {
       "timestamp": "2026-04-28T00:00:11.000Z",
       "equityUsd": 500,
-      "cashUsd": 498.8744,
-      "deployedUsd": 1.1256
+      "cashUsd": 491.558,
+      "deployedUsd": 8.442
     },
     {
       "timestamp": "2026-04-28T00:00:12.000Z",
-      "equityUsd": 499.2328,
-      "cashUsd": 497.7488,
-      "deployedUsd": 1.484
+      "equityUsd": 494.246,
+      "cashUsd": 483.116,
+      "deployedUsd": 11.13
     },
     {
       "timestamp": "2026-04-28T00:00:13.000Z",
       "equityUsd": 500,
-      "cashUsd": 497.7488,
-      "deployedUsd": 2.2512
+      "cashUsd": 483.116,
+      "deployedUsd": 16.884
     },
     {
       "timestamp": "2026-04-28T00:00:14.000Z",
       "equityUsd": 500,
-      "cashUsd": 497.7488,
-      "deployedUsd": 2.2512
+      "cashUsd": 483.116,
+      "deployedUsd": 16.884
     },
     {
       "timestamp": "2026-04-28T00:00:15.000Z",
       "equityUsd": 500,
-      "cashUsd": 497.7488,
-      "deployedUsd": 2.2512
+      "cashUsd": 483.116,
+      "deployedUsd": 16.884
     },
     {
       "timestamp": "2026-04-28T12:00:03.000Z",
       "equityUsd": 500,
-      "cashUsd": 497.7488,
-      "deployedUsd": 2.2512
+      "cashUsd": 483.116,
+      "deployedUsd": 16.884
     },
     {
       "timestamp": "2026-04-28T12:00:07.000Z",
-      "equityUsd": 501.7288,
-      "cashUsd": 496.6232,
-      "deployedUsd": 5.1056
+      "equityUsd": 512.966,
+      "cashUsd": 474.674,
+      "deployedUsd": 38.292
     },
     {
       "timestamp": "2026-04-28T12:00:10.000Z",
       "equityUsd": 500,
-      "cashUsd": 496.6232,
-      "deployedUsd": 3.3768
+      "cashUsd": 474.674,
+      "deployedUsd": 25.326
     },
     {
       "timestamp": "2026-04-28T12:00:12.000Z",
-      "equityUsd": 499.9944,
-      "cashUsd": 496.6232,
-      "deployedUsd": 3.3712
+      "equityUsd": 499.958,
+      "cashUsd": 474.674,
+      "deployedUsd": 25.284
     },
     {
       "timestamp": "2026-04-28T12:00:14.000Z",
       "equityUsd": 500,
-      "cashUsd": 496.6232,
-      "deployedUsd": 3.3768
+      "cashUsd": 474.674,
+      "deployedUsd": 25.326
     },
     {
       "timestamp": "2026-04-29T00:00:03.000Z",
       "equityUsd": 500,
-      "cashUsd": 496.6232,
-      "deployedUsd": 3.3768
+      "cashUsd": 474.674,
+      "deployedUsd": 25.326
     },
     {
       "timestamp": "2026-04-29T00:00:07.000Z",
-      "equityUsd": 509.4488,
-      "cashUsd": 496.6232,
-      "deployedUsd": 12.8256
+      "equityUsd": 570.866,
+      "cashUsd": 474.674,
+      "deployedUsd": 96.192
     },
     {
       "timestamp": "2026-04-29T00:00:09.000Z",
       "equityUsd": 500,
-      "cashUsd": 496.6232,
-      "deployedUsd": 3.3768
+      "cashUsd": 474.674,
+      "deployedUsd": 25.326
     },
     {
       "timestamp": "2026-04-29T00:00:10.000Z",
-      "equityUsd": 502.4584,
-      "cashUsd": 496.6232,
-      "deployedUsd": 5.8352
+      "equityUsd": 518.438,
+      "cashUsd": 474.674,
+      "deployedUsd": 43.764
     },
     {
       "timestamp": "2026-04-29T00:00:11.000Z",
       "equityUsd": 500,
-      "cashUsd": 496.6232,
-      "deployedUsd": 3.3768
+      "cashUsd": 474.674,
+      "deployedUsd": 25.326
     },
     {
       "timestamp": "2026-04-29T00:00:12.000Z",
       "equityUsd": 500,
-      "cashUsd": 496.6232,
-      "deployedUsd": 3.3768
+      "cashUsd": 474.674,
+      "deployedUsd": 25.326
     },
     {
       "timestamp": "2026-04-29T12:00:04.000Z",
-      "equityUsd": 498.89306667,
-      "cashUsd": 495.4976,
-      "deployedUsd": 3.39546667
+      "equityUsd": 491.698,
+      "cashUsd": 466.232,
+      "deployedUsd": 25.466
     },
     {
       "timestamp": "2026-04-29T12:00:08.000Z",
-      "equityUsd": 508.3988,
-      "cashUsd": 495.4976,
-      "deployedUsd": 12.9012
+      "equityUsd": 562.991,
+      "cashUsd": 466.232,
+      "deployedUsd": 96.759
     },
     {
       "timestamp": "2026-04-29T12:00:10.000Z",
       "equityUsd": 500,
-      "cashUsd": 495.4976,
-      "deployedUsd": 4.5024
+      "cashUsd": 466.232,
+      "deployedUsd": 33.768
     },
     {
       "timestamp": "2026-04-29T12:00:11.000Z",
-      "equityUsd": 501.5624,
-      "cashUsd": 495.4976,
-      "deployedUsd": 6.0648
+      "equityUsd": 511.718,
+      "cashUsd": 466.232,
+      "deployedUsd": 45.486
     },
     {
       "timestamp": "2026-04-29T12:00:12.000Z",
       "equityUsd": 500,
-      "cashUsd": 495.4976,
-      "deployedUsd": 4.5024
+      "cashUsd": 466.232,
+      "deployedUsd": 33.768
     },
     {
       "timestamp": "2026-04-30T00:00:05.000Z",
       "equityUsd": 500,
-      "cashUsd": 495.4976,
-      "deployedUsd": 4.5024
+      "cashUsd": 466.232,
+      "deployedUsd": 33.768
     },
     {
       "timestamp": "2026-04-30T00:00:10.000Z",
-      "equityUsd": 512.0344,
-      "cashUsd": 495.4976,
-      "deployedUsd": 16.5368
+      "equityUsd": 590.258,
+      "cashUsd": 466.232,
+      "deployedUsd": 124.026
     },
     {
       "timestamp": "2026-04-30T00:00:13.000Z",
-      "equityUsd": 507.7488,
-      "cashUsd": 495.4976,
-      "deployedUsd": 12.2512
+      "equityUsd": 558.116,
+      "cashUsd": 466.232,
+      "deployedUsd": 91.884
     },
     {
       "timestamp": "2026-04-30T00:00:15.000Z",
-      "equityUsd": 501.7864,
-      "cashUsd": 495.4976,
-      "deployedUsd": 6.2888
+      "equityUsd": 513.398,
+      "cashUsd": 466.232,
+      "deployedUsd": 47.166
     },
     {
       "timestamp": "2026-04-30T00:00:17.000Z",
       "equityUsd": 500,
-      "cashUsd": 495.4976,
-      "deployedUsd": 4.5024
+      "cashUsd": 466.232,
+      "deployedUsd": 33.768
     },
     {
       "timestamp": "2026-04-30T12:00:04.000Z",
       "equityUsd": 500,
-      "cashUsd": 495.4976,
-      "deployedUsd": 4.5024
+      "cashUsd": 466.232,
+      "deployedUsd": 33.768
     },
     {
       "timestamp": "2026-04-30T12:00:09.000Z",
-      "equityUsd": 519.32703333,
-      "cashUsd": 501.0696,
-      "deployedUsd": 18.25743333
+      "equityUsd": 644.85199695,
+      "cashUsd": 503.769,
+      "deployedUsd": 141.08299695
     },
     {
       "timestamp": "2026-04-30T12:00:13.000Z",
-      "equityUsd": 504.89664,
-      "cashUsd": 501.0696,
-      "deployedUsd": 3.82704
+      "equityUsd": 532.8400066,
+      "cashUsd": 503.769,
+      "deployedUsd": 29.0710066
     },
     {
       "timestamp": "2026-04-30T12:00:14.000Z",
-      "equityUsd": 506.63824,
-      "cashUsd": 501.0696,
-      "deployedUsd": 5.56864
+      "equityUsd": 545.9020066,
+      "cashUsd": 503.769,
+      "deployedUsd": 42.1330066
     },
     {
       "timestamp": "2026-04-30T12:00:15.000Z",
-      "equityUsd": 504.89664,
-      "cashUsd": 501.0696,
-      "deployedUsd": 3.82704
+      "equityUsd": 532.8400066,
+      "cashUsd": 503.769,
+      "deployedUsd": 29.0710066
     },
     {
       "timestamp": "2026-04-30T12:00:16.000Z",
-      "equityUsd": 504.89664,
-      "cashUsd": 501.0696,
-      "deployedUsd": 3.82704
+      "equityUsd": 532.8400066,
+      "cashUsd": 503.769,
+      "deployedUsd": 29.0710066
     },
     {
       "timestamp": "2026-04-30T12:00:17.000Z",
-      "equityUsd": 504.89664,
-      "cashUsd": 501.0696,
-      "deployedUsd": 3.82704
+      "equityUsd": 532.8400066,
+      "cashUsd": 503.769,
+      "deployedUsd": 29.0710066
     },
     {
       "timestamp": "2026-05-01T00:00:04.000Z",
-      "equityUsd": 512.22834667,
-      "cashUsd": 504.85856,
-      "deployedUsd": 7.36978667
+      "equityUsd": 590.51333957,
+      "cashUsd": 528.769,
+      "deployedUsd": 61.74433957
     },
     {
       "timestamp": "2026-05-01T00:00:08.000Z",
-      "equityUsd": 512.3794,
-      "cashUsd": 504.85856,
-      "deployedUsd": 7.52084
+      "equityUsd": 585.84805458,
+      "cashUsd": 528.769,
+      "deployedUsd": 57.07905458
     },
     {
       "timestamp": "2026-05-01T00:00:14.000Z",
-      "equityUsd": 508.34792,
-      "cashUsd": 504.85856,
-      "deployedUsd": 3.48936
+      "equityUsd": 555.61195458,
+      "cashUsd": 528.769,
+      "deployedUsd": 26.84295458
     },
     {
       "timestamp": "2026-05-01T00:00:15.000Z",
-      "equityUsd": 509.41752,
-      "cashUsd": 504.85856,
-      "deployedUsd": 4.55896
+      "equityUsd": 563.63395458,
+      "cashUsd": 528.769,
+      "deployedUsd": 34.86495458
     },
     {
       "timestamp": "2026-05-01T00:00:19.000Z",
-      "equityUsd": 508.34792,
-      "cashUsd": 504.85856,
-      "deployedUsd": 3.48936
+      "equityUsd": 555.61195458,
+      "cashUsd": 528.769,
+      "deployedUsd": 26.84295458
     },
     {
       "timestamp": "2026-05-01T00:00:20.000Z",
-      "equityUsd": 507.34959273,
-      "cashUsd": 503.73296,
-      "deployedUsd": 3.61663273
+      "equityUsd": 548.12450003,
+      "cashUsd": 520.327,
+      "deployedUsd": 27.79750003
     },
     {
       "timestamp": "2026-05-01T12:00:06.000Z",
-      "equityUsd": 512.86301333,
-      "cashUsd": 503.73296,
-      "deployedUsd": 9.13005333
+      "equityUsd": 596.22166692,
+      "cashUsd": 520.327,
+      "deployedUsd": 75.89466692
     },
     {
       "timestamp": "2026-05-01T12:00:09.000Z",
-      "equityUsd": 512.0194,
-      "cashUsd": 503.73296,
-      "deployedUsd": 8.28644
+      "equityUsd": 583.14805458,
+      "cashUsd": 520.327,
+      "deployedUsd": 62.82105458
     },
     {
       "timestamp": "2026-05-01T12:00:10.000Z",
-      "equityUsd": 508.34792,
-      "cashUsd": 503.73296,
-      "deployedUsd": 4.61496
+      "equityUsd": 555.61195458,
+      "cashUsd": 520.327,
+      "deployedUsd": 35.28495458
     },
     {
       "timestamp": "2026-05-01T12:00:11.000Z",
-      "equityUsd": 510.08952,
-      "cashUsd": 503.73296,
-      "deployedUsd": 6.35656
+      "equityUsd": 568.67395458,
+      "cashUsd": 520.327,
+      "deployedUsd": 48.34695458
     },
     {
       "timestamp": "2026-05-01T12:00:12.000Z",
-      "equityUsd": 507.22741091,
-      "cashUsd": 503.73296,
-      "deployedUsd": 3.49445091
+      "equityUsd": 547.2081364,
+      "cashUsd": 520.327,
+      "deployedUsd": 26.8811364
     },
     {
       "timestamp": "2026-05-02T00:00:03.000Z",
-      "equityUsd": 508.34792,
-      "cashUsd": 503.73296,
-      "deployedUsd": 4.61496
+      "equityUsd": 555.61195458,
+      "cashUsd": 520.327,
+      "deployedUsd": 35.28495458
     },
     {
       "timestamp": "2026-05-02T00:00:04.000Z",
-      "equityUsd": 513.19901333,
-      "cashUsd": 503.73296,
-      "deployedUsd": 9.46605333
+      "equityUsd": 599.07848782,
+      "cashUsd": 553.20871596,
+      "deployedUsd": 45.86977186
     },
     {
       "timestamp": "2026-05-02T00:00:06.000Z",
-      "equityUsd": 511.42232,
-      "cashUsd": 503.73296,
-      "deployedUsd": 7.68936
+      "equityUsd": 608.74500698,
+      "cashUsd": 553.20871596,
+      "deployedUsd": 55.53629102
     },
     {
       "timestamp": "2026-05-02T00:00:07.000Z",
-      "equityUsd": 511.422705,
-      "cashUsd": 505.383665,
-      "deployedUsd": 6.03904
+      "equityUsd": 608.74789448,
+      "cashUsd": 565.58900346,
+      "deployedUsd": 43.15889102
     },
     {
       "timestamp": "2026-05-02T00:00:08.000Z",
-      "equityUsd": 509.660945,
-      "cashUsd": 505.383665,
-      "deployedUsd": 4.27728
+      "equityUsd": 595.53469448,
+      "cashUsd": 565.58900346,
+      "deployedUsd": 29.94569102
     },
     {
       "timestamp": "2026-05-02T00:00:09.000Z",
-      "equityUsd": 511.380145,
-      "cashUsd": 505.383665,
-      "deployedUsd": 5.99648
+      "equityUsd": 608.42869448,
+      "cashUsd": 565.58900346,
+      "deployedUsd": 42.83969102
     },
     {
       "timestamp": "2026-05-02T00:00:13.000Z",
-      "equityUsd": 508.54043591,
-      "cashUsd": 505.383665,
-      "deployedUsd": 3.15677091
+      "equityUsd": 587.1308763,
+      "cashUsd": 565.58900346,
+      "deployedUsd": 21.54187284
     },
     {
       "timestamp": "2026-05-02T12:00:04.000Z",
-      "equityUsd": 510.02041683,
-      "cashUsd": 504.258065,
-      "deployedUsd": 5.76235183
+      "equityUsd": 594.70252879,
+      "cashUsd": 557.14700346,
+      "deployedUsd": 37.55552533
     },
     {
       "timestamp": "2026-05-02T12:00:07.000Z",
-      "equityUsd": 510.895345,
-      "cashUsd": 504.258065,
-      "deployedUsd": 6.63728
+      "equityUsd": 604.79269448,
+      "cashUsd": 557.14700346,
+      "deployedUsd": 47.64569102
     },
     {
       "timestamp": "2026-05-02T12:00:08.000Z",
-      "equityUsd": 511.142705,
-      "cashUsd": 504.258065,
-      "deployedUsd": 6.88464
+      "equityUsd": 606.64789448,
+      "cashUsd": 557.14700346,
+      "deployedUsd": 49.50089102
     },
     {
       "timestamp": "2026-05-02T12:00:09.000Z",
-      "equityUsd": 510.551345,
-      "cashUsd": 504.258065,
-      "deployedUsd": 6.29328
+      "equityUsd": 602.21269448,
+      "cashUsd": 557.14700346,
+      "deployedUsd": 45.06569102
     },
     {
       "timestamp": "2026-05-02T12:00:10.000Z",
-      "equityUsd": 509.660945,
-      "cashUsd": 504.258065,
-      "deployedUsd": 5.40288
+      "equityUsd": 595.53469448,
+      "cashUsd": 557.14700346,
+      "deployedUsd": 38.38769102
     },
     {
       "timestamp": "2026-05-02T12:00:11.000Z",
-      "equityUsd": 508.54043591,
-      "cashUsd": 504.258065,
-      "deployedUsd": 4.28237091
+      "equityUsd": 587.1308763,
+      "cashUsd": 557.14700346,
+      "deployedUsd": 29.98387284
     },
     {
       "timestamp": "2026-05-03T00:00:06.000Z",
-      "equityUsd": 512.80063016,
-      "cashUsd": 505.706785,
-      "deployedUsd": 7.09384516
+      "equityUsd": 614.37014148,
+      "cashUsd": 557.14700346,
+      "deployedUsd": 57.22313802
     },
     {
       "timestamp": "2026-05-03T00:00:07.000Z",
-      "equityUsd": 509.73491591,
-      "cashUsd": 505.706785,
-      "deployedUsd": 4.02813091
+      "equityUsd": 588.6008763,
+      "cashUsd": 557.14700346,
+      "deployedUsd": 31.45387284
     },
     {
       "timestamp": "2026-05-03T12:00:06.000Z",
-      "equityUsd": 509.96737339,
-      "cashUsd": 505.706785,
-      "deployedUsd": 4.26058839
+      "equityUsd": 592.99807552,
+      "cashUsd": 561.04366262,
+      "deployedUsd": 31.9544129
     },
     {
       "timestamp": "2026-05-03T12:00:08.000Z",
-      "equityUsd": 514.245585,
-      "cashUsd": 505.706785,
-      "deployedUsd": 8.5388
+      "equityUsd": 625.08466262,
+      "cashUsd": 561.04366262,
+      "deployedUsd": 64.041
     },
     {
       "timestamp": "2026-05-03T12:00:09.000Z",
-      "equityUsd": 509.53891591,
-      "cashUsd": 505.706785,
-      "deployedUsd": 3.83213091
+      "equityUsd": 589.78464444,
+      "cashUsd": 561.04366262,
+      "deployedUsd": 28.74098182
     },
     {
       "timestamp": "2026-05-04T00:00:04.000Z",
-      "equityUsd": 509.96737339,
-      "cashUsd": 505.706785,
-      "deployedUsd": 4.26058839
+      "equityUsd": 592.99807552,
+      "cashUsd": 561.04366262,
+      "deployedUsd": 31.9544129
     },
     {
       "timestamp": "2026-05-04T00:00:05.000Z",
-      "equityUsd": 514.493585,
-      "cashUsd": 505.706785,
-      "deployedUsd": 8.7868
+      "equityUsd": 626.94466262,
+      "cashUsd": 561.04366262,
+      "deployedUsd": 65.901
     },
     {
       "timestamp": "2026-05-04T00:00:06.000Z",
-      "equityUsd": 510.653825,
-      "cashUsd": 505.706785,
-      "deployedUsd": 4.94704
+      "equityUsd": 598.14646262,
+      "cashUsd": 561.04366262,
+      "deployedUsd": 37.1028
     },
     {
       "timestamp": "2026-05-04T00:00:07.000Z",
-      "equityUsd": 509.53891591,
-      "cashUsd": 505.706785,
-      "deployedUsd": 3.83213091
+      "equityUsd": 589.78464444,
+      "cashUsd": 561.04366262,
+      "deployedUsd": 28.74098182
     },
     {
       "timestamp": "2026-05-04T12:00:03.000Z",
-      "equityUsd": 510.659425,
-      "cashUsd": 505.706785,
-      "deployedUsd": 4.95264
+      "equityUsd": 598.18846262,
+      "cashUsd": 561.04366262,
+      "deployedUsd": 37.1448
     },
     {
       "timestamp": "2026-05-04T12:00:04.000Z",
-      "equityUsd": 509.9854379,
-      "cashUsd": 505.706785,
-      "deployedUsd": 4.2786529
+      "equityUsd": 593.13355939,
+      "cashUsd": 561.04366262,
+      "deployedUsd": 32.08989677
     },
     {
       "timestamp": "2026-05-04T12:00:05.000Z",
-      "equityUsd": 514.502265,
-      "cashUsd": 506.765465,
-      "deployedUsd": 7.7368
+      "equityUsd": 627.00976262,
+      "cashUsd": 568.98376262,
+      "deployedUsd": 58.026
     },
     {
       "timestamp": "2026-05-04T12:00:06.000Z",
-      "equityUsd": 511.262265,
-      "cashUsd": 506.765465,
-      "deployedUsd": 4.4968
+      "equityUsd": 602.70976262,
+      "cashUsd": 568.98376262,
+      "deployedUsd": 33.726
     },
     {
       "timestamp": "2026-05-04T12:00:07.000Z",
-      "equityUsd": 510.14735591,
-      "cashUsd": 506.765465,
-      "deployedUsd": 3.38189091
+      "equityUsd": 594.34794444,
+      "cashUsd": 568.98376262,
+      "deployedUsd": 25.36418182
     },
     {
       "timestamp": "2026-05-05T00:00:17.000Z",
-      "equityUsd": 510.91903919,
-      "cashUsd": 506.765465,
-      "deployedUsd": 4.15357419
+      "equityUsd": 600.13556907,
+      "cashUsd": 568.98376262,
+      "deployedUsd": 31.15180645
     },
     {
       "timestamp": "2026-05-05T00:00:19.000Z",
-      "equityUsd": 514.142265,
-      "cashUsd": 506.765465,
-      "deployedUsd": 7.3768
+      "equityUsd": 624.30976262,
+      "cashUsd": 568.98376262,
+      "deployedUsd": 55.326
     },
     {
       "timestamp": "2026-05-05T00:00:20.000Z",
-      "equityUsd": 510.11935591,
-      "cashUsd": 506.765465,
-      "deployedUsd": 3.35389091
+      "equityUsd": 594.13794444,
+      "cashUsd": 568.98376262,
+      "deployedUsd": 25.15418182
     },
     {
       "timestamp": "2026-05-05T12:00:04.000Z",
-      "equityUsd": 510.88291016,
-      "cashUsd": 506.765465,
-      "deployedUsd": 4.11744516
+      "equityUsd": 599.86460133,
+      "cashUsd": 568.98376262,
+      "deployedUsd": 30.88083871
     },
     {
       "timestamp": "2026-05-05T12:00:08.000Z",
-      "equityUsd": 513.636665,
-      "cashUsd": 505.639865,
-      "deployedUsd": 7.9968
+      "equityUsd": 620.51776262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 59.976
     },
     {
       "timestamp": "2026-05-05T12:00:10.000Z",
-      "equityUsd": 511.195065,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.5552
+      "equityUsd": 602.20576262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 41.664
     },
     {
       "timestamp": "2026-05-05T12:00:11.000Z",
-      "equityUsd": 510.14735591,
-      "cashUsd": 505.639865,
-      "deployedUsd": 4.50749091
+      "equityUsd": 594.34794444,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 33.80618182
     },
     {
       "timestamp": "2026-05-06T00:00:06.000Z",
-      "equityUsd": 510.84678113,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.20691613
+      "equityUsd": 599.59363359,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 39.05187097
     },
     {
       "timestamp": "2026-05-06T00:00:09.000Z",
-      "equityUsd": 512.916665,
-      "cashUsd": 505.639865,
-      "deployedUsd": 7.2768
+      "equityUsd": 615.11776262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 54.576
     },
     {
       "timestamp": "2026-05-06T00:00:10.000Z",
-      "equityUsd": 511.195065,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.5552
+      "equityUsd": 602.20576262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 41.664
     },
     {
       "timestamp": "2026-05-06T00:00:11.000Z",
-      "equityUsd": 511.267865,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.628
+      "equityUsd": 602.75176262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 42.21
     },
     {
       "timestamp": "2026-05-06T00:00:12.000Z",
-      "equityUsd": 510.14735591,
-      "cashUsd": 505.639865,
-      "deployedUsd": 4.50749091
+      "equityUsd": 594.34794444,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 33.80618182
     },
     {
       "timestamp": "2026-05-06T12:00:04.000Z",
-      "equityUsd": 510.8106521,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.1707871
+      "equityUsd": 599.32266585,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 38.78090323
     },
     {
       "timestamp": "2026-05-06T12:00:07.000Z",
-      "equityUsd": 513.696665,
-      "cashUsd": 505.639865,
-      "deployedUsd": 8.0568
+      "equityUsd": 620.96776262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 60.426
     },
     {
       "timestamp": "2026-05-06T12:00:09.000Z",
-      "equityUsd": 511.195065,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.5552
+      "equityUsd": 602.20576262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 41.664
     },
     {
       "timestamp": "2026-05-06T12:00:10.000Z",
-      "equityUsd": 510.14735591,
-      "cashUsd": 505.639865,
-      "deployedUsd": 4.50749091
+      "equityUsd": 594.34794444,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 33.80618182
     },
     {
       "timestamp": "2026-05-07T00:00:05.000Z",
-      "equityUsd": 510.702265,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.0624
+      "equityUsd": 598.50976262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 37.968
     },
     {
       "timestamp": "2026-05-07T00:00:08.000Z",
-      "equityUsd": 511.267865,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.628
+      "equityUsd": 602.75176262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 42.21
     },
     {
       "timestamp": "2026-05-07T00:00:09.000Z",
-      "equityUsd": 513.296665,
-      "cashUsd": 505.639865,
-      "deployedUsd": 7.6568
+      "equityUsd": 617.96776262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 57.426
     },
     {
       "timestamp": "2026-05-07T00:00:10.000Z",
-      "equityUsd": 511.150265,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.5104
+      "equityUsd": 601.86976262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 41.328
     },
     {
       "timestamp": "2026-05-07T00:00:11.000Z",
-      "equityUsd": 510.60044682,
-      "cashUsd": 505.639865,
-      "deployedUsd": 4.96058182
+      "equityUsd": 597.74612626,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 37.20436364
     },
     {
       "timestamp": "2026-05-07T12:00:17.000Z",
-      "equityUsd": 510.91903919,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.27917419
+      "equityUsd": 600.13556907,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 39.59380645
     },
     {
       "timestamp": "2026-05-07T12:00:18.000Z",
-      "equityUsd": 513.301465,
-      "cashUsd": 505.639865,
-      "deployedUsd": 7.6616
+      "equityUsd": 618.00376262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 57.462
     },
     {
       "timestamp": "2026-05-07T12:00:19.000Z",
-      "equityUsd": 510.60044682,
-      "cashUsd": 505.639865,
-      "deployedUsd": 4.96058182
+      "equityUsd": 597.74612626,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 37.20436364
     },
     {
       "timestamp": "2026-05-08T00:00:03.000Z",
-      "equityUsd": 510.88291016,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.24304516
+      "equityUsd": 599.86460133,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 39.32283871
     },
     {
       "timestamp": "2026-05-08T00:00:05.000Z",
-      "equityUsd": 513.876665,
-      "cashUsd": 505.639865,
-      "deployedUsd": 8.2368
+      "equityUsd": 622.31776262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 61.776
     },
     {
       "timestamp": "2026-05-08T00:00:07.000Z",
-      "equityUsd": 511.267865,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.628
+      "equityUsd": 602.75176262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 42.21
     },
     {
       "timestamp": "2026-05-08T00:00:08.000Z",
-      "equityUsd": 511.060665,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.4208
+      "equityUsd": 601.19776262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 40.656
     },
     {
       "timestamp": "2026-05-08T00:00:09.000Z",
-      "equityUsd": 511.267865,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.628
+      "equityUsd": 602.75176262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 42.21
     },
     {
       "timestamp": "2026-05-08T00:00:11.000Z",
-      "equityUsd": 511.267865,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.628
+      "equityUsd": 602.75176262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 42.21
     },
     {
       "timestamp": "2026-05-08T00:00:12.000Z",
-      "equityUsd": 510.88044682,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.24058182
+      "equityUsd": 599.84612626,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 39.30436364
     },
     {
       "timestamp": "2026-05-08T12:00:03.000Z",
-      "equityUsd": 510.72032952,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.08046452
+      "equityUsd": 598.64524649,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 38.10348387
     },
     {
       "timestamp": "2026-05-08T12:00:04.000Z",
-      "equityUsd": 513.622265,
-      "cashUsd": 505.639865,
-      "deployedUsd": 7.9824
+      "equityUsd": 620.40976262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 59.868
     },
     {
       "timestamp": "2026-05-08T12:00:05.000Z",
-      "equityUsd": 511.055065,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.4152
+      "equityUsd": 601.15576262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 40.614
     },
     {
       "timestamp": "2026-05-08T12:00:06.000Z",
-      "equityUsd": 510.88044682,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.24058182
+      "equityUsd": 599.84612626,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 39.30436364
     },
     {
       "timestamp": "2026-05-09T00:00:22.000Z",
-      "equityUsd": 510.84678113,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.20691613
+      "equityUsd": 599.59363359,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 39.05187097
     },
     {
       "timestamp": "2026-05-09T00:00:23.000Z",
-      "equityUsd": 512.380665,
-      "cashUsd": 505.639865,
-      "deployedUsd": 6.7408
+      "equityUsd": 611.09776262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 50.556
     },
     {
       "timestamp": "2026-05-09T00:00:24.000Z",
-      "equityUsd": 511.083065,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.4432
+      "equityUsd": 601.36576262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 40.824
     },
     {
       "timestamp": "2026-05-09T00:00:25.000Z",
-      "equityUsd": 510.54953773,
-      "cashUsd": 505.639865,
-      "deployedUsd": 4.90967273
+      "equityUsd": 597.36430807,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 36.82254545
     },
     {
       "timestamp": "2026-05-09T12:00:06.000Z",
-      "equityUsd": 510.84678113,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.20691613
+      "equityUsd": 599.59363359,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 39.05187097
     },
     {
       "timestamp": "2026-05-09T12:00:07.000Z",
-      "equityUsd": 512.422265,
-      "cashUsd": 505.639865,
-      "deployedUsd": 6.7824
+      "equityUsd": 611.40976262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 50.868
     },
     {
       "timestamp": "2026-05-09T12:00:08.000Z",
-      "equityUsd": 509.670265,
-      "cashUsd": 505.639865,
-      "deployedUsd": 4.0304
+      "equityUsd": 590.76976262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 30.228
     },
     {
       "timestamp": "2026-05-09T12:00:09.000Z",
-      "equityUsd": 510.60044682,
-      "cashUsd": 505.639865,
-      "deployedUsd": 4.96058182
+      "equityUsd": 597.74612626,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 37.20436364
     },
     {
       "timestamp": "2026-05-10T00:00:04.000Z",
-      "equityUsd": 510.79258758,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.15272258
+      "equityUsd": 599.18718197,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 38.64541935
     },
     {
       "timestamp": "2026-05-10T00:00:07.000Z",
-      "equityUsd": 511.267865,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.628
+      "equityUsd": 602.75176262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 42.21
     },
     {
       "timestamp": "2026-05-10T00:00:09.000Z",
-      "equityUsd": 512.862265,
-      "cashUsd": 505.639865,
-      "deployedUsd": 7.2224
+      "equityUsd": 614.70976262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 54.168
     },
     {
       "timestamp": "2026-05-10T00:00:10.000Z",
-      "equityUsd": 509.939065,
-      "cashUsd": 505.639865,
-      "deployedUsd": 4.2992
+      "equityUsd": 592.78576262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 32.244
     },
     {
       "timestamp": "2026-05-10T00:00:11.000Z",
-      "equityUsd": 511.267865,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.628
+      "equityUsd": 602.75176262,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 42.21
     },
     {
       "timestamp": "2026-05-10T00:00:12.000Z",
-      "equityUsd": 510.34590136,
-      "cashUsd": 505.639865,
-      "deployedUsd": 4.70603636
+      "equityUsd": 595.83703535,
+      "cashUsd": 560.54176262,
+      "deployedUsd": 35.29527273
     },
     {
       "timestamp": "2026-05-10T12:00:03.000Z",
-      "equityUsd": 510.77452306,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.13465806
+      "equityUsd": 594.9776981,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 42.87793548
     },
     {
       "timestamp": "2026-05-10T12:00:06.000Z",
-      "equityUsd": 511.267865,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.628
+      "equityUsd": 602.75176262,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-10T12:00:07.000Z",
-      "equityUsd": 510.356665,
-      "cashUsd": 505.639865,
-      "deployedUsd": 4.7168
+      "equityUsd": 595.91776262,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 43.818
     },
     {
       "timestamp": "2026-05-10T12:00:08.000Z",
-      "equityUsd": 510.146745,
-      "cashUsd": 505.639865,
-      "deployedUsd": 4.50688
+      "equityUsd": 594.34336262,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 42.2436
     },
     {
       "timestamp": "2026-05-10T12:00:09.000Z",
-      "equityUsd": 511.267865,
-      "cashUsd": 505.639865,
-      "deployedUsd": 5.628
+      "equityUsd": 602.75176262,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-10T12:00:10.000Z",
-      "equityUsd": 510.44771955,
-      "cashUsd": 505.639865,
-      "deployedUsd": 4.80785455
+      "equityUsd": 596.60067171,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 44.50090909
     },
     {
       "timestamp": "2026-05-11T00:00:08.000Z",
-      "equityUsd": 510.57581339,
-      "cashUsd": 505.639865,
-      "deployedUsd": 4.93594839
+      "equityUsd": 592.98337552,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 40.8836129
     },
     {
       "timestamp": "2026-05-11T00:00:10.000Z",
-      "equityUsd": 511.822265,
-      "cashUsd": 505.639865,
-      "deployedUsd": 6.1824
+      "equityUsd": 606.90976262,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 54.81
     },
     {
       "timestamp": "2026-05-11T00:00:11.000Z",
-      "equityUsd": 509.025145,
-      "cashUsd": 505.639865,
-      "deployedUsd": 3.38528
+      "equityUsd": 585.93136262,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 33.8316
     },
     {
       "timestamp": "2026-05-11T00:00:12.000Z",
-      "equityUsd": 510.62590136,
-      "cashUsd": 505.639865,
-      "deployedUsd": 4.98603636
+      "equityUsd": 597.93703535,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 45.83727273
     },
     {
       "timestamp": "2026-05-11T12:00:06.000Z",
-      "equityUsd": 510.55774887,
-      "cashUsd": 505.639865,
-      "deployedUsd": 4.91788387
+      "equityUsd": 594.35989165,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 42.26012903
     },
     {
       "timestamp": "2026-05-11T12:00:10.000Z",
-      "equityUsd": 512.02165167,
-      "cashUsd": 504.551785,
-      "deployedUsd": 7.46986667
+      "equityUsd": 616.50976262,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 64.41
     },
     {
       "timestamp": "2026-05-11T12:00:11.000Z",
-      "equityUsd": 509.061145,
-      "cashUsd": 504.551785,
-      "deployedUsd": 4.50936
+      "equityUsd": 586.20136262,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 34.1016
     },
     {
       "timestamp": "2026-05-11T12:00:12.000Z",
-      "equityUsd": 511.267865,
-      "cashUsd": 504.551785,
-      "deployedUsd": 6.71608
+      "equityUsd": 602.75176262,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-11T12:00:13.000Z",
-      "equityUsd": 510.62590136,
-      "cashUsd": 504.551785,
-      "deployedUsd": 6.07411636
+      "equityUsd": 597.93703535,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 45.83727273
     },
     {
       "timestamp": "2026-05-12T00:00:04.000Z",
-      "equityUsd": 510.61194242,
-      "cashUsd": 504.551785,
-      "deployedUsd": 6.06015742
+      "equityUsd": 594.76634326,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 42.66658064
     },
     {
       "timestamp": "2026-05-12T00:00:09.000Z",
-      "equityUsd": 510.47845167,
-      "cashUsd": 504.551785,
-      "deployedUsd": 5.92666667
+      "equityUsd": 602.75176262,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-12T00:00:10.000Z",
-      "equityUsd": 513.302265,
-      "cashUsd": 504.551785,
-      "deployedUsd": 8.75048
+      "equityUsd": 618.00976262,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 65.91
     },
     {
       "timestamp": "2026-05-12T00:00:12.000Z",
-      "equityUsd": 511.602265,
-      "cashUsd": 504.551785,
-      "deployedUsd": 7.05048
+      "equityUsd": 605.25976262,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 53.16
     },
     {
       "timestamp": "2026-05-12T00:00:13.000Z",
-      "equityUsd": 510.146745,
-      "cashUsd": 504.551785,
-      "deployedUsd": 5.59496
+      "equityUsd": 594.34336262,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 42.2436
     },
     {
       "timestamp": "2026-05-12T00:00:15.000Z",
-      "equityUsd": 511.267865,
-      "cashUsd": 504.551785,
-      "deployedUsd": 6.71608
+      "equityUsd": 602.75176262,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-12T00:00:16.000Z",
-      "equityUsd": 511.267865,
-      "cashUsd": 504.551785,
-      "deployedUsd": 6.71608
+      "equityUsd": 602.75176262,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-12T00:00:17.000Z",
-      "equityUsd": 511.267865,
-      "cashUsd": 504.551785,
-      "deployedUsd": 6.71608
+      "equityUsd": 602.75176262,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-12T00:00:18.000Z",
-      "equityUsd": 511.267865,
-      "cashUsd": 504.551785,
-      "deployedUsd": 6.71608
+      "equityUsd": 602.75176262,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-12T00:00:19.000Z",
-      "equityUsd": 511.267865,
-      "cashUsd": 504.551785,
-      "deployedUsd": 6.71608
+      "equityUsd": 602.75176262,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-12T00:00:20.000Z",
-      "equityUsd": 510.49862864,
-      "cashUsd": 504.551785,
-      "deployedUsd": 5.94684364
+      "equityUsd": 596.98248989,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 44.88272727
     },
     {
       "timestamp": "2026-05-12T12:00:05.000Z",
-      "equityUsd": 512.07516823,
-      "cashUsd": 504.551785,
-      "deployedUsd": 7.52338323
+      "equityUsd": 605.90853681,
+      "cashUsd": 552.09976262,
+      "deployedUsd": 53.80877419
     },
     {
       "timestamp": "2026-05-12T12:00:08.000Z",
-      "equityUsd": 512.518185,
-      "cashUsd": 504.551785,
-      "deployedUsd": 7.9664
+      "equityUsd": 611.84776262,
+      "cashUsd": 543.65776262,
+      "deployedUsd": 68.19
     },
     {
       "timestamp": "2026-05-12T12:00:10.000Z",
-      "equityUsd": 509.881145,
-      "cashUsd": 504.551785,
-      "deployedUsd": 5.32936
+      "equityUsd": 592.35136262,
+      "cashUsd": 543.65776262,
+      "deployedUsd": 48.6936
     },
     {
       "timestamp": "2026-05-12T12:00:11.000Z",
-      "equityUsd": 511.267865,
-      "cashUsd": 504.551785,
-      "deployedUsd": 6.71608
+      "equityUsd": 602.75176262,
+      "cashUsd": 543.65776262,
+      "deployedUsd": 59.094
     },
     {
       "timestamp": "2026-05-12T12:00:12.000Z",
-      "equityUsd": 511.267865,
-      "cashUsd": 504.551785,
-      "deployedUsd": 6.71608
+      "equityUsd": 602.75176262,
+      "cashUsd": 543.65776262,
+      "deployedUsd": 59.094
     },
     {
       "timestamp": "2026-05-12T12:00:13.000Z",
-      "equityUsd": 511.51681045,
-      "cashUsd": 504.551785,
-      "deployedUsd": 6.96502545
+      "equityUsd": 604.61885353,
+      "cashUsd": 543.65776262,
+      "deployedUsd": 60.96109091
     },
     {
       "timestamp": "2026-05-13T00:00:08.000Z",
-      "equityUsd": 512.16549081,
-      "cashUsd": 504.551785,
-      "deployedUsd": 7.61370581
+      "equityUsd": 606.58595617,
+      "cashUsd": 543.65776262,
+      "deployedUsd": 62.92819355
     },
     {
       "timestamp": "2026-05-13T00:00:11.000Z",
-      "equityUsd": 518.147745,
-      "cashUsd": 512.519745,
-      "deployedUsd": 5.628
+      "equityUsd": 638.67729994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-13T00:00:12.000Z",
-      "equityUsd": 520.622145,
-      "cashUsd": 512.519745,
-      "deployedUsd": 8.1024
+      "equityUsd": 657.23529994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 69.21
     },
     {
       "timestamp": "2026-05-13T00:00:13.000Z",
-      "equityUsd": 517.882145,
-      "cashUsd": 512.519745,
-      "deployedUsd": 5.3624
+      "equityUsd": 636.68529994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 48.66
     },
     {
       "timestamp": "2026-05-13T00:00:14.000Z",
-      "equityUsd": 517.026625,
-      "cashUsd": 512.519745,
-      "deployedUsd": 4.50688
+      "equityUsd": 630.26889994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 42.2436
     },
     {
       "timestamp": "2026-05-13T00:00:15.000Z",
-      "equityUsd": 518.147745,
-      "cashUsd": 512.519745,
-      "deployedUsd": 5.628
+      "equityUsd": 638.67729994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-13T00:00:16.000Z",
-      "equityUsd": 517.50578136,
-      "cashUsd": 512.519745,
-      "deployedUsd": 4.98603636
+      "equityUsd": 633.86257267,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 45.83727273
     },
     {
       "timestamp": "2026-05-13T12:00:06.000Z",
-      "equityUsd": 518.46730629,
-      "cashUsd": 512.519745,
-      "deployedUsd": 5.94756129
+      "equityUsd": 637.16800962,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 49.14270968
     },
     {
       "timestamp": "2026-05-13T12:00:10.000Z",
-      "equityUsd": 520.342145,
-      "cashUsd": 512.519745,
-      "deployedUsd": 7.8224
+      "equityUsd": 655.13529994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 67.11
     },
     {
       "timestamp": "2026-05-13T12:00:11.000Z",
-      "equityUsd": 516.761025,
-      "cashUsd": 512.519745,
-      "deployedUsd": 4.24128
+      "equityUsd": 628.27689994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 40.2516
     },
     {
       "timestamp": "2026-05-13T12:00:12.000Z",
-      "equityUsd": 518.147745,
-      "cashUsd": 512.519745,
-      "deployedUsd": 5.628
+      "equityUsd": 638.67729994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-13T12:00:13.000Z",
-      "equityUsd": 518.147745,
-      "cashUsd": 512.519745,
-      "deployedUsd": 5.628
+      "equityUsd": 638.67729994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-13T12:00:14.000Z",
-      "equityUsd": 517.302145,
-      "cashUsd": 512.519745,
-      "deployedUsd": 4.7824
+      "equityUsd": 632.33529994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 44.31
     },
     {
       "timestamp": "2026-05-14T00:00:08.000Z",
-      "equityUsd": 517.63633855,
-      "cashUsd": 512.519745,
-      "deployedUsd": 5.11659355
+      "equityUsd": 626.43335155,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 38.40805161
     },
     {
       "timestamp": "2026-05-14T00:00:14.000Z",
-      "equityUsd": 518.147745,
-      "cashUsd": 512.519745,
-      "deployedUsd": 5.628
+      "equityUsd": 638.67729994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-14T00:00:16.000Z",
-      "equityUsd": 521.502145,
-      "cashUsd": 512.519745,
-      "deployedUsd": 8.9824
+      "equityUsd": 663.83529994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 75.81
     },
     {
       "timestamp": "2026-05-14T00:00:18.000Z",
-      "equityUsd": 516.701025,
-      "cashUsd": 512.519745,
-      "deployedUsd": 4.18128
+      "equityUsd": 627.82689994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 39.8016
     },
     {
       "timestamp": "2026-05-14T00:00:19.000Z",
-      "equityUsd": 518.147745,
-      "cashUsd": 512.519745,
-      "deployedUsd": 5.628
+      "equityUsd": 638.67729994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-14T00:00:20.000Z",
-      "equityUsd": 518.147745,
-      "cashUsd": 512.519745,
-      "deployedUsd": 5.628
+      "equityUsd": 638.67729994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-14T00:00:21.000Z",
-      "equityUsd": 518.147745,
-      "cashUsd": 512.519745,
-      "deployedUsd": 5.628
+      "equityUsd": 638.67729994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-14T00:00:22.000Z",
-      "equityUsd": 518.147745,
-      "cashUsd": 512.519745,
-      "deployedUsd": 5.628
+      "equityUsd": 638.67729994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-14T00:00:23.000Z",
-      "equityUsd": 517.32759955,
-      "cashUsd": 512.519745,
-      "deployedUsd": 4.80785455
+      "equityUsd": 632.52620903,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 44.50090909
     },
     {
       "timestamp": "2026-05-14T12:00:08.000Z",
-      "equityUsd": 516.87096306,
-      "cashUsd": 511.731825,
-      "deployedUsd": 5.13913806
+      "equityUsd": 626.56883542,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 38.54353548
     },
     {
       "timestamp": "2026-05-14T12:00:09.000Z",
-      "equityUsd": 518.147745,
-      "cashUsd": 511.731825,
-      "deployedUsd": 6.41592
+      "equityUsd": 638.67729994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-14T12:00:10.000Z",
-      "equityUsd": 519.975425,
-      "cashUsd": 511.731825,
-      "deployedUsd": 8.2436
+      "equityUsd": 652.38489994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 64.3596
     },
     {
       "timestamp": "2026-05-14T12:00:11.000Z",
-      "equityUsd": 518.147745,
-      "cashUsd": 511.731825,
-      "deployedUsd": 6.41592
+      "equityUsd": 638.67729994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-14T12:00:12.000Z",
-      "equityUsd": 517.302145,
-      "cashUsd": 511.731825,
-      "deployedUsd": 5.57032
+      "equityUsd": 632.33529994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 44.31
     },
     {
       "timestamp": "2026-05-15T00:00:06.000Z",
-      "equityUsd": 516.87096306,
-      "cashUsd": 511.731825,
-      "deployedUsd": 5.13913806
+      "equityUsd": 626.56883542,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 38.54353548
     },
     {
       "timestamp": "2026-05-15T00:00:09.000Z",
-      "equityUsd": 520.302145,
-      "cashUsd": 511.731825,
-      "deployedUsd": 8.57032
+      "equityUsd": 654.83529994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 66.81
     },
     {
       "timestamp": "2026-05-15T00:00:10.000Z",
-      "equityUsd": 518.147745,
-      "cashUsd": 511.731825,
-      "deployedUsd": 6.41592
+      "equityUsd": 638.67729994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-15T00:00:11.000Z",
-      "equityUsd": 516.681025,
-      "cashUsd": 511.731825,
-      "deployedUsd": 4.9492
+      "equityUsd": 627.67689994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 39.6516
     },
     {
       "timestamp": "2026-05-15T00:00:12.000Z",
-      "equityUsd": 518.147745,
-      "cashUsd": 511.731825,
-      "deployedUsd": 6.41592
+      "equityUsd": 638.67729994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-15T00:00:13.000Z",
-      "equityUsd": 517.302145,
-      "cashUsd": 511.731825,
-      "deployedUsd": 5.57032
+      "equityUsd": 632.33529994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 44.31
     },
     {
       "timestamp": "2026-05-15T12:00:08.000Z",
-      "equityUsd": 516.99741468,
-      "cashUsd": 511.731825,
-      "deployedUsd": 5.26558968
+      "equityUsd": 627.51722252,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 39.49192258
     },
     {
       "timestamp": "2026-05-15T12:00:11.000Z",
-      "equityUsd": 520.622145,
-      "cashUsd": 511.731825,
-      "deployedUsd": 8.89032
+      "equityUsd": 657.23529994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 69.21
     },
     {
       "timestamp": "2026-05-15T12:00:12.000Z",
-      "equityUsd": 517.802145,
-      "cashUsd": 511.731825,
-      "deployedUsd": 6.07032
+      "equityUsd": 636.08529994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 48.06
     },
     {
       "timestamp": "2026-05-15T12:00:13.000Z",
-      "equityUsd": 517.026625,
-      "cashUsd": 511.731825,
-      "deployedUsd": 5.2948
+      "equityUsd": 630.26889994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 42.2436
     },
     {
       "timestamp": "2026-05-15T12:00:14.000Z",
-      "equityUsd": 518.147745,
-      "cashUsd": 511.731825,
-      "deployedUsd": 6.41592
+      "equityUsd": 638.67729994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-15T12:00:15.000Z",
-      "equityUsd": 517.32759955,
-      "cashUsd": 511.731825,
-      "deployedUsd": 5.59577455
+      "equityUsd": 632.52620903,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 44.50090909
     },
     {
       "timestamp": "2026-05-16T00:00:12.000Z",
-      "equityUsd": 516.97935016,
-      "cashUsd": 511.731825,
-      "deployedUsd": 5.24752516
+      "equityUsd": 627.38173865,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 39.35643871
     },
     {
       "timestamp": "2026-05-16T00:00:16.000Z",
-      "equityUsd": 521.902145,
-      "cashUsd": 511.731825,
-      "deployedUsd": 10.17032
+      "equityUsd": 666.83529994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 78.81
     },
     {
       "timestamp": "2026-05-16T00:00:17.000Z",
-      "equityUsd": 517.762145,
-      "cashUsd": 511.731825,
-      "deployedUsd": 6.03032
+      "equityUsd": 635.78529994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 47.76
     },
     {
       "timestamp": "2026-05-16T00:00:18.000Z",
-      "equityUsd": 517.026625,
-      "cashUsd": 511.731825,
-      "deployedUsd": 5.2948
+      "equityUsd": 630.26889994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 42.2436
     },
     {
       "timestamp": "2026-05-16T00:00:19.000Z",
-      "equityUsd": 518.147745,
-      "cashUsd": 511.731825,
-      "deployedUsd": 6.41592
+      "equityUsd": 638.67729994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-16T00:00:20.000Z",
-      "equityUsd": 518.147745,
-      "cashUsd": 511.731825,
-      "deployedUsd": 6.41592
+      "equityUsd": 638.67729994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-16T00:00:21.000Z",
-      "equityUsd": 517.35305409,
-      "cashUsd": 511.731825,
-      "deployedUsd": 5.62122909
+      "equityUsd": 632.71711812,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 44.69181818
     },
     {
       "timestamp": "2026-05-16T12:00:08.000Z",
-      "equityUsd": 518.147745,
-      "cashUsd": 511.731825,
-      "deployedUsd": 6.41592
+      "equityUsd": 638.67729994,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 50.652
     },
     {
       "timestamp": "2026-05-16T12:00:09.000Z",
-      "equityUsd": 516.97935016,
-      "cashUsd": 511.731825,
-      "deployedUsd": 5.24752516
+      "equityUsd": 627.38173865,
+      "cashUsd": 588.02529994,
+      "deployedUsd": 39.35643871
     },
     {
       "timestamp": "2026-05-16T12:00:12.000Z",
-      "equityUsd": 521.902145,
-      "cashUsd": 511.731825,
-      "deployedUsd": 10.17032
+      "equityUsd": 666.78039994,
+      "cashUsd": 598.95039994,
+      "deployedUsd": 67.83
     },
     {
       "timestamp": "2026-05-16T12:00:14.000Z",
-      "equityUsd": 516.641025,
-      "cashUsd": 511.731825,
-      "deployedUsd": 4.9092
+      "equityUsd": 635.76939994,
+      "cashUsd": 598.95039994,
+      "deployedUsd": 36.819
     },
     {
       "timestamp": "2026-05-16T12:00:15.000Z",
-      "equityUsd": 518.147745,
-      "cashUsd": 511.731825,
-      "deployedUsd": 6.41592
+      "equityUsd": 647.06979994,
+      "cashUsd": 598.95039994,
+      "deployedUsd": 48.1194
     },
     {
       "timestamp": "2026-05-16T12:00:16.000Z",
-      "equityUsd": 518.147745,
-      "cashUsd": 511.731825,
-      "deployedUsd": 6.41592
+      "equityUsd": 647.06979994,
+      "cashUsd": 598.95039994,
+      "deployedUsd": 48.1194
     },
     {
       "timestamp": "2026-05-16T12:00:17.000Z",
-      "equityUsd": 517.35305409,
-      "cashUsd": 511.731825,
-      "deployedUsd": 5.62122909
+      "equityUsd": 641.10961812,
+      "cashUsd": 598.95039994,
+      "deployedUsd": 42.15921818
     },
     {
       "timestamp": "2026-05-17T00:00:23.000Z",
-      "equityUsd": 518.35225339,
-      "cashUsd": 511.731825,
-      "deployedUsd": 6.62042839
+      "equityUsd": 646.07101284,
+      "cashUsd": 598.95039994,
+      "deployedUsd": 47.1206129
     },
     {
       "timestamp": "2026-05-17T00:00:26.000Z",
-      "equityUsd": 518.147745,
-      "cashUsd": 511.731825,
-      "deployedUsd": 6.41592
+      "equityUsd": 647.06979994,
+      "cashUsd": 598.95039994,
+      "deployedUsd": 48.1194
     },
     {
       "timestamp": "2026-05-17T00:00:27.000Z",
-      "equityUsd": 522.206545,
-      "cashUsd": 514.836225,
-      "deployedUsd": 7.37032
+      "equityUsd": 668.46039994,
+      "cashUsd": 598.95039994,
+      "deployedUsd": 69.51
     },
     {
       "timestamp": "2026-05-17T00:00:28.000Z",
-      "equityUsd": 519.919185,
-      "cashUsd": 514.836225,
-      "deployedUsd": 5.08296
+      "equityUsd": 642.13779994,
+      "cashUsd": 598.95039994,
+      "deployedUsd": 43.1874
     },
     {
       "timestamp": "2026-05-17T00:00:29.000Z",
-      "equityUsd": 520.576785,
-      "cashUsd": 514.836225,
-      "deployedUsd": 5.74056
+      "equityUsd": 647.06979994,
+      "cashUsd": 598.95039994,
+      "deployedUsd": 48.1194
     },
     {
       "timestamp": "2026-05-17T00:00:30.000Z",
-      "equityUsd": 520.576785,
-      "cashUsd": 514.836225,
-      "deployedUsd": 5.74056
+      "equityUsd": 647.06979994,
+      "cashUsd": 598.95039994,
+      "deployedUsd": 48.1194
     },
     {
       "timestamp": "2026-05-17T00:00:31.000Z",
-      "equityUsd": 519.78209409,
-      "cashUsd": 514.836225,
-      "deployedUsd": 4.94586909
+      "equityUsd": 641.10961812,
+      "cashUsd": 598.95039994,
+      "deployedUsd": 42.15921818
     },
     {
       "timestamp": "2026-05-17T12:00:06.000Z",
-      "equityUsd": 519.71548694,
-      "cashUsd": 514.836225,
-      "deployedUsd": 4.87926194
+      "equityUsd": 638.07746446,
+      "cashUsd": 598.95039994,
+      "deployedUsd": 39.12706452
     },
     {
       "timestamp": "2026-05-17T12:00:10.000Z",
-      "equityUsd": 520.576785,
-      "cashUsd": 514.836225,
-      "deployedUsd": 5.74056
+      "equityUsd": 647.06979994,
+      "cashUsd": 598.95039994,
+      "deployedUsd": 48.1194
     },
     {
       "timestamp": "2026-05-17T12:00:11.000Z",
-      "equityUsd": 521.725145,
-      "cashUsd": 516.388425,
-      "deployedUsd": 5.33672
+      "equityUsd": 664.07499994,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 42.558
     },
     {
       "timestamp": "2026-05-17T12:00:13.000Z",
-      "equityUsd": 521.516905,
-      "cashUsd": 516.388425,
-      "deployedUsd": 5.12848
+      "equityUsd": 662.51319994,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 40.9962
     },
     {
       "timestamp": "2026-05-17T12:00:14.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 516.388425,
-      "deployedUsd": 5.40288
+      "equityUsd": 664.57119994,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 43.0542
     },
     {
       "timestamp": "2026-05-17T12:00:15.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 516.388425,
-      "deployedUsd": 5.40288
+      "equityUsd": 664.57119994,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 43.0542
     },
     {
       "timestamp": "2026-05-17T12:00:16.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 516.388425,
-      "deployedUsd": 5.40288
+      "equityUsd": 664.57119994,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 43.0542
     },
     {
       "timestamp": "2026-05-17T12:00:17.000Z",
-      "equityUsd": 520.97115955,
-      "cashUsd": 516.388425,
-      "deployedUsd": 4.58273455
+      "equityUsd": 658.42010903,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 36.90310909
     },
     {
       "timestamp": "2026-05-18T00:00:07.000Z",
-      "equityUsd": 520.71323274,
-      "cashUsd": 516.388425,
-      "deployedUsd": 4.32480774
+      "equityUsd": 653.953058,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 32.43605806
     },
     {
       "timestamp": "2026-05-18T00:00:10.000Z",
-      "equityUsd": 521.829145,
-      "cashUsd": 516.388425,
-      "deployedUsd": 5.44072
+      "equityUsd": 664.85499994,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 43.338
     },
     {
       "timestamp": "2026-05-18T00:00:12.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 516.388425,
-      "deployedUsd": 5.40288
+      "equityUsd": 664.57119994,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 43.0542
     },
     {
       "timestamp": "2026-05-18T00:00:13.000Z",
-      "equityUsd": 520.732905,
-      "cashUsd": 516.388425,
-      "deployedUsd": 4.34448
+      "equityUsd": 656.63319994,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 35.1162
     },
     {
       "timestamp": "2026-05-18T00:00:14.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 516.388425,
-      "deployedUsd": 5.40288
+      "equityUsd": 664.57119994,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 43.0542
     },
     {
       "timestamp": "2026-05-18T00:00:15.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 516.388425,
-      "deployedUsd": 5.40288
+      "equityUsd": 664.57119994,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 43.0542
     },
     {
       "timestamp": "2026-05-18T00:00:16.000Z",
-      "equityUsd": 520.97115955,
-      "cashUsd": 516.388425,
-      "deployedUsd": 4.58273455
+      "equityUsd": 658.42010903,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 36.90310909
     },
     {
       "timestamp": "2026-05-18T12:00:06.000Z",
-      "equityUsd": 520.74936177,
-      "cashUsd": 516.388425,
-      "deployedUsd": 4.36093677
+      "equityUsd": 654.22402575,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 32.70702581
     },
     {
       "timestamp": "2026-05-18T12:00:09.000Z",
-      "equityUsd": 521.897145,
-      "cashUsd": 516.388425,
-      "deployedUsd": 5.50872
+      "equityUsd": 665.36499994,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 43.848
     },
     {
       "timestamp": "2026-05-18T12:00:11.000Z",
-      "equityUsd": 520.732905,
-      "cashUsd": 516.388425,
-      "deployedUsd": 4.34448
+      "equityUsd": 656.63319994,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 35.1162
     },
     {
       "timestamp": "2026-05-18T12:00:12.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 516.388425,
-      "deployedUsd": 5.40288
+      "equityUsd": 664.57119994,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 43.0542
     },
     {
       "timestamp": "2026-05-18T12:00:14.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 516.388425,
-      "deployedUsd": 5.40288
+      "equityUsd": 664.57119994,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 43.0542
     },
     {
       "timestamp": "2026-05-18T12:00:15.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 516.388425,
-      "deployedUsd": 5.40288
+      "equityUsd": 664.57119994,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 43.0542
     },
     {
       "timestamp": "2026-05-18T12:00:16.000Z",
-      "equityUsd": 521.40388682,
-      "cashUsd": 516.388425,
-      "deployedUsd": 5.01546182
+      "equityUsd": 661.66556358,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 40.14856364
     },
     {
       "timestamp": "2026-05-19T00:00:05.000Z",
-      "equityUsd": 520.71323274,
-      "cashUsd": 516.388425,
-      "deployedUsd": 4.32480774
+      "equityUsd": 653.953058,
+      "cashUsd": 621.51699994,
+      "deployedUsd": 32.43605806
     },
     {
       "timestamp": "2026-05-19T00:00:08.000Z",
-      "equityUsd": 521.30586758,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.04304258
+      "equityUsd": 660.93041929,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 47.85541935
     },
     {
       "timestamp": "2026-05-19T00:00:09.000Z",
-      "equityUsd": 520.732905,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.47008
+      "equityUsd": 656.63319994,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 43.5582
     },
     {
       "timestamp": "2026-05-19T00:00:10.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.52848
+      "equityUsd": 664.57119994,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 51.4962
     },
     {
       "timestamp": "2026-05-19T00:00:11.000Z",
-      "equityUsd": 521.48025045,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.21742545
+      "equityUsd": 662.23829085,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 49.16329091
     },
     {
       "timestamp": "2026-05-19T12:00:19.000Z",
-      "equityUsd": 520.62291016,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.36008516
+      "equityUsd": 653.27563865,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 40.20063871
     },
     {
       "timestamp": "2026-05-19T12:00:23.000Z",
-      "equityUsd": 521.56044823,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.29762323
+      "equityUsd": 662.83977413,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 49.76477419
     },
     {
       "timestamp": "2026-05-19T12:00:26.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.40736
+      "equityUsd": 656.16279994,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 43.0878
     },
     {
       "timestamp": "2026-05-19T12:00:28.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.52848
+      "equityUsd": 664.57119994,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 51.4962
     },
     {
       "timestamp": "2026-05-19T12:00:30.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.52848
+      "equityUsd": 664.57119994,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 51.4962
     },
     {
       "timestamp": "2026-05-19T12:00:31.000Z",
-      "equityUsd": 521.30206864,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.03924364
+      "equityUsd": 660.90192721,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 47.82692727
     },
     {
       "timestamp": "2026-05-20T00:00:08.000Z",
-      "equityUsd": 520.75283016,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.49000516
+      "equityUsd": 654.25003865,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 41.17503871
     },
     {
       "timestamp": "2026-05-20T00:00:11.000Z",
-      "equityUsd": 522.110745,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.84792
+      "equityUsd": 666.96699994,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 53.892
     },
     {
       "timestamp": "2026-05-20T00:00:12.000Z",
-      "equityUsd": 521.42268564,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.15986064
+      "equityUsd": 661.80655478,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 48.73155484
     },
     {
       "timestamp": "2026-05-20T00:00:13.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.40736
+      "equityUsd": 656.16279994,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 43.0878
     },
     {
       "timestamp": "2026-05-20T00:00:14.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.52848
+      "equityUsd": 664.57119994,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 51.4962
     },
     {
       "timestamp": "2026-05-20T00:00:15.000Z",
-      "equityUsd": 521.30206864,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.03924364
+      "equityUsd": 660.90192721,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 47.82692727
     },
     {
       "timestamp": "2026-05-20T12:00:05.000Z",
-      "equityUsd": 520.77089468,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.50806968
+      "equityUsd": 654.38552252,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 41.31052258
     },
     {
       "timestamp": "2026-05-20T12:00:11.000Z",
-      "equityUsd": 521.50522242,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.24239742
+      "equityUsd": 662.42558058,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 49.35058064
     },
     {
       "timestamp": "2026-05-20T12:00:14.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.40736
+      "equityUsd": 656.16279994,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 43.0878
     },
     {
       "timestamp": "2026-05-20T12:00:15.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.52848
+      "equityUsd": 664.57119994,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 51.4962
     },
     {
       "timestamp": "2026-05-20T12:00:18.000Z",
-      "equityUsd": 521.09843227,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.83560727
+      "equityUsd": 659.37465449,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 46.29965455
     },
     {
       "timestamp": "2026-05-21T00:00:05.000Z",
-      "equityUsd": 520.77089468,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.50806968
+      "equityUsd": 654.38552252,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 41.31052258
     },
     {
       "timestamp": "2026-05-21T00:00:10.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.52848
+      "equityUsd": 664.57119994,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 51.4962
     },
     {
       "timestamp": "2026-05-21T00:00:13.000Z",
-      "equityUsd": 522.110745,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.84792
+      "equityUsd": 666.96699994,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 53.892
     },
     {
       "timestamp": "2026-05-21T00:00:14.000Z",
-      "equityUsd": 521.35236306,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.08953806
+      "equityUsd": 661.27913542,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 48.20413548
     },
     {
       "timestamp": "2026-05-21T00:00:15.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.40736
+      "equityUsd": 656.16279994,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 43.0878
     },
     {
       "timestamp": "2026-05-21T00:00:16.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.52848
+      "equityUsd": 664.57119994,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 51.4962
     },
     {
       "timestamp": "2026-05-21T00:00:17.000Z",
-      "equityUsd": 521.02206864,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.75924364
+      "equityUsd": 658.80192721,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 45.72692727
     },
     {
       "timestamp": "2026-05-21T12:00:08.000Z",
-      "equityUsd": 520.91541081,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.65258581
+      "equityUsd": 655.46939349,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 42.39439355
     },
     {
       "timestamp": "2026-05-21T12:00:09.000Z",
-      "equityUsd": 521.19825468,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.93542968
+      "equityUsd": 660.12332252,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 47.04832258
     },
     {
       "timestamp": "2026-05-21T12:00:10.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.52848
+      "equityUsd": 664.57119994,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 51.4962
     },
     {
       "timestamp": "2026-05-21T12:00:11.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.40736
+      "equityUsd": 656.16279994,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 43.0878
     },
     {
       "timestamp": "2026-05-21T12:00:12.000Z",
-      "equityUsd": 521.02206864,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.75924364
+      "equityUsd": 658.80192721,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 45.72692727
     },
     {
       "timestamp": "2026-05-22T00:00:09.000Z",
-      "equityUsd": 520.65383661,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.39101161
+      "equityUsd": 653.50758704,
+      "cashUsd": 613.07499994,
+      "deployedUsd": 40.4325871
     },
     {
       "timestamp": "2026-05-22T00:00:14.000Z",
-      "equityUsd": 521.35657726,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.09375226
+      "equityUsd": 657.37985299,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 52.74685305
     },
     {
       "timestamp": "2026-05-22T00:00:17.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.52848
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-22T00:00:18.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.40736
+      "equityUsd": 656.16279994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.5298
     },
     {
       "timestamp": "2026-05-22T00:00:24.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.52848
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-22T00:00:26.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.52848
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-22T00:00:27.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.52848
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-22T00:00:29.000Z",
-      "equityUsd": 521.02206864,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.75924364
+      "equityUsd": 658.80192721,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 54.16892727
     },
     {
       "timestamp": "2026-05-22T12:00:05.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.52848
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-22T12:00:06.000Z",
-      "equityUsd": 520.65383661,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.39101161
+      "equityUsd": 653.50758704,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 48.8745871
     },
     {
       "timestamp": "2026-05-22T12:00:09.000Z",
-      "equityUsd": 522.26238371,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.99955871
+      "equityUsd": 664.17340137,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.54040143
     },
     {
       "timestamp": "2026-05-22T12:00:11.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.52848
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-22T12:00:12.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.40736
+      "equityUsd": 656.16279994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.5298
     },
     {
       "timestamp": "2026-05-22T12:00:13.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.52848
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-22T12:00:14.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.52848
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-22T12:00:15.000Z",
-      "equityUsd": 521.04752318,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.78469818
+      "equityUsd": 658.9928363,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 54.35983636
     },
     {
       "timestamp": "2026-05-23T00:00:06.000Z",
-      "equityUsd": 521.02885597,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.76603097
+      "equityUsd": 656.3202322,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.68723226
     },
     {
       "timestamp": "2026-05-23T00:00:09.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.52848
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-23T00:00:10.000Z",
-      "equityUsd": 522.36819016,
-      "cashUsd": 515.262825,
-      "deployedUsd": 7.10536516
+      "equityUsd": 666.05583865,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 61.42283871
     },
     {
       "timestamp": "2026-05-23T00:00:12.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.40736
+      "equityUsd": 656.16279994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.5298
     },
     {
       "timestamp": "2026-05-23T00:00:13.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.52848
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-23T00:00:14.000Z",
-      "equityUsd": 521.09843227,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.83560727
+      "equityUsd": 659.37465449,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 54.74165455
     },
     {
       "timestamp": "2026-05-23T12:00:06.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.52848
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-23T12:00:07.000Z",
-      "equityUsd": 521.01079145,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.74796645
+      "equityUsd": 656.18474833,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.55174839
     },
     {
       "timestamp": "2026-05-23T12:00:09.000Z",
-      "equityUsd": 521.64380306,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.38097806
+      "equityUsd": 660.62293542,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 55.98993548
     },
     {
       "timestamp": "2026-05-23T12:00:10.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.40736
+      "equityUsd": 656.16279994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.5298
     },
     {
       "timestamp": "2026-05-23T12:00:11.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 515.262825,
-      "deployedUsd": 6.52848
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-23T12:00:12.000Z",
-      "equityUsd": 521.12388682,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.86106182
+      "equityUsd": 659.56556358,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 54.93256364
     },
     {
       "timestamp": "2026-05-24T00:00:04.000Z",
-      "equityUsd": 521.01079145,
-      "cashUsd": 515.262825,
-      "deployedUsd": 5.74796645
+      "equityUsd": 656.18474833,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.55174839
     },
     {
       "timestamp": "2026-05-24T00:00:06.000Z",
-      "equityUsd": 521.40235599,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.26513099
+      "equityUsd": 661.65408238,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 57.02108244
     },
     {
       "timestamp": "2026-05-24T00:00:08.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.53296
+      "equityUsd": 656.16279994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.5298
     },
     {
       "timestamp": "2026-05-24T00:00:09.000Z",
-      "equityUsd": 521.12388682,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.98666182
+      "equityUsd": 659.56556358,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 54.93256364
     },
     {
       "timestamp": "2026-05-24T12:00:04.000Z",
-      "equityUsd": 520.97466242,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.83743742
+      "equityUsd": 655.91378058,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.28078064
     },
     {
       "timestamp": "2026-05-24T12:00:07.000Z",
-      "equityUsd": 520.86858299,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.73135799
+      "equityUsd": 657.65078489,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 53.01778495
     },
     {
       "timestamp": "2026-05-24T12:00:08.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.53296
+      "equityUsd": 656.16279994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.5298
     },
     {
       "timestamp": "2026-05-24T12:00:09.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-24T12:00:10.000Z",
-      "equityUsd": 521.07297773,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.93575273
+      "equityUsd": 659.18374539,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 54.55074545
     },
     {
       "timestamp": "2026-05-25T00:00:04.000Z",
-      "equityUsd": 520.64097468,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.50374968
+      "equityUsd": 653.41112252,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 48.77812258
     },
     {
       "timestamp": "2026-05-25T00:00:07.000Z",
-      "equityUsd": 520.7587622,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.6215372
+      "equityUsd": 656.82712897,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 52.19412903
     },
     {
       "timestamp": "2026-05-25T00:00:08.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.53296
+      "equityUsd": 656.16279994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.5298
     },
     {
       "timestamp": "2026-05-25T00:00:09.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-25T00:00:10.000Z",
-      "equityUsd": 520.89479591,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.75757091
+      "equityUsd": 657.84738176,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 53.21438182
     },
     {
       "timestamp": "2026-05-25T12:00:03.000Z",
-      "equityUsd": 521.03839403,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.90116903
+      "equityUsd": 656.39176768,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.75876774
     },
     {
       "timestamp": "2026-05-25T12:00:06.000Z",
-      "equityUsd": 521.27754834,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.14032334
+      "equityUsd": 660.71802503,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 56.08502509
     },
     {
       "timestamp": "2026-05-25T12:00:08.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.53296
+      "equityUsd": 656.16279994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.5298
     },
     {
       "timestamp": "2026-05-25T12:00:09.000Z",
-      "equityUsd": 520.89479591,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.75757091
+      "equityUsd": 657.84738176,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 53.21438182
     },
     {
       "timestamp": "2026-05-26T00:00:04.000Z",
-      "equityUsd": 521.03839403,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.90116903
+      "equityUsd": 656.39176768,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.75876774
     },
     {
       "timestamp": "2026-05-26T00:00:07.000Z",
-      "equityUsd": 521.11093903,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.97371403
+      "equityUsd": 659.46845514,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 54.8354552
     },
     {
       "timestamp": "2026-05-26T00:00:08.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.53296
+      "equityUsd": 656.16279994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.5298
     },
     {
       "timestamp": "2026-05-26T00:00:09.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-26T00:00:10.000Z",
-      "equityUsd": 520.92025045,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.78302545
+      "equityUsd": 658.03829085,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 53.40529091
     },
     {
       "timestamp": "2026-05-26T12:00:04.000Z",
-      "equityUsd": 520.74936177,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.61213677
+      "equityUsd": 654.22402575,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 49.59102581
     },
     {
       "timestamp": "2026-05-26T12:00:09.000Z",
-      "equityUsd": 520.91650175,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.77927675
+      "equityUsd": 658.01017557,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 53.37717563
     },
     {
       "timestamp": "2026-05-26T12:00:10.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-26T12:00:13.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.53296
+      "equityUsd": 656.16279994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.5298
     },
     {
       "timestamp": "2026-05-26T12:00:14.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-26T12:00:16.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-26T12:00:17.000Z",
-      "equityUsd": 521.09843227,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.96120727
+      "equityUsd": 659.37465449,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 54.74165455
     },
     {
       "timestamp": "2026-05-27T00:00:05.000Z",
-      "equityUsd": 520.73129726,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.59407226
+      "equityUsd": 654.08854187,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 49.45554193
     },
     {
       "timestamp": "2026-05-27T00:00:08.000Z",
-      "equityUsd": 520.93456627,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.79734127
+      "equityUsd": 658.14565944,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 53.5126595
     },
     {
       "timestamp": "2026-05-27T00:00:09.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.53296
+      "equityUsd": 656.16279994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.5298
     },
     {
       "timestamp": "2026-05-27T00:00:10.000Z",
-      "equityUsd": 520.97115954,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.83393454
+      "equityUsd": 658.42010903,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 53.78710909
     },
     {
       "timestamp": "2026-05-27T12:00:03.000Z",
-      "equityUsd": 520.74936177,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.61213677
+      "equityUsd": 654.22402575,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 49.59102581
     },
     {
       "timestamp": "2026-05-27T12:00:06.000Z",
-      "equityUsd": 521.094399,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.957174
+      "equityUsd": 659.34440496,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 54.71140502
     },
     {
       "timestamp": "2026-05-27T12:00:07.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.53296
+      "equityUsd": 656.16279994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.5298
     },
     {
       "timestamp": "2026-05-27T12:00:08.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-27T12:00:09.000Z",
-      "equityUsd": 520.99661409,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.85938909
+      "equityUsd": 658.61101812,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 53.97801818
     },
     {
       "timestamp": "2026-05-28T00:00:05.000Z",
-      "equityUsd": 520.82161984,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.68439484
+      "equityUsd": 654.76596123,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 50.13296129
     },
     {
       "timestamp": "2026-05-28T00:00:09.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-28T00:00:11.000Z",
-      "equityUsd": 520.10039967,
-      "cashUsd": 514.137225,
-      "deployedUsd": 5.96317467
+      "equityUsd": 651.88940998,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 47.25641004
     },
     {
       "timestamp": "2026-05-28T00:00:13.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-28T00:00:14.000Z",
-      "equityUsd": 520.97115954,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.83393454
+      "equityUsd": 658.42010903,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 53.78710909
     },
     {
       "timestamp": "2026-05-28T12:00:04.000Z",
-      "equityUsd": 520.83968435,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.70245935
+      "equityUsd": 654.9014451,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 50.26844516
     },
     {
       "timestamp": "2026-05-28T12:00:07.000Z",
-      "equityUsd": 521.24151967,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.10429467
+      "equityUsd": 660.44780998,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 55.81481004
     },
     {
       "timestamp": "2026-05-28T12:00:11.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.53296
+      "equityUsd": 656.16279994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.5298
     },
     {
       "timestamp": "2026-05-28T12:00:12.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-28T12:00:13.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-28T12:00:14.000Z",
-      "equityUsd": 520.97115954,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.83393454
+      "equityUsd": 658.42010903,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 53.78710909
     },
     {
       "timestamp": "2026-05-29T00:00:07.000Z",
-      "equityUsd": 520.78549081,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.64826581
+      "equityUsd": 654.49499349,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 49.86199355
     },
     {
       "timestamp": "2026-05-29T00:00:11.000Z",
-      "equityUsd": 521.08513257,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.94790757
+      "equityUsd": 659.27490675,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 54.64190681
     },
     {
       "timestamp": "2026-05-29T00:00:13.000Z",
-      "equityUsd": 520.688105,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.55088
+      "equityUsd": 656.29719994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.6642
     },
     {
       "timestamp": "2026-05-29T00:00:14.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-29T00:00:17.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-29T00:00:18.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-29T00:00:19.000Z",
-      "equityUsd": 521.04752318,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.91029818
+      "equityUsd": 658.9928363,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 54.35983636
     },
     {
       "timestamp": "2026-05-30T00:00:18.000Z",
-      "equityUsd": 520.93853339,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.80130839
+      "equityUsd": 655.64281284,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.0098129
     },
     {
       "timestamp": "2026-05-30T00:00:21.000Z",
-      "equityUsd": 521.00715886,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.86993386
+      "equityUsd": 658.69010388,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 54.05710394
     },
     {
       "timestamp": "2026-05-30T00:00:22.000Z",
-      "equityUsd": 520.800105,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.66288
+      "equityUsd": 657.13719994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 52.5042
     },
     {
       "timestamp": "2026-05-30T00:00:23.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-30T00:00:24.000Z",
-      "equityUsd": 521.07297773,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.93575273
+      "equityUsd": 659.18374539,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 54.55074545
     },
     {
       "timestamp": "2026-05-30T12:00:15.000Z",
-      "equityUsd": 520.88433984,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.74711484
+      "equityUsd": 655.23636123,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 50.60336129
     },
     {
       "timestamp": "2026-05-30T12:00:18.000Z",
-      "equityUsd": 520.87132612,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.73410112
+      "equityUsd": 657.67135836,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 53.03835842
     },
     {
       "timestamp": "2026-05-30T12:00:19.000Z",
-      "equityUsd": 520.732905,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.59568
+      "equityUsd": 656.63319994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 52.0002
     },
     {
       "timestamp": "2026-05-30T12:00:20.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-30T12:00:21.000Z",
-      "equityUsd": 521.17479591,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.03757091
+      "equityUsd": 659.94738176,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 55.31438182
     },
     {
       "timestamp": "2026-05-31T00:00:07.000Z",
-      "equityUsd": 520.82161984,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.68439484
+      "equityUsd": 654.76596123,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 50.13296129
     },
     {
       "timestamp": "2026-05-31T00:00:10.000Z",
-      "equityUsd": 520.68013377,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.54290877
+      "equityUsd": 656.23741571,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.60441577
     },
     {
       "timestamp": "2026-05-31T00:00:12.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.53296
+      "equityUsd": 656.16279994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.5298
     },
     {
       "timestamp": "2026-05-31T00:00:13.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-31T00:00:14.000Z",
-      "equityUsd": 521.27661409,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.13938909
+      "equityUsd": 660.71101812,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 56.07801818
     },
     {
       "timestamp": "2026-05-31T12:00:06.000Z",
-      "equityUsd": 520.83968435,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.70245935
+      "equityUsd": 654.9014451,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 50.26844516
     },
     {
       "timestamp": "2026-05-31T12:00:09.000Z",
-      "equityUsd": 520.87058538,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.73336038
+      "equityUsd": 657.66580281,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 53.03280287
     },
     {
       "timestamp": "2026-05-31T12:00:10.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.53296
+      "equityUsd": 656.16279994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.5298
     },
     {
       "timestamp": "2026-05-31T12:00:11.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-05-31T12:00:12.000Z",
-      "equityUsd": 521.32752318,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.19029818
+      "equityUsd": 661.0928363,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 56.45983636
     },
     {
       "timestamp": "2026-06-01T00:00:03.000Z",
-      "equityUsd": 520.73129726,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.59407226
+      "equityUsd": 654.08854187,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 49.45554193
     },
     {
       "timestamp": "2026-06-01T00:00:05.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-06-01T00:00:06.000Z",
-      "equityUsd": 521.06040139,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.92317639
+      "equityUsd": 659.08942288,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 54.45642294
     },
     {
       "timestamp": "2026-06-01T00:00:07.000Z",
-      "equityUsd": 520.670185,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.53296
+      "equityUsd": 656.16279994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.5298
     },
     {
       "timestamp": "2026-06-01T00:00:08.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-06-01T00:00:09.000Z",
-      "equityUsd": 521.55661409,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.41938909
+      "equityUsd": 662.81101812,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 58.17801818
     },
     {
       "timestamp": "2026-06-01T12:00:04.000Z",
-      "equityUsd": 520.73129726,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.59407226
+      "equityUsd": 654.08854187,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 49.45554193
     },
     {
       "timestamp": "2026-06-01T12:00:07.000Z",
-      "equityUsd": 519.60006036,
-      "cashUsd": 514.137225,
-      "deployedUsd": 5.46283536
+      "equityUsd": 648.13686517,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 43.50386523
     },
     {
       "timestamp": "2026-06-01T12:00:08.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-06-01T12:00:09.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-06-01T12:00:10.000Z",
-      "equityUsd": 521.30206864,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.16484364
+      "equityUsd": 660.90192721,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 56.26892727
     },
     {
       "timestamp": "2026-06-02T00:00:05.000Z",
-      "equityUsd": 520.69516823,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.55794323
+      "equityUsd": 653.81757413,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 49.18457419
     },
     {
       "timestamp": "2026-06-02T00:00:08.000Z",
-      "equityUsd": 519.63457888,
-      "cashUsd": 514.137225,
-      "deployedUsd": 5.49735388
+      "equityUsd": 648.39575406,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 43.76275412
     },
     {
       "timestamp": "2026-06-02T00:00:09.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-06-02T00:00:10.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-06-02T00:00:11.000Z",
-      "equityUsd": 521.12388682,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.98666182
+      "equityUsd": 659.56556358,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 54.93256364
     },
     {
       "timestamp": "2026-06-02T12:00:07.000Z",
-      "equityUsd": 520.65903919,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.52181419
+      "equityUsd": 653.54660639,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 48.91360645
     },
     {
       "timestamp": "2026-06-02T12:00:10.000Z",
-      "equityUsd": 519.57999824,
-      "cashUsd": 514.137225,
-      "deployedUsd": 5.44277324
+      "equityUsd": 647.98639922,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 43.35339928
     },
     {
       "timestamp": "2026-06-02T12:00:11.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-06-02T12:00:12.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-06-02T12:00:13.000Z",
-      "equityUsd": 521.09843227,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.96120727
+      "equityUsd": 659.37465449,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 54.74165455
     },
     {
       "timestamp": "2026-06-03T00:00:05.000Z",
-      "equityUsd": 520.71323274,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.57600774
+      "equityUsd": 653.953058,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 49.32005806
     },
     {
       "timestamp": "2026-06-03T00:00:08.000Z",
-      "equityUsd": 519.41780469,
-      "cashUsd": 514.137225,
-      "deployedUsd": 5.28057969
+      "equityUsd": 646.76994761,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 42.13694767
     },
     {
       "timestamp": "2026-06-03T00:00:09.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-06-03T00:00:10.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-06-03T00:00:11.000Z",
-      "equityUsd": 521.09843227,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.96120727
+      "equityUsd": 659.37465449,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 54.74165455
     },
     {
       "timestamp": "2026-06-03T12:00:03.000Z",
-      "equityUsd": 521.002265,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.86504
+      "equityUsd": 656.12079994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 51.4878
     },
     {
       "timestamp": "2026-06-03T12:00:06.000Z",
-      "equityUsd": 519.36238772,
-      "cashUsd": 514.137225,
-      "deployedUsd": 5.22516272
+      "equityUsd": 646.35432037,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 41.72132043
     },
     {
       "timestamp": "2026-06-03T12:00:08.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-06-03T12:00:09.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-06-03T12:00:10.000Z",
-      "equityUsd": 521.09843227,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.96120727
+      "equityUsd": 659.37465449,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 54.74165455
     },
     {
       "timestamp": "2026-06-04T00:00:03.000Z",
-      "equityUsd": 520.85760435,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.72037935
+      "equityUsd": 655.0358451,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 50.40284516
     },
     {
       "timestamp": "2026-06-04T00:00:05.000Z",
-      "equityUsd": 521.791305,
-      "cashUsd": 514.137225,
-      "deployedUsd": 7.65408
+      "equityUsd": 664.57119994,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 59.9382
     },
     {
       "timestamp": "2026-06-04T00:00:06.000Z",
-      "equityUsd": 518.12790926,
-      "cashUsd": 514.137225,
-      "deployedUsd": 3.99068426
+      "equityUsd": 637.0957319,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 32.46273196
     },
     {
       "timestamp": "2026-06-04T12:00:05.000Z",
-      "equityUsd": 520.82161984,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.68439484
+      "equityUsd": 654.76596123,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 50.13296129
     },
     {
       "timestamp": "2026-06-04T12:00:06.000Z",
-      "equityUsd": 519.09964937,
-      "cashUsd": 514.137225,
-      "deployedUsd": 4.96242437
+      "equityUsd": 644.38378274,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 39.7507828
     },
     {
       "timestamp": "2026-06-04T12:00:07.000Z",
-      "equityUsd": 521.09843227,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.96120727
+      "equityUsd": 659.37465449,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 54.74165455
     },
     {
       "timestamp": "2026-06-05T00:00:18.000Z",
-      "equityUsd": 520.62291016,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.48568516
+      "equityUsd": 653.27563865,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 48.64263871
     },
     {
       "timestamp": "2026-06-05T00:00:19.000Z",
-      "equityUsd": 518.06226052,
-      "cashUsd": 514.137225,
-      "deployedUsd": 3.92503552
+      "equityUsd": 636.60336631,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 31.97036637
     },
     {
       "timestamp": "2026-06-05T12:00:05.000Z",
-      "equityUsd": 520.53258758,
-      "cashUsd": 514.137225,
-      "deployedUsd": 6.39536258
+      "equityUsd": 652.59821929,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 47.96521935
     },
     {
       "timestamp": "2026-06-05T12:00:07.000Z",
-      "equityUsd": 518.81439324,
-      "cashUsd": 514.284485,
-      "deployedUsd": 4.52990824
+      "equityUsd": 642.24991177,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 37.61691183
     },
     {
       "timestamp": "2026-06-05T12:00:08.000Z",
-      "equityUsd": 521.13313227,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.84864727
+      "equityUsd": 659.37465449,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 54.74165455
     },
     {
       "timestamp": "2026-06-06T00:00:03.000Z",
-      "equityUsd": 520.69373919,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.40925419
+      "equityUsd": 653.54660639,
+      "cashUsd": 604.63299994,
+      "deployedUsd": 48.91360645
     },
     {
       "timestamp": "2026-06-06T00:00:04.000Z",
-      "equityUsd": 518.97965011,
-      "cashUsd": 514.284485,
-      "deployedUsd": 4.69516511
+      "equityUsd": 643.48378829,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 37.74633835
     },
     {
       "timestamp": "2026-06-06T00:00:05.000Z",
-      "equityUsd": 521.13313227,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.84864727
+      "equityUsd": 659.63490449,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 53.89745455
     },
     {
       "timestamp": "2026-06-06T12:00:04.000Z",
-      "equityUsd": 520.76599726,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.48151226
+      "equityUsd": 654.34879187,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 48.61134193
     },
     {
       "timestamp": "2026-06-06T12:00:05.000Z",
-      "equityUsd": 519.30029527,
-      "cashUsd": 514.284485,
-      "deployedUsd": 5.01581027
+      "equityUsd": 645.888627,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 40.15117706
     },
     {
       "timestamp": "2026-06-06T12:00:06.000Z",
-      "equityUsd": 521.13313227,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.84864727
+      "equityUsd": 659.63490449,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 53.89745455
     },
     {
       "timestamp": "2026-06-07T00:00:13.000Z",
-      "equityUsd": 520.78406177,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.49957677
+      "equityUsd": 654.48427575,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 48.74682581
     },
     {
       "timestamp": "2026-06-07T00:00:15.000Z",
-      "equityUsd": 519.01549241,
-      "cashUsd": 514.284485,
-      "deployedUsd": 4.73100741
+      "equityUsd": 643.7526055,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 38.01515556
     },
     {
       "timestamp": "2026-06-07T00:00:16.000Z",
-      "equityUsd": 521.13313227,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.84864727
+      "equityUsd": 659.63490449,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 53.89745455
     },
     {
       "timestamp": "2026-06-07T12:00:03.000Z",
-      "equityUsd": 520.71180371,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.42731871
+      "equityUsd": 653.94234026,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 48.20489032
     },
     {
       "timestamp": "2026-06-07T12:00:05.000Z",
-      "equityUsd": 519.30997269,
-      "cashUsd": 514.284485,
-      "deployedUsd": 5.02548769
+      "equityUsd": 645.96120765,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 40.22375771
     },
     {
       "timestamp": "2026-06-07T12:00:06.000Z",
-      "equityUsd": 521.13313227,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.84864727
+      "equityUsd": 659.63490449,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 53.89745455
     },
     {
       "timestamp": "2026-06-08T00:00:03.000Z",
-      "equityUsd": 520.69373919,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.40925419
+      "equityUsd": 653.80685639,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 48.06940645
     },
     {
       "timestamp": "2026-06-08T00:00:05.000Z",
-      "equityUsd": 519.01236218,
-      "cashUsd": 514.284485,
-      "deployedUsd": 4.72787718
+      "equityUsd": 643.72912879,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 37.99167885
     },
     {
       "timestamp": "2026-06-08T00:00:06.000Z",
-      "equityUsd": 521.23495045,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.95046545
+      "equityUsd": 660.39854085,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 54.66109091
     },
     {
       "timestamp": "2026-06-08T12:00:03.000Z",
-      "equityUsd": 520.69373919,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.40925419
+      "equityUsd": 653.80685639,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 48.06940645
     },
     {
       "timestamp": "2026-06-08T12:00:05.000Z",
-      "equityUsd": 519.71412734,
-      "cashUsd": 514.284485,
-      "deployedUsd": 5.42964234
+      "equityUsd": 648.9923675,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 43.25491756
     },
     {
       "timestamp": "2026-06-08T12:00:06.000Z",
-      "equityUsd": 520.704885,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.4204
+      "equityUsd": 656.42304994,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 50.6856
     },
     {
       "timestamp": "2026-06-08T12:00:07.000Z",
-      "equityUsd": 521.18404136,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.89955636
+      "equityUsd": 660.01672267,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 54.27927273
     },
     {
       "timestamp": "2026-06-09T00:00:03.000Z",
-      "equityUsd": 520.63954564,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.35506064
+      "equityUsd": 653.40040478,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 47.66295484
     },
     {
       "timestamp": "2026-06-09T00:00:06.000Z",
-      "equityUsd": 519.96278034,
-      "cashUsd": 514.284485,
-      "deployedUsd": 5.67829534
+      "equityUsd": 650.85726499,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 45.11981505
     },
     {
       "timestamp": "2026-06-09T00:00:07.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 514.284485,
-      "deployedUsd": 7.54152
+      "equityUsd": 664.83144994,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 59.094
     },
     {
       "timestamp": "2026-06-09T00:00:08.000Z",
-      "equityUsd": 521.23495045,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.95046545
+      "equityUsd": 660.39854085,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 54.66109091
     },
     {
       "timestamp": "2026-06-09T12:00:03.000Z",
-      "equityUsd": 520.56728758,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.28280258
+      "equityUsd": 652.85846929,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 47.12101935
     },
     {
       "timestamp": "2026-06-09T12:00:06.000Z",
-      "equityUsd": 519.6592439,
-      "cashUsd": 514.284485,
-      "deployedUsd": 5.3747589
+      "equityUsd": 648.5807417,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 42.84329176
     },
     {
       "timestamp": "2026-06-09T12:00:08.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 514.284485,
-      "deployedUsd": 7.54152
+      "equityUsd": 664.83144994,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 59.094
     },
     {
       "timestamp": "2026-06-09T12:00:09.000Z",
-      "equityUsd": 521.20949591,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.92501091
+      "equityUsd": 660.20763176,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 54.47018182
     },
     {
       "timestamp": "2026-06-10T00:00:04.000Z",
-      "equityUsd": 520.62148113,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.33699613
+      "equityUsd": 653.26492091,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 47.52747097
     },
     {
       "timestamp": "2026-06-10T00:00:07.000Z",
-      "equityUsd": 519.50772658,
-      "cashUsd": 514.284485,
-      "deployedUsd": 5.22324158
+      "equityUsd": 647.44436177,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 41.70691183
     },
     {
       "timestamp": "2026-06-10T00:00:08.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 514.284485,
-      "deployedUsd": 7.54152
+      "equityUsd": 664.83144994,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 59.094
     },
     {
       "timestamp": "2026-06-10T00:00:09.000Z",
-      "equityUsd": 521.20949591,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.92501091
+      "equityUsd": 660.20763176,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 54.47018182
     },
     {
       "timestamp": "2026-06-10T12:00:03.000Z",
-      "equityUsd": 520.476965,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.19248
+      "equityUsd": 652.18104994,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 46.4436
     },
     {
       "timestamp": "2026-06-10T12:00:06.000Z",
-      "equityUsd": 520.00094999,
-      "cashUsd": 514.284485,
-      "deployedUsd": 5.71646499
+      "equityUsd": 651.14353739,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 45.40608745
     },
     {
       "timestamp": "2026-06-10T12:00:08.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 514.284485,
-      "deployedUsd": 7.54152
+      "equityUsd": 664.83144994,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 59.094
     },
     {
       "timestamp": "2026-06-10T12:00:09.000Z",
-      "equityUsd": 521.28585954,
-      "cashUsd": 514.284485,
-      "deployedUsd": 7.00137454
+      "equityUsd": 660.78035903,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 55.04290909
     },
     {
       "timestamp": "2026-06-11T00:00:05.000Z",
-      "equityUsd": 520.5853521,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.3008671
+      "equityUsd": 652.99395317,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 47.25650323
     },
     {
       "timestamp": "2026-06-11T00:00:09.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 514.284485,
-      "deployedUsd": 7.54152
+      "equityUsd": 664.83144994,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 59.094
     },
     {
       "timestamp": "2026-06-11T00:00:11.000Z",
-      "equityUsd": 519.52926541,
-      "cashUsd": 514.284485,
-      "deployedUsd": 5.24478041
+      "equityUsd": 647.60590299,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 41.86845305
     },
     {
       "timestamp": "2026-06-11T00:00:12.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 514.284485,
-      "deployedUsd": 7.54152
+      "equityUsd": 664.83144994,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 59.094
     },
     {
       "timestamp": "2026-06-11T00:00:13.000Z",
-      "equityUsd": 521.28585954,
-      "cashUsd": 514.284485,
-      "deployedUsd": 7.00137454
+      "equityUsd": 660.78035903,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 55.04290909
     },
     {
       "timestamp": "2026-06-11T12:00:03.000Z",
-      "equityUsd": 520.56728758,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.28280258
+      "equityUsd": 652.85846929,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 47.12101935
     },
     {
       "timestamp": "2026-06-11T12:00:06.000Z",
-      "equityUsd": 521.00565422,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.72116922
+      "equityUsd": 658.67881912,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 52.94136918
     },
     {
       "timestamp": "2026-06-11T12:00:07.000Z",
-      "equityUsd": 520.704885,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.4204
+      "equityUsd": 656.42304994,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 50.6856
     },
     {
       "timestamp": "2026-06-11T12:00:08.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 514.284485,
-      "deployedUsd": 7.54152
+      "equityUsd": 664.83144994,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 59.094
     },
     {
       "timestamp": "2026-06-11T12:00:09.000Z",
-      "equityUsd": 521.33676864,
-      "cashUsd": 514.284485,
-      "deployedUsd": 7.05228364
+      "equityUsd": 661.16217721,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 55.42472727
     },
     {
       "timestamp": "2026-06-12T00:00:04.000Z",
-      "equityUsd": 520.54922306,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.26473806
+      "equityUsd": 652.72298542,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 46.98553548
     },
     {
       "timestamp": "2026-06-12T00:00:06.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 514.284485,
-      "deployedUsd": 7.54152
+      "equityUsd": 664.83144994,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 59.094
     },
     {
       "timestamp": "2026-06-12T00:00:07.000Z",
-      "equityUsd": 522.2266817,
-      "cashUsd": 514.284485,
-      "deployedUsd": 7.9421967
+      "equityUsd": 667.83652521,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 62.09907527
     },
     {
       "timestamp": "2026-06-12T00:00:08.000Z",
-      "equityUsd": 520.704885,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.4204
+      "equityUsd": 656.42304994,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 50.6856
     },
     {
       "timestamp": "2026-06-12T00:00:09.000Z",
-      "equityUsd": 521.33676864,
-      "cashUsd": 514.284485,
-      "deployedUsd": 7.05228364
+      "equityUsd": 661.16217721,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 55.42472727
     },
     {
       "timestamp": "2026-06-12T12:00:03.000Z",
-      "equityUsd": 520.56728758,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.28280258
+      "equityUsd": 652.85846929,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 47.12101935
     },
     {
       "timestamp": "2026-06-12T12:00:05.000Z",
-      "equityUsd": 521.47800787,
-      "cashUsd": 514.284485,
-      "deployedUsd": 7.19352287
+      "equityUsd": 662.22147144,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 56.4840215
     },
     {
       "timestamp": "2026-06-12T12:00:07.000Z",
-      "equityUsd": 520.704885,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.4204
+      "equityUsd": 656.42304994,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 50.6856
     },
     {
       "timestamp": "2026-06-12T12:00:08.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 514.284485,
-      "deployedUsd": 7.54152
+      "equityUsd": 664.83144994,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 59.094
     },
     {
       "timestamp": "2026-06-12T12:00:09.000Z",
-      "equityUsd": 521.33676864,
-      "cashUsd": 514.284485,
-      "deployedUsd": 7.05228364
+      "equityUsd": 661.16217721,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 55.42472727
     },
     {
       "timestamp": "2026-06-13T00:00:04.000Z",
-      "equityUsd": 520.60341661,
-      "cashUsd": 514.284485,
-      "deployedUsd": 6.31893161
+      "equityUsd": 653.12943704,
+      "cashUsd": 605.73744994,
+      "deployedUsd": 47.3919871
     },
     {
       "timestamp": "2026-06-13T00:00:07.000Z",
-      "equityUsd": 520.9234649,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.7645799
+      "equityUsd": 658.06239919,
+      "cashUsd": 597.29544994,
+      "deployedUsd": 60.76694925
     },
     {
       "timestamp": "2026-06-13T00:00:08.000Z",
-      "equityUsd": 520.704885,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.546
+      "equityUsd": 656.42304994,
+      "cashUsd": 597.29544994,
+      "deployedUsd": 59.1276
     },
     {
       "timestamp": "2026-06-13T00:00:09.000Z",
-      "equityUsd": 521.18404136,
-      "cashUsd": 513.158885,
-      "deployedUsd": 8.02515636
+      "equityUsd": 660.01672267,
+      "cashUsd": 597.29544994,
+      "deployedUsd": 62.72127273
     },
     {
       "timestamp": "2026-06-13T12:00:07.000Z",
-      "equityUsd": 520.62148113,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.46259613
+      "equityUsd": 653.26492091,
+      "cashUsd": 597.29544994,
+      "deployedUsd": 55.96947097
     },
     {
       "timestamp": "2026-06-13T12:00:10.000Z",
-      "equityUsd": 521.82714848,
-      "cashUsd": 513.158885,
-      "deployedUsd": 8.66826348
+      "equityUsd": 665.22462606,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 66.85457612
     },
     {
       "timestamp": "2026-06-13T12:00:11.000Z",
-      "equityUsd": 520.704885,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.546
+      "equityUsd": 656.35194994,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 57.9819
     },
     {
       "timestamp": "2026-06-13T12:00:12.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 513.158885,
-      "deployedUsd": 8.66712
+      "equityUsd": 664.76034994,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 66.3903
     },
     {
       "timestamp": "2026-06-13T12:00:13.000Z",
-      "equityUsd": 521.13313227,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.97424727
+      "equityUsd": 659.56380448,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 61.19375454
     },
     {
       "timestamp": "2026-06-14T00:00:07.000Z",
-      "equityUsd": 521.90406177,
-      "cashUsd": 513.158885,
-      "deployedUsd": 8.74517677
+      "equityUsd": 662.81317575,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 64.44312581
     },
     {
       "timestamp": "2026-06-14T00:00:10.000Z",
-      "equityUsd": 520.42885935,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.26997435
+      "equityUsd": 654.7374576,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 56.36740766
     },
     {
       "timestamp": "2026-06-14T00:00:11.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 513.158885,
-      "deployedUsd": 8.66712
+      "equityUsd": 664.76034994,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 66.3903
     },
     {
       "timestamp": "2026-06-14T00:00:12.000Z",
-      "equityUsd": 520.704885,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.546
+      "equityUsd": 656.35194994,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 57.9819
     },
     {
       "timestamp": "2026-06-14T00:00:13.000Z",
-      "equityUsd": 521.13313227,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.97424727
+      "equityUsd": 659.56380448,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 61.19375454
     },
     {
       "timestamp": "2026-06-14T12:00:04.000Z",
-      "equityUsd": 521.07309403,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.91420903
+      "equityUsd": 656.58091768,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 58.21086774
     },
     {
       "timestamp": "2026-06-14T12:00:07.000Z",
-      "equityUsd": 520.59196518,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.43308018
+      "equityUsd": 656.05075132,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 57.68070138
     },
     {
       "timestamp": "2026-06-14T12:00:09.000Z",
-      "equityUsd": 520.704885,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.546
+      "equityUsd": 656.35194994,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 57.9819
     },
     {
       "timestamp": "2026-06-14T12:00:10.000Z",
-      "equityUsd": 521.08222318,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.92333818
+      "equityUsd": 659.1819863,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 60.81193636
     },
     {
       "timestamp": "2026-06-15T00:00:03.000Z",
-      "equityUsd": 520.83825532,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.67937032
+      "equityUsd": 654.81962736,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 56.44957742
     },
     {
       "timestamp": "2026-06-15T00:00:06.000Z",
-      "equityUsd": 520.10211044,
-      "cashUsd": 513.158885,
-      "deployedUsd": 6.94322544
+      "equityUsd": 652.46684073,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 54.09679079
     },
     {
       "timestamp": "2026-06-15T00:00:08.000Z",
-      "equityUsd": 520.704885,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.546
+      "equityUsd": 656.35194994,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 57.9819
     },
     {
       "timestamp": "2026-06-15T00:00:09.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 513.158885,
-      "deployedUsd": 8.66712
+      "equityUsd": 664.76034994,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 66.3903
     },
     {
       "timestamp": "2026-06-15T00:00:10.000Z",
-      "equityUsd": 521.05676864,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.89788364
+      "equityUsd": 658.99107721,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 60.62102727
     },
     {
       "timestamp": "2026-06-15T12:00:03.000Z",
-      "equityUsd": 520.69373919,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.53485419
+      "equityUsd": 653.73575639,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 55.36570645
     },
     {
       "timestamp": "2026-06-15T12:00:06.000Z",
-      "equityUsd": 520.24007686,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.08119186
+      "equityUsd": 653.38158889,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 55.01153895
     },
     {
       "timestamp": "2026-06-15T12:00:07.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 513.158885,
-      "deployedUsd": 8.66712
+      "equityUsd": 664.76034994,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 66.3903
     },
     {
       "timestamp": "2026-06-15T12:00:08.000Z",
-      "equityUsd": 520.704885,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.546
+      "equityUsd": 656.35194994,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 57.9819
     },
     {
       "timestamp": "2026-06-15T12:00:09.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 513.158885,
-      "deployedUsd": 8.66712
+      "equityUsd": 664.76034994,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 66.3903
     },
     {
       "timestamp": "2026-06-15T12:00:10.000Z",
-      "equityUsd": 520.92949591,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.77061091
+      "equityUsd": 658.03653176,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 59.66648182
     },
     {
       "timestamp": "2026-06-16T00:00:06.000Z",
-      "equityUsd": 520.67567468,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.51678968
+      "equityUsd": 653.60027252,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 55.23022258
     },
     {
       "timestamp": "2026-06-16T00:00:10.000Z",
-      "equityUsd": 520.31772259,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.15883759
+      "equityUsd": 653.93393185,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 55.56388191
     },
     {
       "timestamp": "2026-06-16T00:00:12.000Z",
-      "equityUsd": 520.704885,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.546
+      "equityUsd": 656.35194994,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 57.9819
     },
     {
       "timestamp": "2026-06-16T00:00:13.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 513.158885,
-      "deployedUsd": 8.66712
+      "equityUsd": 664.76034994,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 66.3903
     },
     {
       "timestamp": "2026-06-16T00:00:14.000Z",
-      "equityUsd": 520.92949591,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.77061091
+      "equityUsd": 658.03653176,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 59.66648182
     },
     {
       "timestamp": "2026-06-16T12:00:04.000Z",
-      "equityUsd": 520.67567468,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.51678968
+      "equityUsd": 653.60027252,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 55.23022258
     },
     {
       "timestamp": "2026-06-16T12:00:08.000Z",
-      "equityUsd": 521.49198656,
-      "cashUsd": 513.158885,
-      "deployedUsd": 8.33310156
+      "equityUsd": 661.54091166,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 63.17086172
     },
     {
       "timestamp": "2026-06-16T12:00:10.000Z",
-      "equityUsd": 520.704885,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.546
+      "equityUsd": 656.35194994,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 57.9819
     },
     {
       "timestamp": "2026-06-16T12:00:11.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 513.158885,
-      "deployedUsd": 8.66712
+      "equityUsd": 664.76034994,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 66.3903
     },
     {
       "timestamp": "2026-06-16T12:00:12.000Z",
-      "equityUsd": 520.70549591,
-      "cashUsd": 513.158885,
-      "deployedUsd": 7.54661091
+      "equityUsd": 656.35653176,
+      "cashUsd": 598.37004994,
+      "deployedUsd": 57.98648182
     },
     {
       "timestamp": "2026-06-17T00:00:05.000Z",
-      "equityUsd": 519.79430693,
-      "cashUsd": 512.033285,
-      "deployedUsd": 7.76102193
+      "equityUsd": 646.99001446,
+      "cashUsd": 589.92804994,
+      "deployedUsd": 57.06196452
     },
     {
       "timestamp": "2026-06-17T00:00:08.000Z",
-      "equityUsd": 517.7262357,
-      "cashUsd": 512.033285,
-      "deployedUsd": 5.6929507
+      "equityUsd": 635.15178018,
+      "cashUsd": 589.92804994,
+      "deployedUsd": 45.22373024
     },
     {
       "timestamp": "2026-06-17T00:00:09.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 512.033285,
-      "deployedUsd": 9.79272
+      "equityUsd": 664.76034994,
+      "cashUsd": 589.92804994,
+      "deployedUsd": 74.8323
     },
     {
       "timestamp": "2026-06-17T00:00:10.000Z",
-      "equityUsd": 520.704885,
-      "cashUsd": 512.033285,
-      "deployedUsd": 8.6716
+      "equityUsd": 656.35194994,
+      "cashUsd": 589.92804994,
+      "deployedUsd": 66.4239
     },
     {
       "timestamp": "2026-06-17T00:00:11.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 512.033285,
-      "deployedUsd": 9.79272
+      "equityUsd": 664.76034994,
+      "cashUsd": 589.92804994,
+      "deployedUsd": 74.8323
     },
     {
       "timestamp": "2026-06-17T00:00:12.000Z",
-      "equityUsd": 520.70549591,
-      "cashUsd": 512.033285,
-      "deployedUsd": 8.67221091
+      "equityUsd": 656.35653176,
+      "cashUsd": 589.92804994,
+      "deployedUsd": 66.42848182
     },
     {
       "timestamp": "2026-06-17T12:00:08.000Z",
-      "equityUsd": 519.48070693,
-      "cashUsd": 512.033285,
-      "deployedUsd": 7.44742193
+      "equityUsd": 644.63801446,
+      "cashUsd": 589.92804994,
+      "deployedUsd": 54.70996452
     },
     {
       "timestamp": "2026-06-17T12:00:11.000Z",
-      "equityUsd": 517.77119627,
-      "cashUsd": 512.033285,
-      "deployedUsd": 5.73791127
+      "equityUsd": 635.48898448,
+      "cashUsd": 589.92804994,
+      "deployedUsd": 45.56093454
     },
     {
       "timestamp": "2026-06-17T12:00:13.000Z",
-      "equityUsd": 520.704885,
-      "cashUsd": 512.033285,
-      "deployedUsd": 8.6716
+      "equityUsd": 656.35194994,
+      "cashUsd": 589.92804994,
+      "deployedUsd": 66.4239
     },
     {
       "timestamp": "2026-06-17T12:00:14.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 512.033285,
-      "deployedUsd": 9.79272
+      "equityUsd": 664.76034994,
+      "cashUsd": 589.92804994,
+      "deployedUsd": 74.8323
     },
     {
       "timestamp": "2026-06-17T12:00:15.000Z",
-      "equityUsd": 520.70549591,
-      "cashUsd": 512.033285,
-      "deployedUsd": 8.67221091
+      "equityUsd": 656.35653176,
+      "cashUsd": 589.92804994,
+      "deployedUsd": 66.42848182
     },
     {
       "timestamp": "2026-06-18T00:00:16.000Z",
-      "equityUsd": 519.37231984,
-      "cashUsd": 512.033285,
-      "deployedUsd": 7.33903484
+      "equityUsd": 643.82511123,
+      "cashUsd": 589.92804994,
+      "deployedUsd": 53.89706129
     },
     {
       "timestamp": "2026-06-18T00:00:21.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 512.033285,
-      "deployedUsd": 9.79272
+      "equityUsd": 664.76034994,
+      "cashUsd": 589.92804994,
+      "deployedUsd": 74.8323
     },
     {
       "timestamp": "2026-06-18T00:00:23.000Z",
-      "equityUsd": 517.86004693,
-      "cashUsd": 512.033285,
-      "deployedUsd": 5.82676193
+      "equityUsd": 636.15536441,
+      "cashUsd": 589.92804994,
+      "deployedUsd": 46.22731447
     },
     {
       "timestamp": "2026-06-18T00:00:24.000Z",
-      "equityUsd": 520.704885,
-      "cashUsd": 512.033285,
-      "deployedUsd": 8.6716
+      "equityUsd": 656.35194994,
+      "cashUsd": 589.92804994,
+      "deployedUsd": 66.4239
     },
     {
       "timestamp": "2026-06-18T00:00:27.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 512.033285,
-      "deployedUsd": 9.79272
+      "equityUsd": 664.76034994,
+      "cashUsd": 589.92804994,
+      "deployedUsd": 74.8323
     },
     {
       "timestamp": "2026-06-18T00:00:28.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 512.033285,
-      "deployedUsd": 9.79272
+      "equityUsd": 660.51834994,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 79.0323
     },
     {
       "timestamp": "2026-06-18T00:00:29.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 512.033285,
-      "deployedUsd": 9.79272
+      "equityUsd": 664.76034994,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 83.2743
     },
     {
       "timestamp": "2026-06-18T00:00:31.000Z",
-      "equityUsd": 520.70549591,
-      "cashUsd": 512.033285,
-      "deployedUsd": 8.67221091
+      "equityUsd": 656.35653176,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 74.87048182
     },
     {
       "timestamp": "2026-06-18T12:00:05.000Z",
-      "equityUsd": 519.40339081,
-      "cashUsd": 512.033285,
-      "deployedUsd": 7.37010581
+      "equityUsd": 644.05814349,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 62.57209355
     },
     {
       "timestamp": "2026-06-18T12:00:06.000Z",
-      "equityUsd": 517.8073253,
-      "cashUsd": 512.033285,
-      "deployedUsd": 5.7740403
+      "equityUsd": 635.75995222,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 54.27390228
     },
     {
       "timestamp": "2026-06-18T12:00:08.000Z",
-      "equityUsd": 520.704885,
-      "cashUsd": 512.033285,
-      "deployedUsd": 8.6716
+      "equityUsd": 649.67124026,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 68.18519032
     },
     {
       "timestamp": "2026-06-18T12:00:09.000Z",
-      "equityUsd": 520.70549591,
-      "cashUsd": 512.033285,
-      "deployedUsd": 8.67221091
+      "equityUsd": 656.35653176,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 74.87048182
     },
     {
       "timestamp": "2026-06-19T00:00:21.000Z",
-      "equityUsd": 519.49804887,
-      "cashUsd": 512.033285,
-      "deployedUsd": 7.46476387
+      "equityUsd": 644.76807897,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 63.28202903
     },
     {
       "timestamp": "2026-06-19T00:00:24.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 512.033285,
-      "deployedUsd": 9.79272
+      "equityUsd": 664.76034994,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 83.2743
     },
     {
       "timestamp": "2026-06-19T00:00:25.000Z",
-      "equityUsd": 516.90150757,
-      "cashUsd": 512.033285,
-      "deployedUsd": 4.86822257
+      "equityUsd": 628.96631925,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 47.48026931
     },
     {
       "timestamp": "2026-06-19T00:00:27.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 512.033285,
-      "deployedUsd": 9.79272
+      "equityUsd": 657.94415639,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 76.45810645
     },
     {
       "timestamp": "2026-06-19T00:00:28.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 512.033285,
-      "deployedUsd": 9.79272
+      "equityUsd": 664.76034994,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 83.2743
     },
     {
       "timestamp": "2026-06-19T00:00:29.000Z",
-      "equityUsd": 520.70549591,
-      "cashUsd": 512.033285,
-      "deployedUsd": 8.67221091
+      "equityUsd": 656.35653176,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 74.87048182
     },
     {
       "timestamp": "2026-06-19T12:00:04.000Z",
-      "equityUsd": 519.50744242,
-      "cashUsd": 512.033285,
-      "deployedUsd": 7.47415742
+      "equityUsd": 644.83853058,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 63.35248064
     },
     {
       "timestamp": "2026-06-19T12:00:06.000Z",
-      "equityUsd": 518.02262757,
-      "cashUsd": 512.033285,
-      "deployedUsd": 5.98934257
+      "equityUsd": 637.37471925,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 55.88866931
     },
     {
       "timestamp": "2026-06-19T12:00:07.000Z",
-      "equityUsd": 520.704885,
-      "cashUsd": 512.033285,
-      "deployedUsd": 8.6716
+      "equityUsd": 656.35194994,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 74.8659
     },
     {
       "timestamp": "2026-06-19T12:00:08.000Z",
-      "equityUsd": 521.09827596,
-      "cashUsd": 510.99845919,
-      "deployedUsd": 10.09981677
+      "equityUsd": 658.62157575,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 77.13552581
     },
     {
       "timestamp": "2026-06-19T12:00:09.000Z",
-      "equityUsd": 520.7054959,
-      "cashUsd": 510.99845919,
-      "deployedUsd": 9.70703671
+      "equityUsd": 656.35653176,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 74.87048182
     },
     {
       "timestamp": "2026-06-20T00:00:04.000Z",
-      "equityUsd": 519.76106822,
-      "cashUsd": 510.99845919,
-      "deployedUsd": 8.76260903
+      "equityUsd": 646.74072413,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 65.25467419
     },
     {
       "timestamp": "2026-06-20T00:00:07.000Z",
-      "equityUsd": 516.88611928,
-      "cashUsd": 510.99845919,
-      "deployedUsd": 5.88766009
+      "equityUsd": 628.85090706,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 47.36485712
     },
     {
       "timestamp": "2026-06-20T00:00:08.000Z",
-      "equityUsd": 520.95375983,
-      "cashUsd": 510.99845919,
-      "deployedUsd": 9.95530064
+      "equityUsd": 657.53770478,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 76.05165484
     },
     {
       "timestamp": "2026-06-20T00:00:09.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 510.99845919,
-      "deployedUsd": 10.82754581
+      "equityUsd": 664.76034994,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 83.2743
     },
     {
       "timestamp": "2026-06-20T00:00:11.000Z",
-      "equityUsd": 520.7054959,
-      "cashUsd": 510.99845919,
-      "deployedUsd": 9.70703671
+      "equityUsd": 656.35653176,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 74.87048182
     },
     {
       "timestamp": "2026-06-20T12:00:04.000Z",
-      "equityUsd": 518.5753908,
-      "cashUsd": 509.87285919,
-      "deployedUsd": 8.70253161
+      "equityUsd": 643.89014349,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 62.40409355
     },
     {
       "timestamp": "2026-06-20T12:00:06.000Z",
-      "equityUsd": 516.86537854,
-      "cashUsd": 509.87285919,
-      "deployedUsd": 6.99251935
+      "equityUsd": 628.69535151,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 47.20930157
     },
     {
       "timestamp": "2026-06-20T12:00:07.000Z",
-      "equityUsd": 521.11634048,
-      "cashUsd": 509.87285919,
-      "deployedUsd": 11.24348129
+      "equityUsd": 658.75705962,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 77.27100968
     },
     {
       "timestamp": "2026-06-20T12:00:08.000Z",
-      "equityUsd": 520.7054959,
-      "cashUsd": 509.87285919,
-      "deployedUsd": 10.83263671
+      "equityUsd": 656.35653176,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 74.87048182
     },
     {
       "timestamp": "2026-06-21T00:00:06.000Z",
-      "equityUsd": 519.0133779,
-      "cashUsd": 509.87285919,
-      "deployedUsd": 9.14051871
+      "equityUsd": 645.37504671,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 63.88899677
     },
     {
       "timestamp": "2026-06-21T00:00:10.000Z",
-      "equityUsd": 518.1447955,
-      "cashUsd": 509.87285919,
-      "deployedUsd": 8.27193631
+      "equityUsd": 638.29097875,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 56.80492881
     },
     {
       "timestamp": "2026-06-21T00:00:12.000Z",
-      "equityUsd": 521.09827596,
-      "cashUsd": 509.87285919,
-      "deployedUsd": 11.22541677
+      "equityUsd": 658.62157575,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 77.13552581
     },
     {
       "timestamp": "2026-06-21T00:00:13.000Z",
-      "equityUsd": 521.4894959,
-      "cashUsd": 509.87285919,
-      "deployedUsd": 11.61663671
+      "equityUsd": 662.23653176,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 80.75048182
     },
     {
       "timestamp": "2026-06-21T12:00:03.000Z",
-      "equityUsd": 519.02684887,
-      "cashUsd": 509.87285919,
-      "deployedUsd": 9.15398968
+      "equityUsd": 645.77607897,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 64.29002903
     },
     {
       "timestamp": "2026-06-21T12:00:06.000Z",
-      "equityUsd": 519.40203498,
-      "cashUsd": 509.87285919,
-      "deployedUsd": 9.52917579
+      "equityUsd": 647.7202748,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 66.23422486
     },
     {
       "timestamp": "2026-06-21T12:00:07.000Z",
-      "equityUsd": 520.704885,
-      "cashUsd": 509.87285919,
-      "deployedUsd": 10.83202581
+      "equityUsd": 656.35194994,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 74.8659
     },
     {
       "timestamp": "2026-06-21T12:00:09.000Z",
-      "equityUsd": 521.17053403,
-      "cashUsd": 509.87285919,
-      "deployedUsd": 11.29767484
+      "equityUsd": 659.16351123,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 77.67746129
     },
     {
       "timestamp": "2026-06-21T12:00:10.000Z",
-      "equityUsd": 521.2094959,
-      "cashUsd": 509.87285919,
-      "deployedUsd": 11.33663671
+      "equityUsd": 660.13653176,
+      "cashUsd": 581.48604994,
+      "deployedUsd": 78.65048182
     },
     {
       "timestamp": "2026-06-22T00:00:05.000Z",
-      "equityUsd": 519.84171338,
-      "cashUsd": 509.87285919,
-      "deployedUsd": 9.96885419
+      "equityUsd": 647.34556284,
+      "cashUsd": 573.04404994,
+      "deployedUsd": 74.3015129
     },
     {
       "timestamp": "2026-06-22T00:00:09.000Z",
-      "equityUsd": 517.27834227,
-      "cashUsd": 508.74725919,
-      "deployedUsd": 8.53108308
+      "equityUsd": 637.00381029,
+      "cashUsd": 573.04404994,
+      "deployedUsd": 63.95976035
     },
     {
       "timestamp": "2026-06-22T00:00:11.000Z",
-      "equityUsd": 521.06214693,
-      "cashUsd": 508.74725919,
-      "deployedUsd": 12.31488774
+      "equityUsd": 658.350608,
+      "cashUsd": 573.04404994,
+      "deployedUsd": 85.30655806
     },
     {
       "timestamp": "2026-06-22T00:00:12.000Z",
-      "equityUsd": 521.00585954,
-      "cashUsd": 508.74725919,
-      "deployedUsd": 12.25860035
+      "equityUsd": 658.60925903,
+      "cashUsd": 573.04404994,
+      "deployedUsd": 85.56520909
     },
     {
       "timestamp": "2026-06-22T12:00:03.000Z",
-      "equityUsd": 519.61631983,
-      "cashUsd": 508.74725919,
-      "deployedUsd": 10.86906064
+      "equityUsd": 645.65511123,
+      "cashUsd": 573.04404994,
+      "deployedUsd": 72.61106129
     },
     {
       "timestamp": "2026-06-22T12:00:08.000Z",
-      "equityUsd": 516.92092292,
-      "cashUsd": 508.74725919,
-      "deployedUsd": 8.17366373
+      "equityUsd": 629.92366513,
+      "cashUsd": 565.41378071,
+      "deployedUsd": 64.50988442
     },
     {
       "timestamp": "2026-06-22T12:00:12.000Z",
-      "equityUsd": 521.134405,
-      "cashUsd": 508.74725919,
-      "deployedUsd": 12.38714581
+      "equityUsd": 658.89254349,
+      "cashUsd": 565.41378071,
+      "deployedUsd": 93.47876278
     },
     {
       "timestamp": "2026-06-22T12:00:15.000Z",
-      "equityUsd": 521.03131409,
-      "cashUsd": 508.74725919,
-      "deployedUsd": 12.2840549
+      "equityUsd": 658.80016812,
+      "cashUsd": 565.41378071,
+      "deployedUsd": 93.38638741
     },
     {
       "timestamp": "2026-06-23T00:00:04.000Z",
-      "equityUsd": 518.73668112,
-      "cashUsd": 508.74725919,
-      "deployedUsd": 9.98942193
+      "equityUsd": 639.05782091,
+      "cashUsd": 565.41378071,
+      "deployedUsd": 73.6440402
     },
     {
       "timestamp": "2026-06-23T00:00:07.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 508.74725919,
-      "deployedUsd": 13.07874581
+      "equityUsd": 664.76034994,
+      "cashUsd": 565.41378071,
+      "deployedUsd": 99.34656923
     },
     {
       "timestamp": "2026-06-23T00:00:08.000Z",
-      "equityUsd": 516.6995119,
-      "cashUsd": 508.74725919,
-      "deployedUsd": 7.95225271
+      "equityUsd": 628.2630825,
+      "cashUsd": 565.41378071,
+      "deployedUsd": 62.84930179
     },
     {
       "timestamp": "2026-06-23T00:00:11.000Z",
-      "equityUsd": 520.704885,
-      "cashUsd": 508.74725919,
-      "deployedUsd": 11.95762581
+      "equityUsd": 656.35194994,
+      "cashUsd": 565.41378071,
+      "deployedUsd": 90.93816923
     },
     {
       "timestamp": "2026-06-23T00:00:12.000Z",
-      "equityUsd": 520.79479209,
-      "cashUsd": 508.74725919,
-      "deployedUsd": 12.0475329
+      "equityUsd": 656.34544671,
+      "cashUsd": 565.41378071,
+      "deployedUsd": 90.931666
     },
     {
       "timestamp": "2026-06-23T00:00:13.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 508.74725919,
-      "deployedUsd": 13.07874581
+      "equityUsd": 664.76034994,
+      "cashUsd": 565.41378071,
+      "deployedUsd": 99.34656923
     },
     {
       "timestamp": "2026-06-23T00:00:16.000Z",
-      "equityUsd": 520.95495045,
-      "cashUsd": 508.74725919,
-      "deployedUsd": 12.20769126
+      "equityUsd": 658.22744085,
+      "cashUsd": 565.41378071,
+      "deployedUsd": 92.81366014
     },
     {
       "timestamp": "2026-06-23T12:00:05.000Z",
-      "equityUsd": 518.18462951,
-      "cashUsd": 508.74725919,
-      "deployedUsd": 9.43737032
+      "equityUsd": 634.91743381,
+      "cashUsd": 565.41378071,
+      "deployedUsd": 69.5036531
     },
     {
       "timestamp": "2026-06-23T12:00:08.000Z",
-      "equityUsd": 516.53596848,
-      "cashUsd": 508.74725919,
-      "deployedUsd": 7.78870929
+      "equityUsd": 627.03650681,
+      "cashUsd": 565.41378071,
+      "deployedUsd": 61.6227261
     },
     {
       "timestamp": "2026-06-23T12:00:11.000Z",
-      "equityUsd": 520.41070435,
-      "cashUsd": 508.74725919,
-      "deployedUsd": 11.66344516
+      "equityUsd": 653.46478865,
+      "cashUsd": 565.41378071,
+      "deployedUsd": 88.05100794
     },
     {
       "timestamp": "2026-06-23T12:00:13.000Z",
-      "equityUsd": 520.7054959,
-      "cashUsd": 508.74725919,
-      "deployedUsd": 11.95823671
+      "equityUsd": 656.35653176,
+      "cashUsd": 565.41378071,
+      "deployedUsd": 90.94275105
     },
     {
       "timestamp": "2026-06-24T00:00:04.000Z",
-      "equityUsd": 518.41869403,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 10.79703484
+      "equityUsd": 636.67291768,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 79.70113697
     },
     {
       "timestamp": "2026-06-24T00:00:07.000Z",
-      "equityUsd": 515.29836848,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 7.67670929
+      "equityUsd": 617.75450681,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 60.7827261
     },
     {
       "timestamp": "2026-06-24T00:00:09.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 14.20434581
+      "equityUsd": 664.76034994,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 107.78856923
     },
     {
       "timestamp": "2026-06-24T00:00:10.000Z",
-      "equityUsd": 520.15780112,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 12.53614193
+      "equityUsd": 651.56801446,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 94.59623375
     },
     {
       "timestamp": "2026-06-24T00:00:11.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 14.20434581
+      "equityUsd": 664.76034994,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 107.78856923
     },
     {
       "timestamp": "2026-06-24T00:00:12.000Z",
-      "equityUsd": 520.7054959,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 13.08383671
+      "equityUsd": 656.35653176,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 99.38475105
     },
     {
       "timestamp": "2026-06-24T12:00:16.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 14.20434581
+      "equityUsd": 664.76034994,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 107.78856923
     },
     {
       "timestamp": "2026-06-24T12:00:17.000Z",
-      "equityUsd": 517.38708112,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 9.76542193
+      "equityUsd": 628.93582091,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 71.9640402
     },
     {
       "timestamp": "2026-06-24T12:00:20.000Z",
-      "equityUsd": 516.50848461,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 8.88682542
+      "equityUsd": 626.83037778,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 69.85859707
     },
     {
       "timestamp": "2026-06-24T12:00:23.000Z",
-      "equityUsd": 520.23005919,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 12.6084
+      "equityUsd": 652.10994994,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 95.13816923
     },
     {
       "timestamp": "2026-06-24T12:00:25.000Z",
-      "equityUsd": 520.7054959,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 13.08383671
+      "equityUsd": 656.35653176,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 99.38475105
     },
     {
       "timestamp": "2026-06-25T00:00:04.000Z",
-      "equityUsd": 519.2694037,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 11.64774451
+      "equityUsd": 643.05324026,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 86.08145955
     },
     {
       "timestamp": "2026-06-25T00:00:09.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 14.20434581
+      "equityUsd": 664.76034994,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 107.78856923
     },
     {
       "timestamp": "2026-06-25T00:00:12.000Z",
-      "equityUsd": 515.47381622,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 7.85215703
+      "equityUsd": 619.07036488,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 62.09858417
     },
     {
       "timestamp": "2026-06-25T00:00:18.000Z",
-      "equityUsd": 521.24279209,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 13.6211329
+      "equityUsd": 659.70544671,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 102.733666
     },
     {
       "timestamp": "2026-06-25T00:00:20.000Z",
-      "equityUsd": 520.7054959,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 13.08383671
+      "equityUsd": 656.35653176,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 99.38475105
     },
     {
       "timestamp": "2026-06-25T12:00:04.000Z",
-      "equityUsd": 518.8589779,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 11.23731871
+      "equityUsd": 639.97504671,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 83.003266
     },
     {
       "timestamp": "2026-06-25T12:00:08.000Z",
-      "equityUsd": 517.0568717,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 9.43521251
+      "equityUsd": 630.94328101,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 73.9715003
     },
     {
       "timestamp": "2026-06-25T12:00:10.000Z",
-      "equityUsd": 520.30231725,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 12.68065806
+      "equityUsd": 652.65188542,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 95.68010471
     },
     {
       "timestamp": "2026-06-25T12:00:11.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 14.20434581
+      "equityUsd": 664.76034994,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 107.78856923
     },
     {
       "timestamp": "2026-06-25T12:00:12.000Z",
-      "equityUsd": 521.826005,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 14.20434581
+      "equityUsd": 664.76034994,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 107.78856923
     },
     {
       "timestamp": "2026-06-25T12:00:13.000Z",
-      "equityUsd": 520.7054959,
-      "cashUsd": 507.62165919,
-      "deployedUsd": 13.08383671
+      "equityUsd": 656.35653176,
+      "cashUsd": 556.97178071,
+      "deployedUsd": 99.38475105
     }
   ],
   "tokensTraded": 13,
   "dataset": {
-    "tokensLoaded": 111,
+    "tokensLoaded": 113,
     "dataSource": "wallet",
-    "timelineSteps": 2720,
+    "timelineSteps": 2721,
     "mirrorWallet": "0xc03ce4d8af842ca6251ac57228b3ffb166ed50af"
   },
   "diagnostics": {
-    "entryEvaluations": 15839,
+    "entryEvaluations": 16099,
     "ordersPlaced": 18,
     "entryRejections": {
-      "price_out_of_band": 10442,
-      "score_reject": 4651,
-      "duplicate_token": 728
+      "yes:price_out_of_band": 10587,
+      "yes:score_reject": 4765,
+      "yes:duplicate_token": 729
+    },
+    "legBreakdown": {
+      "yes": {
+        "evaluations": 16099,
+        "ordersPlaced": 18
+      },
+      "no": {
+        "evaluations": 0,
+        "ordersPlaced": 0
+      }
     }
   }
 }

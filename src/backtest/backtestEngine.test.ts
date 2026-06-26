@@ -110,7 +110,9 @@ const config = {
   BACKTEST_STARTING_CAPITAL_USD: 500,
   BACKTEST_SEED: 1,
   BACKTEST_MAX_MARKETS: 100,
-  MIN_LIQUIDITY_USD: 1000,
+  LONGSHOT_ENTRY_THRESHOLD: 70,
+  NO_ENTRY_ENABLED: false,
+  TAIL_NO_ENTRY_THRESHOLD: 60,
 } as never;
 
 describe("createBacktestEngine", () => {

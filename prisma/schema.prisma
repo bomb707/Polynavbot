@@ -19,6 +19,7 @@ enum OrderSide {
 
 enum SignalType {
   LONGSHOT_ENTRY
+  TAIL_NO_ENTRY
   EXIT
   REBALANCE
 }

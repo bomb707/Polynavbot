@@ -20,6 +20,7 @@ export interface BacktestRunOptions {
 export interface BacktestLoadOptions {
   mirrorWallet?: string;
   mirrorMaxItems?: number;
+  includeNoTokens?: boolean;
 }
 
 export type BacktestDataSource = "snapshots" | "database" | "gamma" | "wallet";
@@ -167,6 +168,10 @@ export interface BacktestResult {
     entryEvaluations: number;
     ordersPlaced: number;
     entryRejections: Record<string, number>;
+    legBreakdown: {
+      yes: { evaluations: number; ordersPlaced: number };
+      no: { evaluations: number; ordersPlaced: number };
+    };
   };
 }
 

@@ -53,6 +53,7 @@ export function createBacktestEngine(deps: BacktestEngineDeps): IBacktestEngine 
     publicClient,
     logger,
     config: baseBacktestConfig,
+    appConfig: config,
   });
 
   return {
@@ -70,7 +71,8 @@ export function createBacktestEngine(deps: BacktestEngineDeps): IBacktestEngine 
       const rng = createSeededRng(backtestConfig.seed);
       const dataset = await dataLoader.loadBacktestDataset(options.start, options.end, {
         mirrorWallet: options.mirrorWallet,
-        mirrorMaxItems: options.mirrorMaxItems,
+        mirrorMaxItems: options.mirrorMaxItems ?? config.MIRROR_MAX_ITEMS,
+        includeNoTokens: config.NO_ENTRY_ENABLED,
       });
       const timeline = buildTimeline(dataset);
       const startMs = options.start.getTime();
@@ -82,6 +84,10 @@ export function createBacktestEngine(deps: BacktestEngineDeps): IBacktestEngine 
       const entryRejections = new EntryRejectionTracker();
       let entryEvaluations = 0;
       let ordersPlaced = 0;
+      const legBreakdown = {
+        yes: { evaluations: 0, ordersPlaced: 0 },
+        no: { evaluations: 0, ordersPlaced: 0 },
+      };
 
       const portfolio = new BacktestPortfolio(
         backtestConfig.startingCapitalUsd,
@@ -187,8 +193,11 @@ export function createBacktestEngine(deps: BacktestEngineDeps): IBacktestEngine 
             feeService,
           );
           entryEvaluations += 1;
+          const legKey = entry.leg === "NO" ? "no" : "yes";
+          legBreakdown[legKey].evaluations += 1;
           if (entry.placed && entry.order) {
             ordersPlaced += 1;
+            legBreakdown[legKey].ordersPlaced += 1;
             portfolio.placeOrder(entry.order);
           } else if (entry.reason) {
             entryRejections.record(entry.reason);
@@ -258,6 +267,7 @@ export function createBacktestEngine(deps: BacktestEngineDeps): IBacktestEngine 
           entryEvaluations,
           ordersPlaced,
           entryRejections: entryRejections.toSortedRecord(),
+          legBreakdown,
         },
       };
     },

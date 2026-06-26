@@ -1,5 +1,6 @@
+import type { SignalType } from "@prisma/client";
 import type { Decimal } from "@prisma/client/runtime/library";
-import type { Prisma, PrismaClient, Signal, SignalStatus, SignalType } from "@prisma/client";
+import type { Prisma, PrismaClient, Signal, SignalStatus } from "@prisma/client";
 
 export interface CreateSignalInput {
   marketId: string;
@@ -18,7 +19,7 @@ export interface ISignalRepository {
   findById(id: string): Promise<Signal | null>;
   findByStatus(status: SignalStatus): Promise<Signal[]>;
   findByTokenId(tokenId: string): Promise<Signal[]>;
-  findRecentEntrySignal(tokenId: string, since: Date): Promise<Signal | null>;
+  findRecentEntrySignal(tokenId: string, since: Date, signalType: SignalType): Promise<Signal | null>;
   findRecent(limit?: number): Promise<Signal[]>;
   hasPaperOrder(signalId: string): Promise<boolean>;
   updateStatus(id: string, status: SignalStatus): Promise<Signal>;
@@ -60,11 +61,11 @@ export function createSignalRepository(prisma: PrismaClient): ISignalRepository 
       });
     },
 
-    findRecentEntrySignal(tokenId, since) {
+    findRecentEntrySignal(tokenId, since, signalType) {
       return prisma.signal.findFirst({
         where: {
           tokenId,
-          signalType: "LONGSHOT_ENTRY",
+          signalType,
           status: { in: ["APPROVED", "EXECUTED"] },
           createdAt: { gte: since },
         },

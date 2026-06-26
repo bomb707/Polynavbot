@@ -196,6 +196,9 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
       { multiplier: 25, fraction: 0.2, flag: "soldAt25x", reason: "milestone_25x", label: "25x" },
     ];
 
+    const skipMilestones = input.outcomeSide === "NO";
+
+    if (!skipMilestones) {
     for (const milestone of milestoneChecks) {
       if (exitState[milestone.flag]) {
         continue;
@@ -219,6 +222,7 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
         nextExitState: exitState,
         milestoneFlag: milestone.flag,
       };
+    }
     }
 
     return holdEvaluation(exitState, sellPrice);
@@ -322,6 +326,7 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
       market,
       liquidityUsd,
       riskForced,
+      outcomeSide: outcome.side,
     });
 
     if (evaluation.action === "hold") {
@@ -399,6 +404,7 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
       market,
       liquidityUsd,
       riskForced,
+      outcomeSide: outcome.side,
     });
 
     if (evaluation.action === "hold") {

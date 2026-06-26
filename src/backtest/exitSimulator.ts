@@ -74,6 +74,7 @@ export function evaluateExitForBar(
     },
     liquidityUsd: bar.liquidity ?? meta.liquidityUsd,
     riskForced,
+    outcomeSide: meta.outcomeSide,
   });
 
   position.exitState = evaluation.nextExitState as PositionExitState;

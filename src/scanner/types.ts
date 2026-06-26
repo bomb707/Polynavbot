@@ -9,9 +9,11 @@ export type SkipReason =
   | "missing_end_date"
   | "low_liquidity"
   | "not_yes"
+  | "not_no"
   | "missing_token"
   | "missing_price"
-  | "price_out_of_range";
+  | "price_out_of_range"
+  | "no_price_out_of_range";
 
 export const SKIP_REASONS: SkipReason[] = [
   "malformed",
@@ -22,9 +24,11 @@ export const SKIP_REASONS: SkipReason[] = [
   "missing_end_date",
   "low_liquidity",
   "not_yes",
+  "not_no",
   "missing_token",
   "missing_price",
   "price_out_of_range",
+  "no_price_out_of_range",
 ];
 
 export interface CandidateOutcome {
@@ -36,6 +40,8 @@ export interface CandidateOutcome {
   price: number;
   endDate: Date | null;
   outcomeCount: number;
+  side: "YES" | "NO";
+  source: "gamma" | "wallet";
 }
 
 export interface ScanSummary {

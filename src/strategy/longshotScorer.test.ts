@@ -11,6 +11,7 @@ const config = {
   MIN_LIQUIDITY_USD: 1000,
   MAX_SPREAD: 0.03,
   MAX_POSITION_SIZE_USD: 2,
+  LONGSHOT_ENTRY_THRESHOLD: 70,
 } as Pick<
   Config,
   | "MIN_ENTRY_PRICE"
@@ -19,6 +20,7 @@ const config = {
   | "MIN_LIQUIDITY_USD"
   | "MAX_SPREAD"
   | "MAX_POSITION_SIZE_USD"
+  | "LONGSHOT_ENTRY_THRESHOLD"
 > as Config;
 
 function daysFromNow(days: number): Date {

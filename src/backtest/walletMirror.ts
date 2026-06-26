@@ -3,6 +3,9 @@ import type { SnapshotTokenRef } from "../db/repositories/snapshot.repository.js
 import type { ILogger } from "../logger/types.js";
 import type { IPublicClient } from "../polymarket/publicClient.js";
 import type { ActivityItem, NormalizedMarket } from "../polymarket/publicTypes.js";
+import { persistMarketForBacktest } from "../scanner/marketPersist.js";
+
+export { persistMarketForBacktest };
 
 export interface WalletTokenCandidate {
   tokenId: string;
@@ -12,9 +15,14 @@ export interface WalletTokenCandidate {
   outcomeName: string | null;
 }
 
+export interface ResolveWalletTokenRefsOptions {
+  includeNoTokens?: boolean;
+}
+
 export interface ResolveWalletTokenRefsResult {
   refs: SnapshotTokenRef[];
   yesTokens: number;
+  noTokens: number;
   skippedNoTokens: number;
   skippedMissingSlug: number;
 }
@@ -60,57 +68,21 @@ export function collectWalletTokenCandidates(
   return [...byToken.values()];
 }
 
-export async function persistMarketForBacktest(
-  repositories: IRepositories,
-  normalized: NormalizedMarket,
-): Promise<SnapshotTokenRef[]> {
-  const market = await repositories.market.upsertByPolymarketId({
-    polymarketMarketId: normalized.polymarketMarketId,
-    conditionId: normalized.conditionId,
-    question: normalized.question,
-    slug: normalized.slug,
-    category: normalized.category,
-    active: normalized.active,
-    closed: normalized.closed,
-    archived: normalized.archived,
-    enableOrderBook: normalized.enableOrderBook,
-    endDate: normalized.endDate,
-  });
-
-  const refs: SnapshotTokenRef[] = [];
-  for (const outcome of normalized.outcomes) {
-    const saved = await repositories.outcome.upsertByTokenId({
-      marketId: market.id,
-      tokenId: outcome.tokenId,
-      name: outcome.name,
-      side: outcome.side,
-      currentPrice: outcome.price,
-      liquidity: normalized.liquidityUsd,
-      volume: normalized.volumeUsd,
-    });
-    refs.push({
-      tokenId: saved.tokenId,
-      marketId: market.id,
-      outcomeId: saved.id,
-    });
-  }
-
-  return refs;
-}
-
 export async function resolveWalletTokenRefs(
   publicClient: IPublicClient,
   repositories: IRepositories,
   logger: ILogger,
   walletAddress: string,
   maxItems: number,
+  options: ResolveWalletTokenRefsOptions = {},
 ): Promise<ResolveWalletTokenRefsResult> {
+  const includeNoTokens = options.includeNoTokens ?? false;
   const normalizedWallet = walletAddress.trim().toLowerCase();
   if (!/^0x[a-f0-9]{40}$/.test(normalizedWallet)) {
     throw new Error(`Invalid mirror wallet address: ${walletAddress}`);
   }
 
-  logger.info({ walletAddress: normalizedWallet, maxItems }, "Fetching wallet activity for backtest mirror");
+  logger.info({ walletAddress: normalizedWallet, maxItems, includeNoTokens }, "Fetching wallet activity for backtest mirror");
 
   const activity = await publicClient.getAllUserActivity(normalizedWallet, maxItems);
   const candidates = collectWalletTokenCandidates(activity);
@@ -122,17 +94,12 @@ export async function resolveWalletTokenRefs(
 
   const refs: SnapshotTokenRef[] = [];
   let yesTokens = 0;
+  let noTokens = 0;
   let skippedNoTokens = 0;
   let skippedMissingSlug = 0;
   const slugCache = new Map<string, NormalizedMarket | null>();
 
   for (const candidate of candidates) {
-    const side = inferSide(candidate.outcomeName ?? "Yes");
-    if (side !== "YES") {
-      skippedNoTokens += 1;
-      continue;
-    }
-
     if (!candidate.slug) {
       skippedMissingSlug += 1;
       continue;
@@ -152,6 +119,14 @@ export async function resolveWalletTokenRefs(
       continue;
     }
 
+    const matchedOutcome = normalized.outcomes.find((o) => o.tokenId === candidate.tokenId);
+    const side = matchedOutcome?.side ?? inferSide(candidate.outcomeName ?? "Yes");
+
+    if (side !== "YES" && !includeNoTokens) {
+      skippedNoTokens += 1;
+      continue;
+    }
+
     const marketRefs = await persistMarketForBacktest(repositories, normalized);
     const ref = marketRefs.find((entry) => entry.tokenId === candidate.tokenId);
     if (!ref) {
@@ -163,13 +138,18 @@ export async function resolveWalletTokenRefs(
     }
 
     refs.push(ref);
-    yesTokens += 1;
+    if (side === "YES") {
+      yesTokens += 1;
+    } else {
+      noTokens += 1;
+    }
   }
 
   logger.info(
     {
       walletAddress: normalizedWallet,
       yesTokens,
+      noTokens,
       skippedNoTokens,
       skippedMissingSlug,
       tokenRefs: refs.length,
@@ -177,5 +157,5 @@ export async function resolveWalletTokenRefs(
     "Wallet mirror token refs resolved",
   );
 
-  return { refs, yesTokens, skippedNoTokens, skippedMissingSlug };
+  return { refs, yesTokens, noTokens, skippedNoTokens, skippedMissingSlug };
 }
