@@ -2,6 +2,7 @@ import type { Config } from "../config/index.js";
 import type { ILogger } from "../logger/types.js";
 import { createHttpClient, type HttpClient } from "./http.js";
 import {
+  extractLiquidity,
   parseNumberArrayField,
   parseStringArrayField,
   rawActivityItemSchema,
@@ -10,15 +11,18 @@ import {
   rawGammaMarketsResponseSchema,
   rawOrderBookSchema,
   rawPriceHistorySchema,
+  rawClobMarketInfoSchema,
 } from "./schemas.js";
 import type {
   ActivityItem,
   GetActiveMarketsParams,
   GetActiveMarketsResult,
+  GetBacktestMarketsParams,
   NormalizedMarket,
   NormalizedOutcome,
   OrderBook,
   PriceHistoryPoint,
+  ClobMarketInfo,
 } from "./publicTypes.js";
 
 export interface IPublicClient {
@@ -31,6 +35,7 @@ export interface IPublicClient {
     endTs: number,
     interval: string,
   ): Promise<PriceHistoryPoint[]>;
+  getBacktestMarkets(start: Date, end: Date, maxMarkets: number): Promise<NormalizedMarket[]>;
   getUserActivity(
     walletAddress: string,
     limit: number,
@@ -42,7 +47,12 @@ export interface IPublicClient {
     outcomeIndex: number,
   ): NormalizedOutcome | null;
   fetchActiveMarketsRaw(params: GetActiveMarketsParams): Promise<unknown[]>;
+  getClobMarketInfo(conditionId: string): Promise<ClobMarketInfo | null>;
 }
+
+const GAMMA_MARKETS_PAGE_SIZE = 100;
+/** CLOB /prices-history rejects ranges longer than ~15 days. */
+const CLOB_PRICE_HISTORY_MAX_CHUNK_SECONDS = 14 * 24 * 60 * 60;
 
 function toNumber(value: unknown): number | null {
   if (value === null || value === undefined) {
@@ -183,6 +193,22 @@ export function createPublicClient(
       enableOrderBook:
         market.enableOrderBook ?? market.enable_order_book ?? false,
       endDate: parseDate(market.endDate ?? market.end_date_iso),
+      liquidityUsd: (() => {
+        const value = extractLiquidity(rawMarket);
+        return value > 0 ? value : null;
+      })(),
+      volumeUsd: (() => {
+        for (const candidate of [market.volumeNum, market.volume]) {
+          if (candidate === null || candidate === undefined) {
+            continue;
+          }
+          const num = Number(candidate);
+          if (Number.isFinite(num) && num > 0) {
+            return num;
+          }
+        }
+        return null;
+      })(),
       outcomes,
     };
   };
@@ -278,7 +304,125 @@ export function createPublicClient(
     return { tokenId, bids, asks, bestBid, bestAsk, spread };
   };
 
-  const getPricesHistory = async (
+  const buildBacktestMarketsUrl = (params: GetBacktestMarketsParams): URL => {
+    const url = new URL("/markets", config.POLY_GAMMA_API_URL);
+    url.searchParams.set("limit", String(params.limit));
+    url.searchParams.set("offset", String(params.offset));
+    url.searchParams.set("closed", String(params.closed));
+    url.searchParams.set("end_date_min", params.start.toISOString());
+    url.searchParams.set("start_date_max", params.end.toISOString());
+    return url;
+  };
+
+  const fetchBacktestMarketsPage = async (
+    params: GetBacktestMarketsParams,
+  ): Promise<NormalizedMarket[]> => {
+    const url = buildBacktestMarketsUrl(params);
+    const payload = await http.fetchJson<unknown>(url.toString());
+    const rawMarkets = extractGammaMarkets(payload);
+    const markets: NormalizedMarket[] = [];
+
+    for (const rawMarket of rawMarkets) {
+      const normalized = normalizeMarket(rawMarket);
+      if (normalized?.enableOrderBook) {
+        markets.push(normalized);
+      }
+    }
+
+    return markets;
+  };
+
+  const getBacktestMarkets = async (
+    start: Date,
+    end: Date,
+    maxMarkets: number,
+  ): Promise<NormalizedMarket[]> => {
+    const seen = new Set<string>();
+    const markets: NormalizedMarket[] = [];
+
+    for (const closed of [false, true]) {
+      let offset = 0;
+
+      while (markets.length < maxMarkets) {
+        const page = await fetchBacktestMarketsPage({
+          start,
+          end,
+          limit: GAMMA_MARKETS_PAGE_SIZE,
+          offset,
+          closed,
+        });
+
+        if (page.length === 0) {
+          break;
+        }
+
+        for (const market of page) {
+          if (seen.has(market.polymarketMarketId)) {
+            continue;
+          }
+          seen.add(market.polymarketMarketId);
+          markets.push(market);
+          if (markets.length >= maxMarkets) {
+            break;
+          }
+        }
+
+        if (page.length < GAMMA_MARKETS_PAGE_SIZE) {
+          break;
+        }
+
+        offset += GAMMA_MARKETS_PAGE_SIZE;
+      }
+
+      if (markets.length >= maxMarkets) {
+        break;
+      }
+    }
+
+    return markets;
+  };
+
+  const parsePriceHistoryPayload = (payload: unknown): PriceHistoryPoint[] => {
+    if (
+      payload !== null &&
+      typeof payload === "object" &&
+      "error" in payload &&
+      typeof (payload as { error?: unknown }).error === "string"
+    ) {
+      return [];
+    }
+
+    const parsed = rawPriceHistorySchema.safeParse(payload);
+    if (!parsed.success) {
+      return [];
+    }
+
+    return parsed.data.history
+      .map((point) => {
+        const timestamp = new Date(Number(point.t) * 1000);
+        const price = Number(point.p);
+        if (Number.isNaN(timestamp.getTime()) || Number.isNaN(price)) {
+          return null;
+        }
+        return { timestamp, price };
+      })
+      .filter((point): point is PriceHistoryPoint => point !== null);
+  };
+
+  const filterPointsInRange = (
+    points: PriceHistoryPoint[],
+    startTs: number,
+    endTs: number,
+  ): PriceHistoryPoint[] => {
+    const startMs = startTs * 1000;
+    const endMs = endTs * 1000;
+    return points.filter((point) => {
+      const ts = point.timestamp.getTime();
+      return ts >= startMs && ts <= endMs;
+    });
+  };
+
+  const fetchPricesHistoryChunk = async (
     tokenId: string,
     startTs: number,
     endTs: number,
@@ -298,25 +442,59 @@ export function createPublicClient(
       return [];
     }
 
-    const parsed = rawPriceHistorySchema.safeParse(payload);
-    if (!parsed.success) {
-      logger.warn(
-        { tokenId, issues: parsed.error.issues },
-        "Invalid price history response",
+    const points = parsePriceHistoryPayload(payload);
+    const inRange = filterPointsInRange(points, startTs, endTs);
+    if (inRange.length === 0 && interval !== "max") {
+      const fallback = filterPointsInRange(
+        await fetchPricesHistoryChunk(tokenId, startTs, endTs, "max"),
+        startTs,
+        endTs,
       );
+      return fallback;
+    }
+
+    return inRange;
+  };
+
+  const getPricesHistory = async (
+    tokenId: string,
+    startTs: number,
+    endTs: number,
+    interval: string,
+  ): Promise<PriceHistoryPoint[]> => {
+    if (endTs <= startTs) {
       return [];
     }
 
-    return parsed.data.history
-      .map((point) => {
-        const timestamp = new Date(Number(point.t) * 1000);
-        const price = Number(point.p);
-        if (Number.isNaN(timestamp.getTime()) || Number.isNaN(price)) {
-          return null;
-        }
-        return { timestamp, price };
-      })
-      .filter((point): point is PriceHistoryPoint => point !== null);
+    if (endTs - startTs <= CLOB_PRICE_HISTORY_MAX_CHUNK_SECONDS) {
+      return filterPointsInRange(
+        await fetchPricesHistoryChunk(tokenId, startTs, endTs, interval),
+        startTs,
+        endTs,
+      );
+    }
+
+    const byTs = new Map<number, PriceHistoryPoint>();
+    let chunkStart = startTs;
+
+    while (chunkStart < endTs) {
+      const chunkEnd = Math.min(chunkStart + CLOB_PRICE_HISTORY_MAX_CHUNK_SECONDS, endTs);
+      const chunk = filterPointsInRange(
+        await fetchPricesHistoryChunk(tokenId, chunkStart, chunkEnd, interval),
+        chunkStart,
+        chunkEnd,
+      );
+      for (const point of chunk) {
+        byTs.set(point.timestamp.getTime(), point);
+      }
+      chunkStart = chunkEnd;
+    }
+
+    return filterPointsInRange(
+      [...byTs.values()].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime()),
+      startTs,
+      endTs,
+    );
   };
 
   const getUserActivity = async (
@@ -373,12 +551,64 @@ export function createPublicClient(
     return items;
   };
 
+  const getClobMarketInfo = async (conditionId: string): Promise<ClobMarketInfo | null> => {
+    const url = new URL(`/clob-markets/${conditionId}`, config.POLY_CLOB_HOST);
+
+    let payload: unknown;
+    try {
+      payload = await http.fetchJson<unknown>(url.toString());
+    } catch (error) {
+      logger.warn({ conditionId, err: String(error) }, "Failed to fetch CLOB market info");
+      return null;
+    }
+
+    const parsed = rawClobMarketInfoSchema.safeParse(payload);
+    if (!parsed.success) {
+      logger.warn({ conditionId, issues: parsed.error.issues }, "Invalid CLOB market info response");
+      return {
+        conditionId,
+        makerBaseFeeBps: 0,
+        takerBaseFeeBps: 0,
+        feesEnabled: false,
+        feeDetails: null,
+        feeCategory: null,
+      };
+    }
+
+    const data = parsed.data;
+    const makerBaseFeeBps = data.mbf ?? 0;
+    const takerBaseFeeBps = data.tbf ?? 0;
+    const feeRate = data.fd?.r ?? 0;
+    const feesEnabled = feeRate > 0 || takerBaseFeeBps > 0;
+
+    if (!data.fd) {
+      logger.debug({ conditionId }, "CLOB market info missing fee details");
+    }
+
+    return {
+      conditionId,
+      makerBaseFeeBps,
+      takerBaseFeeBps,
+      feesEnabled,
+      feeDetails: data.fd
+        ? {
+            feeRate,
+            feeExponent: data.fd.e ?? null,
+            takerOnly: data.fd.to ?? true,
+          }
+        : null,
+      feeCategory: null,
+    };
+  };
+
   return {
     getActiveMarkets,
     getMarketBySlug,
     getOrderBook,
     getPricesHistory,
+    getBacktestMarkets,
     getUserActivity,
+    getClobMarketInfo,
     normalizeMarket,
     normalizeOutcome,
     fetchActiveMarketsRaw,

@@ -1,5 +1,6 @@
 import type { Decimal } from "@prisma/client/runtime/library";
 import type {
+  LiquidityRole,
   LiveOrder,
   OrderSide,
   OrderStatus,
@@ -7,6 +8,13 @@ import type {
   Prisma,
   PrismaClient,
 } from "@prisma/client";
+
+export interface OrderFeeEstimateInput {
+  estimatedPlatformFeeUsd?: Decimal | number;
+  estimatedBuilderFeeUsd?: Decimal | number;
+  estimatedTotalFeeUsd?: Decimal | number;
+  liquidityRole?: LiquidityRole;
+}
 
 export interface CreatePaperOrderInput {
   signalId?: string | null;
@@ -18,6 +26,10 @@ export interface CreatePaperOrderInput {
   size: Decimal | number;
   notionalUsd: Decimal | number;
   status?: OrderStatus;
+  estimatedPlatformFeeUsd?: Decimal | number;
+  estimatedBuilderFeeUsd?: Decimal | number;
+  estimatedTotalFeeUsd?: Decimal | number;
+  liquidityRole?: LiquidityRole;
 }
 
 export interface CreateLiveOrderInput {
@@ -31,6 +43,10 @@ export interface CreateLiveOrderInput {
   notionalUsd: Decimal | number;
   status?: OrderStatus;
   rawResponse?: Prisma.InputJsonValue;
+  estimatedPlatformFeeUsd?: Decimal | number;
+  estimatedBuilderFeeUsd?: Decimal | number;
+  estimatedTotalFeeUsd?: Decimal | number;
+  liquidityRole?: LiquidityRole;
 }
 
 export interface IOrderRepository {
@@ -40,7 +56,14 @@ export interface IOrderRepository {
   findLiveById(id: string): Promise<LiveOrder | null>;
   findLiveByExternalId(externalOrderId: string): Promise<LiveOrder | null>;
   findPendingPaperOrders(): Promise<PaperOrder[]>;
+  findPendingLiveOrders(): Promise<LiveOrder[]>;
+  findPendingBuyByTokenId(tokenId: string): Promise<PaperOrder | null>;
+  findPendingBuyByTokenIdLive(tokenId: string): Promise<LiveOrder | null>;
+  findPendingSellByTokenId(tokenId: string): Promise<PaperOrder | null>;
+  findPendingSellByTokenIdLive(tokenId: string): Promise<LiveOrder | null>;
   countPendingPaperOrders(): Promise<number>;
+  countOpenPaperOrders(): Promise<number>;
+  countOpenLiveOrders(): Promise<number>;
   updatePaperStatus(
     id: string,
     status: OrderStatus,
@@ -62,6 +85,10 @@ export function createOrderRepository(prisma: PrismaClient): IOrderRepository {
         price: data.price,
         size: data.size,
         notionalUsd: data.notionalUsd,
+        estimatedPlatformFeeUsd: data.estimatedPlatformFeeUsd,
+        estimatedBuilderFeeUsd: data.estimatedBuilderFeeUsd,
+        estimatedTotalFeeUsd: data.estimatedTotalFeeUsd,
+        liquidityRole: data.liquidityRole,
         status: data.status,
         market: { connect: { id: data.marketId } },
         outcome: { connect: { id: data.outcomeId } },
@@ -81,6 +108,10 @@ export function createOrderRepository(prisma: PrismaClient): IOrderRepository {
         price: data.price,
         size: data.size,
         notionalUsd: data.notionalUsd,
+        estimatedPlatformFeeUsd: data.estimatedPlatformFeeUsd,
+        estimatedBuilderFeeUsd: data.estimatedBuilderFeeUsd,
+        estimatedTotalFeeUsd: data.estimatedTotalFeeUsd,
+        liquidityRole: data.liquidityRole,
         status: data.status,
         rawResponse: data.rawResponse,
         market: { connect: { id: data.marketId } },
@@ -111,10 +142,79 @@ export function createOrderRepository(prisma: PrismaClient): IOrderRepository {
       });
     },
 
+    findPendingLiveOrders() {
+      return prisma.liveOrder.findMany({
+        where: {
+          status: { in: ["PENDING", "OPEN", "PARTIALLY_FILLED"] },
+        },
+        orderBy: { createdAt: "asc" },
+      });
+    },
+
+    findPendingBuyByTokenId(tokenId) {
+      return prisma.paperOrder.findFirst({
+        where: {
+          tokenId,
+          side: "BUY",
+          status: { in: ["PENDING", "PARTIALLY_FILLED"] },
+        },
+        orderBy: { createdAt: "desc" },
+      });
+    },
+
+    findPendingBuyByTokenIdLive(tokenId) {
+      return prisma.liveOrder.findFirst({
+        where: {
+          tokenId,
+          side: "BUY",
+          status: { in: ["PENDING", "OPEN", "PARTIALLY_FILLED"] },
+        },
+        orderBy: { createdAt: "desc" },
+      });
+    },
+
+    findPendingSellByTokenId(tokenId) {
+      return prisma.paperOrder.findFirst({
+        where: {
+          tokenId,
+          side: "SELL",
+          status: { in: ["PENDING", "PARTIALLY_FILLED"] },
+        },
+        orderBy: { createdAt: "desc" },
+      });
+    },
+
+    findPendingSellByTokenIdLive(tokenId) {
+      return prisma.liveOrder.findFirst({
+        where: {
+          tokenId,
+          side: "SELL",
+          status: { in: ["PENDING", "OPEN", "PARTIALLY_FILLED"] },
+        },
+        orderBy: { createdAt: "desc" },
+      });
+    },
+
     countPendingPaperOrders() {
       return prisma.paperOrder.count({
         where: {
           status: { in: ["PENDING", "PARTIALLY_FILLED"] },
+        },
+      });
+    },
+
+    countOpenPaperOrders() {
+      return prisma.paperOrder.count({
+        where: {
+          status: { in: ["PENDING", "OPEN", "PARTIALLY_FILLED"] },
+        },
+      });
+    },
+
+    countOpenLiveOrders() {
+      return prisma.liveOrder.count({
+        where: {
+          status: { in: ["PENDING", "OPEN", "PARTIALLY_FILLED"] },
         },
       });
     },

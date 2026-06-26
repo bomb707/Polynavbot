@@ -1,15 +1,29 @@
 import { Command } from "commander";
 
 import type { AppContainer } from "../container.js";
+import { isLiveMode } from "../config/index.js";
+import { formatTerminalDashboard } from "../report/reportFormatter.js";
+import { runBacktest } from "./backtest.js";
+import { runDashboard } from "./dashboard.js";
 import { formatEntryPaperSummary, runEntryPaper } from "./entryPaper.js";
 import { formatExitPaperSummary, runExitPaper } from "./exitPaper.js";
 import { runHealthCheck } from "./health.js";
 import { formatPaperRunSummary, runPaperTrading } from "./paperRun.js";
 import { formatPositionsUpdateSummary, runPositionsUpdate } from "./positionsUpdate.js";
+import { formatReportPaths, runReport } from "./report.js";
 import { formatScanSummary, runScan } from "./scan.js";
+import { runScheduler } from "./scheduler.js";
+import { runWorker } from "./worker.js";
+import { runWsMonitor } from "./wsMonitor.js";
 
 export function createCli(container: AppContainer): Command {
   const program = new Command();
+
+  if (isLiveMode(container.config)) {
+    console.warn(
+      "WARNING: TRADING_MODE=live is active. Live CLOB placement requires LIVE_TRADING_CONFIRMATION=I_UNDERSTAND_THE_RISKS.",
+    );
+  }
 
   program
     .name("polynavbot")
@@ -111,6 +125,124 @@ export function createCli(container: AppContainer): Command {
         console.log(formatPositionsUpdateSummary(summary));
         await container.shutdown();
         process.exit(0);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(message);
+        await container.shutdown();
+        process.exit(1);
+      }
+    });
+
+  program
+    .command("report")
+    .description("Print portfolio dashboard and write reports/latest.{md,json} plus trades.csv")
+    .option("--output-dir <path>", "Output directory for report files", "reports")
+    .action(async (options: { outputDir: string }) => {
+      try {
+        const { snapshot, paths } = await runReport(container, {
+          outputDir: options.outputDir,
+        });
+        console.log(formatTerminalDashboard(snapshot));
+        console.log("");
+        console.log(formatReportPaths(paths));
+        await container.shutdown();
+        process.exit(0);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(message);
+        await container.shutdown();
+        process.exit(1);
+      }
+    });
+
+  program
+    .command("backtest")
+    .description("Run longshot strategy backtest over historical price data")
+    .requiredOption("--start <date>", "Start date (YYYY-MM-DD)")
+    .requiredOption("--end <date>", "End date (YYYY-MM-DD)")
+    .option("--output-dir <path>", "Output directory for reports")
+    .option(
+      "--fee-mode <mode>",
+      "Fee assumption: maker_only, taker_only, mixed, or actual_if_available",
+    )
+    .action(async (options: { start: string; end: string; outputDir?: string; feeMode?: string }) => {
+      try {
+        await runBacktest(container, {
+          start: options.start,
+          end: options.end,
+          outputDir: options.outputDir,
+          feeMode: options.feeMode as
+            | "maker_only"
+            | "taker_only"
+            | "mixed"
+            | "actual_if_available"
+            | undefined,
+        });
+        await container.shutdown();
+        process.exit(0);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(message);
+        await container.shutdown();
+        process.exit(1);
+      }
+    });
+
+  program
+    .command("worker")
+    .description("Run BullMQ job workers for scheduled paper trading tasks")
+    .action(async () => {
+      try {
+        await runWorker(container);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(message);
+        await container.shutdown();
+        process.exit(1);
+      }
+    });
+
+  program
+    .command("scheduler")
+    .description("Register repeatable BullMQ job schedules")
+    .action(async () => {
+      try {
+        await runScheduler(container);
+        await container.shutdown();
+        process.exit(0);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(message);
+        await container.shutdown();
+        process.exit(1);
+      }
+    });
+
+  program
+    .command("dashboard")
+    .description("Run a live portfolio dashboard in the browser")
+    .option("--port <n>", "HTTP port", "3847")
+    .option("--refresh <seconds>", "Auto-refresh interval in seconds", "10")
+    .action(async (options: { port: string; refresh: string }) => {
+      try {
+        await runDashboard(container, {
+          port: Number(options.port),
+          refreshSeconds: Number(options.refresh),
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(message);
+        await container.shutdown();
+        process.exit(1);
+      }
+    });
+
+  program
+    .command("ws:monitor")
+    .description("Run WebSocket price monitor for open positions")
+    .action(async () => {
+      try {
+        await runWsMonitor(container);
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         console.error(message);

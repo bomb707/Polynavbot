@@ -13,11 +13,24 @@ export interface UpsertMarketInput {
   endDate?: Date | null;
 }
 
+export interface UpdateFeeParamsInput {
+  feesEnabled: boolean;
+  feeRate: number;
+  feeExponent?: number | null;
+  takerOnly: boolean;
+  makerBaseFeeBps: number;
+  takerBaseFeeBps: number;
+  feeCategory?: string | null;
+  feeLastFetchedAt: Date;
+}
+
 export interface IMarketRepository {
   upsertByPolymarketId(data: UpsertMarketInput): Promise<Market>;
   findById(id: string): Promise<Market | null>;
   findByPolymarketId(polymarketMarketId: string): Promise<Market | null>;
+  findByConditionId(conditionId: string): Promise<Market | null>;
   listActive(): Promise<Market[]>;
+  updateFeeParams(marketId: string, data: UpdateFeeParamsInput): Promise<Market>;
 }
 
 export function createMarketRepository(prisma: PrismaClient): IMarketRepository {
@@ -61,10 +74,21 @@ export function createMarketRepository(prisma: PrismaClient): IMarketRepository 
       return prisma.market.findUnique({ where: { polymarketMarketId } });
     },
 
+    findByConditionId(conditionId) {
+      return prisma.market.findFirst({ where: { conditionId } });
+    },
+
     listActive() {
       return prisma.market.findMany({
         where: { active: true, closed: false, archived: false },
         orderBy: { createdAt: "desc" },
+      });
+    },
+
+    updateFeeParams(marketId, data) {
+      return prisma.market.update({
+        where: { id: marketId },
+        data,
       });
     },
   };

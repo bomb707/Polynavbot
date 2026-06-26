@@ -28,6 +28,11 @@ export interface CreatePositionInput {
   currentValueUsd?: Decimal | number | null;
   realizedPnlUsd?: Decimal | number;
   unrealizedPnlUsd?: Decimal | number | null;
+  totalFeesPaidUsd?: Decimal | number;
+  grossRealizedPnlUsd?: Decimal | number;
+  netRealizedPnlUsd?: Decimal | number;
+  grossUnrealizedPnlUsd?: Decimal | number | null;
+  netUnrealizedPnlUsd?: Decimal | number | null;
   status?: PositionStatus;
   openedAt?: Date;
 }
@@ -40,12 +45,19 @@ export interface UpdatePositionInput {
   currentValueUsd?: Decimal | number | null;
   unrealizedPnlUsd?: Decimal | number | null;
   realizedPnlUsd?: Decimal | number;
+  totalFeesPaidUsd?: Decimal | number;
+  grossRealizedPnlUsd?: Decimal | number;
+  netRealizedPnlUsd?: Decimal | number;
+  grossUnrealizedPnlUsd?: Decimal | number | null;
+  netUnrealizedPnlUsd?: Decimal | number | null;
   exitState?: Prisma.InputJsonValue;
   status?: PositionStatus;
 }
 
 export interface ClosePositionInput {
   realizedPnlUsd: Decimal | number;
+  grossRealizedPnlUsd?: Decimal | number;
+  netRealizedPnlUsd?: Decimal | number;
   closedAt?: Date;
 }
 
@@ -56,6 +68,7 @@ export interface IPositionRepository {
   findOpenByTokenId(tokenId: string): Promise<Position | null>;
   findByTokenId(tokenId: string): Promise<Position[]>;
   sumRealizedPnlSince(since: Date): Promise<number>;
+  sumGrossRealizedPnl(): Promise<number>;
   update(id: string, data: UpdatePositionInput): Promise<Position>;
   updateExitState(id: string, exitState: PositionExitState): Promise<Position>;
   close(id: string, data: ClosePositionInput): Promise<Position>;
@@ -123,6 +136,26 @@ export function createPositionRepository(
       return typeof total === "number" ? total : total.toNumber();
     },
 
+    async sumGrossRealizedPnl() {
+      const result = await prisma.position.aggregate({
+        _sum: { grossRealizedPnlUsd: true, realizedPnlUsd: true },
+      });
+
+      const gross = result._sum.grossRealizedPnlUsd;
+      if (gross != null) {
+        const value = typeof gross === "number" ? gross : gross.toNumber();
+        if (value !== 0) {
+          return value;
+        }
+      }
+
+      const fallback = result._sum.realizedPnlUsd;
+      if (fallback == null) {
+        return 0;
+      }
+      return typeof fallback === "number" ? fallback : fallback.toNumber();
+    },
+
     update(id, data) {
       return prisma.position.update({
         where: { id },
@@ -143,6 +176,8 @@ export function createPositionRepository(
         data: {
           status: "CLOSED",
           realizedPnlUsd: data.realizedPnlUsd,
+          netRealizedPnlUsd: data.netRealizedPnlUsd ?? data.realizedPnlUsd,
+          grossRealizedPnlUsd: data.grossRealizedPnlUsd ?? data.realizedPnlUsd,
           closedAt: data.closedAt ?? new Date(),
         },
       });

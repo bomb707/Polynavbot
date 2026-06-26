@@ -153,7 +153,7 @@ describe("createPublicClient", () => {
     );
 
     const client = createPublicClient(config, createLogger());
-    const resultPromise = client.getPricesHistory("token-1", 1, 2, "1h");
+    const resultPromise = client.getPricesHistory("token-1", 1_700_000_000, 1_700_010_000, "1h");
     await vi.runAllTimersAsync();
     const history = await resultPromise;
 

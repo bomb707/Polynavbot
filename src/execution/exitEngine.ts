@@ -1,15 +1,18 @@
 import type { PaperOrder, Position } from "@prisma/client";
 
 import type { Config } from "../config/index.js";
-import { isPaperMode } from "../config/index.js";
+import { isLiveMode, isPaperMode } from "../config/index.js";
 import type { IRepositories } from "../db/repositories/index.js";
 import type { PositionExitState } from "../db/repositories/position.repository.js";
+import type { IFeeService } from "../fees/feeTypes.js";
 import type { ILogger } from "../logger/types.js";
+import { midPrice } from "../polymarket/orderBookPricing.js";
 import type { IPublicClient } from "../polymarket/publicClient.js";
 import type { OrderBook } from "../polymarket/publicTypes.js";
 import type { IPaperTradingEngine } from "../paper/paperTypes.js";
 import type { IRiskEngine } from "../risk/riskTypes.js";
 import { roundDownShares, toNumber } from "./entryHelpers.js";
+import type { IExecutionEngine } from "./executionEngineTypes.js";
 import type {
   ExitActionRecord,
   ExitEvaluation,
@@ -22,8 +25,10 @@ export interface ExitEngineDeps {
   config: Config;
   repositories: IRepositories;
   publicClient: IPublicClient;
+  executionEngine: IExecutionEngine;
   paperTradingEngine: IPaperTradingEngine;
   riskEngine: IRiskEngine;
+  feeService: IFeeService;
   logger: ILogger;
 }
 
@@ -81,7 +86,15 @@ function holdEvaluation(
 }
 
 export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
-  const { config, repositories, publicClient, paperTradingEngine, riskEngine, logger } = deps;
+  const {
+    config,
+    repositories,
+    publicClient,
+    executionEngine,
+    paperTradingEngine,
+    feeService,
+    logger,
+  } = deps;
 
   async function resolveExitState(
     position: Position,
@@ -111,7 +124,7 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
 
   function evaluateExit(input: ExitEvaluationInput): ExitEvaluation {
     const { position, market, liquidityUsd, riskForced } = input;
-    let exitState = bumpExitState(
+    const exitState = bumpExitState(
       input.exitState,
       input.currentPrice,
       toNum(position.avgEntryPrice),
@@ -197,8 +210,6 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
         continue;
       }
 
-      exitState = { ...exitState, [milestone.flag]: true };
-
       return {
         action: "sell_partial",
         sellSizeShares,
@@ -206,18 +217,20 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
         reason: milestone.reason,
         message: `Partial exit at ${milestone.label} milestone`,
         nextExitState: exitState,
+        milestoneFlag: milestone.flag,
       };
     }
 
     return holdEvaluation(exitState, sellPrice);
   }
 
-  async function createPaperSellOrder(
+  async function executeSellOrder(
     position: Position,
     sellSizeShares: number,
     sellPrice: number,
     orderBook: OrderBook,
     liquidityUsd: number | null,
+    dataUpdatedAt: Date,
   ): Promise<{
     order?: PaperOrder;
     filled: boolean;
@@ -225,52 +238,46 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
     rejectedReason?: string;
   }> {
     const sizeUsd = round8(sellSizeShares * sellPrice);
-    const avgEntry = toNum(position.avgEntryPrice);
 
-    const riskResult = await riskEngine.checkOrder({
+    const orderResult = await executionEngine.placeSellLimitOrder({
       marketId: position.marketId,
       outcomeId: position.outcomeId,
       tokenId: position.tokenId,
-      side: "SELL",
       limitPrice: sellPrice,
       sizeUsd,
       isNewEntry: false,
       spread: orderBook.spread,
       liquidityUsd,
-      dataUpdatedAt: new Date(),
+      dataUpdatedAt,
     });
 
-    if (!riskResult.allowed) {
-      return { filled: false, realizedPnlUsd: 0, rejectedReason: riskResult.reason };
+    if (orderResult.status === "rejected") {
+      return {
+        filled: false,
+        realizedPnlUsd: 0,
+        rejectedReason: orderResult.rejectedReason ?? "Order rejected",
+      };
     }
 
-    const effectiveSizeUsd = riskResult.adjustedSizeUsd ?? sizeUsd;
-
-    const { order, rejectedReason } = await paperTradingEngine.placeLimitOrder({
-      marketId: position.marketId,
-      outcomeId: position.outcomeId,
-      tokenId: position.tokenId,
-      side: "SELL",
-      limitPrice: sellPrice,
-      sizeUsd: effectiveSizeUsd,
-      skipRiskCheck: true,
-      riskContext: {
-        spread: orderBook.spread,
-        liquidityUsd,
-        isNewEntry: false,
-      },
-    });
-
-    if (rejectedReason || !order) {
-      return { filled: false, realizedPnlUsd: 0, rejectedReason: rejectedReason ?? "Order rejected" };
+    if (orderResult.status === "logged") {
+      return { filled: false, realizedPnlUsd: 0 };
     }
 
-    const fillResult = await paperTradingEngine.simulateFill(order, { orderBook });
-    const realizedPnlUsd = fillResult.filled
-      ? round8((fillResult.fillPrice - avgEntry) * fillResult.fillSize)
-      : 0;
+    if (isPaperMode(config) && orderResult.orderId) {
+      const order = await repositories.order.findPaperById(orderResult.orderId);
+      if (!order) {
+        return { filled: false, realizedPnlUsd: 0, rejectedReason: "Paper order not found" };
+      }
 
-    return { order, filled: fillResult.filled, realizedPnlUsd };
+      const fillResult = await paperTradingEngine.simulateFill(order, { orderBook });
+      const realizedPnlUsd = fillResult.filled
+        ? round8(fillResult.netRealizedPnlUsd ?? 0)
+        : 0;
+
+      return { order, filled: fillResult.filled, realizedPnlUsd };
+    }
+
+    return { filled: false, realizedPnlUsd: 0 };
   }
 
   async function updatePositionAfterExit(
@@ -280,15 +287,232 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
     await repositories.position.updateExitState(positionId, exitState);
   }
 
+  async function previewPositionExit(position: Position): Promise<ExitActionRecord | null> {
+    const market = await repositories.market.findById(position.marketId);
+    const outcome = await repositories.outcome.findByTokenId(position.tokenId);
+    if (!market || !outcome) {
+      return null;
+    }
+
+    const orderBook = await publicClient.getOrderBook(position.tokenId);
+    if (!orderBook) {
+      return null;
+    }
+
+    const currentPrice =
+      midPrice(orderBook) ??
+      orderBook.bestBid ??
+      orderBook.bestAsk ??
+      toNumber(position.currentPrice) ??
+      toNum(position.avgEntryPrice);
+
+    const exitState = await resolveExitState(position, currentPrice);
+    const liquidityUsd = toNumber(outcome.liquidity);
+
+    const todayPnl = await repositories.position.sumRealizedPnlSince(
+      new Date(Date.now() - 24 * 60 * 60 * 1000),
+    );
+    const riskForced = todayPnl < -config.MAX_DAILY_LOSS_USD;
+
+    const evaluation = evaluateExit({
+      position,
+      exitState,
+      currentPrice,
+      orderBook,
+      market,
+      liquidityUsd,
+      riskForced,
+    });
+
+    if (evaluation.action === "hold") {
+      return null;
+    }
+
+    const marketRecord = await repositories.market.findById(position.marketId);
+    const feeParams = marketRecord
+      ? feeService.getMarketFeeParams(marketRecord)
+      : { feesEnabled: false, feeRate: 0, takerOnly: true, makerBaseFeeBps: 0, takerBaseFeeBps: 0 };
+    const liquidityRole = feeService.estimateLiquidityRole({
+      side: "SELL",
+      limitPrice: evaluation.sellPrice,
+      bestBid: orderBook.bestBid,
+      bestAsk: orderBook.bestAsk,
+    });
+    const sellEconomics = feeService.calculateSellEconomics({
+      side: "SELL",
+      price: evaluation.sellPrice,
+      shares: evaluation.sellSizeShares,
+      liquidityRole,
+      feeParams,
+    });
+
+    return {
+      tokenId: position.tokenId,
+      question: market.question,
+      action: evaluation.action,
+      reason: evaluation.reason,
+      sellSizeShares: evaluation.sellSizeShares,
+      sellPrice: evaluation.sellPrice,
+      filled: false,
+      estimatedFeeUsd: sellEconomics.totalFeeUsd,
+      netProceedsUsd: sellEconomics.netProceedsUsd,
+    };
+  }
+
+  async function evaluatePositionExit(position: Position): Promise<ExitActionRecord | null> {
+    const market = await repositories.market.findById(position.marketId);
+    const outcome = await repositories.outcome.findByTokenId(position.tokenId);
+    if (!market || !outcome) {
+      return null;
+    }
+
+    const orderBook = await publicClient.getOrderBook(position.tokenId);
+    if (!orderBook) {
+      return null;
+    }
+
+    const sellPriceResult = computePassiveSellPrice(orderBook);
+    const currentPrice =
+      midPrice(orderBook) ??
+      orderBook.bestBid ??
+      orderBook.bestAsk ??
+      toNumber(position.currentPrice) ??
+      toNum(position.avgEntryPrice);
+
+    if (isPaperMode(config)) {
+      await paperTradingEngine.markToMarket(position.tokenId, currentPrice);
+    }
+
+    const exitState = await resolveExitState(position, currentPrice);
+    const liquidityUsd = toNumber(outcome.liquidity);
+
+    const todayPnl = await repositories.position.sumRealizedPnlSince(
+      new Date(Date.now() - 24 * 60 * 60 * 1000),
+    );
+    const riskForced = todayPnl < -config.MAX_DAILY_LOSS_USD;
+
+    const evaluation = evaluateExit({
+      position,
+      exitState,
+      currentPrice,
+      orderBook,
+      market,
+      liquidityUsd,
+      riskForced,
+    });
+
+    if (evaluation.action === "hold") {
+      await updatePositionAfterExit(position.id, evaluation.nextExitState);
+      return {
+        tokenId: position.tokenId,
+        question: market.question,
+        action: "hold",
+        reason: evaluation.reason,
+        sellSizeShares: 0,
+        sellPrice: "sellPrice" in sellPriceResult ? sellPriceResult.sellPrice : currentPrice,
+        filled: false,
+      };
+    }
+
+    const pendingSell = isPaperMode(config)
+      ? await repositories.order.findPendingSellByTokenId(position.tokenId)
+      : await repositories.order.findPendingSellByTokenIdLive(position.tokenId);
+
+    if (pendingSell) {
+      await updatePositionAfterExit(position.id, evaluation.nextExitState);
+      return {
+        tokenId: position.tokenId,
+        question: market.question,
+        action: evaluation.action,
+        reason: evaluation.reason,
+        sellSizeShares: evaluation.sellSizeShares,
+        sellPrice: evaluation.sellPrice,
+        filled: false,
+      };
+    }
+
+    const sellResult = await executeSellOrder(
+      position,
+      evaluation.sellSizeShares,
+      evaluation.sellPrice,
+      orderBook,
+      liquidityUsd,
+      outcome.updatedAt,
+    );
+
+    const exitStateToPersist =
+      sellResult.filled && evaluation.milestoneFlag
+        ? { ...evaluation.nextExitState, [evaluation.milestoneFlag]: true }
+        : evaluation.nextExitState;
+
+    await updatePositionAfterExit(position.id, exitStateToPersist);
+
+    logger.info(
+      {
+        tokenId: position.tokenId,
+        action: evaluation.action,
+        reason: evaluation.reason,
+        filled: sellResult.filled,
+      },
+      "Exit evaluated",
+    );
+
+    return {
+      tokenId: position.tokenId,
+      question: market.question,
+      action: evaluation.action,
+      reason: evaluation.reason,
+      sellSizeShares: evaluation.sellSizeShares,
+      sellPrice: evaluation.sellPrice,
+      filled: sellResult.filled,
+      realizedPnlUsd: sellResult.filled ? sellResult.realizedPnlUsd : undefined,
+    };
+  }
+
   return {
     evaluateExit,
 
-    async run() {
-      if (!isPaperMode(config)) {
-        throw new Error("exit:paper requires TRADING_MODE=paper");
+    async runForToken(tokenId) {
+      await executionEngine.initialize();
+
+      if (isPaperMode(config)) {
+        await paperTradingEngine.initialize();
       }
 
-      await paperTradingEngine.initialize();
+      const position = await repositories.position.findOpenByTokenId(tokenId);
+      if (!position) {
+        return null;
+      }
+
+      const action = await evaluatePositionExit(position);
+
+      if (isLiveMode(config)) {
+        await executionEngine.syncTrades();
+      }
+
+      return action;
+    },
+
+    async previewExits() {
+      const positions = await repositories.position.findOpen();
+      const pending: ExitActionRecord[] = [];
+
+      for (const position of positions) {
+        const action = await previewPositionExit(position);
+        if (action) {
+          pending.push(action);
+        }
+      }
+
+      return pending;
+    },
+
+    async run() {
+      await executionEngine.initialize();
+
+      if (isPaperMode(config)) {
+        await paperTradingEngine.initialize();
+      }
 
       const positions = await repositories.position.findOpen();
       const actions: ExitActionRecord[] = [];
@@ -298,97 +522,28 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
       let totalRealizedPnlUsd = 0;
 
       for (const position of positions) {
-        const market = await repositories.market.findById(position.marketId);
-        const outcome = await repositories.outcome.findByTokenId(position.tokenId);
-        if (!market || !outcome) {
-          continue;
-        }
-
-        const orderBook = await publicClient.getOrderBook(position.tokenId);
-        if (!orderBook) {
+        const action = await evaluatePositionExit(position);
+        if (!action) {
           holds += 1;
           continue;
         }
 
-        const sellPriceResult = computePassiveSellPrice(orderBook);
-        const currentPrice =
-          orderBook.bestBid ??
-          orderBook.bestAsk ??
-          toNumber(position.currentPrice) ??
-          toNum(position.avgEntryPrice);
+        actions.push(action);
 
-        await paperTradingEngine.markToMarket(position.tokenId, currentPrice);
-
-        const exitState = await resolveExitState(position, currentPrice);
-        const liquidityUsd = toNumber(outcome.liquidity);
-
-        const todayPnl = await repositories.position.sumRealizedPnlSince(
-          new Date(Date.now() - 24 * 60 * 60 * 1000),
-        );
-        const riskForced = todayPnl < -config.MAX_DAILY_LOSS_USD;
-
-        const evaluation = evaluateExit({
-          position,
-          exitState,
-          currentPrice,
-          orderBook,
-          market,
-          liquidityUsd,
-          riskForced,
-        });
-
-        if (evaluation.action === "hold") {
-          await updatePositionAfterExit(position.id, evaluation.nextExitState);
+        if (action.action === "hold") {
           holds += 1;
-          actions.push({
-            tokenId: position.tokenId,
-            question: market.question,
-            action: "hold",
-            reason: evaluation.reason,
-            sellSizeShares: 0,
-            sellPrice: "sellPrice" in sellPriceResult ? sellPriceResult.sellPrice : currentPrice,
-            filled: false,
-          });
           continue;
         }
-
-        const sellResult = await createPaperSellOrder(
-          position,
-          evaluation.sellSizeShares,
-          evaluation.sellPrice,
-          orderBook,
-          liquidityUsd,
-        );
 
         exitsPlaced += 1;
-
-        if (sellResult.filled) {
+        if (action.filled) {
           exitsFilled += 1;
-          totalRealizedPnlUsd += sellResult.realizedPnlUsd;
+          totalRealizedPnlUsd += action.realizedPnlUsd ?? 0;
         }
+      }
 
-        await updatePositionAfterExit(position.id, evaluation.nextExitState);
-
-        actions.push({
-          tokenId: position.tokenId,
-          question: market.question,
-          action: evaluation.action,
-          reason: evaluation.reason,
-          sellSizeShares: evaluation.sellSizeShares,
-          sellPrice: evaluation.sellPrice,
-          filled: sellResult.filled,
-          realizedPnlUsd: sellResult.filled ? sellResult.realizedPnlUsd : undefined,
-        });
-
-        logger.info(
-          {
-            tokenId: position.tokenId,
-            action: evaluation.action,
-            reason: evaluation.reason,
-            filled: sellResult.filled,
-          },
-          "Exit evaluated",
-        );
+      if (isLiveMode(config)) {
+        await executionEngine.syncTrades();
       }
 
       return {

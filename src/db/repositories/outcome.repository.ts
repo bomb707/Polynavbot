@@ -27,6 +27,12 @@ export interface IOutcomeRepository {
   upsertByTokenId(data: UpsertOutcomeInput): Promise<Outcome>;
   findByTokenId(tokenId: string): Promise<Outcome | null>;
   findByMarketId(marketId: string): Promise<Outcome[]>;
+  listAllTokenRefs(): Promise<Array<{ tokenId: string; marketId: string; outcomeId: string }>>;
+  findTokenRefsForBacktest(
+    start: Date,
+    end: Date,
+    maxMarkets: number,
+  ): Promise<Array<{ tokenId: string; marketId: string; outcomeId: string }>>;
   updatePricing(
     tokenId: string,
     pricing: UpdateOutcomePricingInput,
@@ -76,6 +82,63 @@ export function createOutcomeRepository(
         where: { marketId },
         orderBy: { createdAt: "asc" },
       });
+    },
+
+    listAllTokenRefs() {
+      return prisma.outcome.findMany({
+        select: {
+          tokenId: true,
+          marketId: true,
+          id: true,
+        },
+        orderBy: { createdAt: "asc" },
+      }).then((rows) =>
+        rows.map((row) => ({
+          tokenId: row.tokenId,
+          marketId: row.marketId,
+          outcomeId: row.id,
+        })),
+      );
+    },
+
+    async findTokenRefsForBacktest(start, end, maxMarkets) {
+      const outcomes = await prisma.outcome.findMany({
+        where: {
+          market: {
+            enableOrderBook: true,
+            OR: [{ endDate: null }, { endDate: { gte: start } }],
+            createdAt: { lte: end },
+          },
+        },
+        select: {
+          tokenId: true,
+          marketId: true,
+          id: true,
+        },
+        orderBy: { createdAt: "desc" },
+      });
+
+      const refs: Array<{ tokenId: string; marketId: string; outcomeId: string }> = [];
+      const seenMarkets = new Set<string>();
+
+      for (const row of outcomes) {
+        if (!seenMarkets.has(row.marketId)) {
+          if (seenMarkets.size >= maxMarkets) {
+            continue;
+          }
+          seenMarkets.add(row.marketId);
+        }
+
+        if (seenMarkets.has(row.marketId)) {
+          refs.push({
+            tokenId: row.tokenId,
+            marketId: row.marketId,
+            outcomeId: row.id,
+          });
+        }
+      }
+
+      return refs;
     },
 
     updatePricing(tokenId, pricing) {

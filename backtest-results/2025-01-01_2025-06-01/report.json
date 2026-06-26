@@ -1,0 +1,641 @@
+{
+  "start": "2025-01-01T00:00:00.000Z",
+  "end": "2025-06-01T00:00:00.000Z",
+  "config": {
+    "interval": "1h",
+    "slippageBps": 50,
+    "fillProbability": 0.7,
+    "assumedSpread": 0.02,
+    "topOfBookDepthUsd": 25,
+    "minLiquidityForExit": 1000,
+    "startingCapitalUsd": 500,
+    "seed": 42,
+    "feeMode": "mixed",
+    "maxMarkets": 20,
+    "minLiquidityUsd": 1000
+  },
+  "metrics": {
+    "totalRoi": 0,
+    "grossRoi": 0,
+    "realizedPnlUsd": 0,
+    "grossRealizedPnlUsd": 0,
+    "totalFeesPaidUsd": 0,
+    "unrealizedPnlUsd": 0,
+    "finalEquityUsd": 500,
+    "maxDrawdown": 0,
+    "hitRate": 0,
+    "averageWinner": 0,
+    "averageLoser": 0,
+    "payoffSkew": 0,
+    "capitalUtilization": 0,
+    "worstLosingStreak": 0,
+    "totalTrades": 0,
+    "winningTrades": 0,
+    "losingTrades": 0
+  },
+  "trades": [],
+  "equityCurve": [
+    {
+      "timestamp": "2025-01-01T00:00:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-01T12:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-02T00:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-02T12:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-03T00:00:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-03T12:00:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-04T00:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-04T12:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-05T00:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-05T12:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-06T00:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-06T12:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-07T00:00:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-07T12:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-08T00:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-08T12:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-09T00:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-09T12:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-10T00:00:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-10T12:00:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-11T00:00:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-11T12:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-12T00:00:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-12T12:00:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-13T00:00:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-13T12:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-14T00:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-14T12:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-15T00:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-15T12:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-16T00:00:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-16T12:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-17T00:00:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-17T12:00:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-18T00:00:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-18T12:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-19T00:00:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-19T12:00:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-20T00:00:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-01-20T12:00:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-03T00:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-03T12:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-04T00:00:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-04T12:00:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-05T00:00:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-05T12:00:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-06T00:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-06T12:00:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-07T00:00:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-07T12:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-08T00:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-08T12:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-09T00:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-09T12:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-10T00:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-10T12:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-11T00:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-11T12:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-12T00:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-12T12:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-13T00:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-13T12:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-14T00:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-14T12:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-15T00:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-15T12:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-16T00:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-16T12:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-17T00:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-17T12:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-18T00:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-18T12:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-19T00:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-19T12:00:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-20T00:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-20T12:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-21T00:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-21T12:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-22T00:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-22T12:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-23T00:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-23T12:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-24T00:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-24T12:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-25T00:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-25T12:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-26T00:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-26T12:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-27T00:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-27T12:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-28T00:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-28T12:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-29T00:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-29T12:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-30T00:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-30T12:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-31T00:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2025-05-31T12:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    }
+  ],
+  "tokensTraded": 0,
+  "dataset": {
+    "tokensLoaded": 14,
+    "dataSource": "gamma",
+    "timelineSteps": 98
+  },
+  "diagnostics": {
+    "entryEvaluations": 636,
+    "ordersPlaced": 0,
+    "entryRejections": {
+      "price_out_of_band": 597,
+      "score_reject": 39
+    }
+  }
+}

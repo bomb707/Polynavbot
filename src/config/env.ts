@@ -59,11 +59,44 @@ export const envSchema = z
     EXIT_TRAILING_STOP_PCT: z.coerce.number().positive().max(1).default(0.6),
     EXIT_MIN_LIQUIDITY_USD: z.coerce.number().positive().default(1000),
 
+    JOB_CONCURRENCY: z.coerce.number().int().positive().default(1),
+    ENTRY_SIGNAL_DEDUP_MINUTES: z.coerce.number().int().positive().default(10),
+    JOB_ATTEMPTS: z.coerce.number().int().positive().default(3),
+    JOB_BACKOFF_MS: z.coerce.number().int().positive().default(5000),
+
+    BACKTEST_INTERVAL: z.string().default("1h"),
+    BACKTEST_SLIPPAGE_BPS: z.coerce.number().int().nonnegative().default(50),
+    BACKTEST_FILL_PROBABILITY: z.coerce.number().positive().max(1).default(0.7),
+    BACKTEST_ASSUMED_SPREAD: z.coerce.number().positive().default(0.02),
+    BACKTEST_TOP_OF_BOOK_DEPTH_USD: z.coerce.number().positive().default(25),
+    BACKTEST_MIN_LIQUIDITY_FOR_EXIT: z.coerce.number().positive().default(1000),
+    BACKTEST_STARTING_CAPITAL_USD: z.coerce.number().positive().default(500),
+    BACKTEST_SEED: z.coerce.number().int().default(42),
+    BACKTEST_MAX_MARKETS: z.coerce.number().int().positive().default(100),
+
+    LIVE_TRADING_CONFIRMATION: z.string().min(1).optional(),
+    POLY_SIGNATURE_TYPE: z.coerce.number().int().min(0).max(3).default(3),
+
     PRIVATE_KEY: z.string().min(1).optional(),
     DEPOSIT_WALLET_ADDRESS: z.string().min(1).optional(),
     POLY_API_KEY: z.string().min(1).optional(),
     POLY_API_SECRET: z.string().min(1).optional(),
     POLY_API_PASSPHRASE: z.string().min(1).optional(),
+
+    WS_ENABLED: z.coerce.boolean().default(false),
+    WS_PING_INTERVAL_MS: z.coerce.number().int().positive().default(10000),
+    WS_RECONNECT_BASE_MS: z.coerce.number().int().positive().default(1000),
+    WS_RECONNECT_MAX_MS: z.coerce.number().int().positive().default(30000),
+    WS_SNAPSHOT_INTERVAL_SECONDS: z.coerce.number().int().positive().default(60),
+    WS_EXIT_DEBOUNCE_MS: z.coerce.number().int().positive().default(2000),
+    WS_SUBSCRIPTION_REFRESH_MS: z.coerce.number().int().positive().default(60000),
+    WS_REST_RECONCILE_INTERVAL_SECONDS: z.coerce.number().int().positive().default(120),
+
+    BUILDER_FEE_BPS: z.coerce.number().int().nonnegative().default(0),
+    FEE_PARAMS_REFRESH_HOURS: z.coerce.number().positive().default(24),
+    BACKTEST_FEE_MODE: z
+      .enum(["maker_only", "taker_only", "mixed", "actual_if_available"])
+      .default("mixed"),
   })
   .superRefine((data, ctx) => {
     if (data.MIN_ENTRY_PRICE >= data.MAX_ENTRY_PRICE) {
@@ -97,6 +130,10 @@ export function isLiveMode(config: Pick<Env, "TRADING_MODE">): boolean {
 
 export function isPaperMode(config: Pick<Env, "TRADING_MODE">): boolean {
   return config.TRADING_MODE === "paper";
+}
+
+export function isDryRunMode(config: Pick<Env, "TRADING_MODE">): boolean {
+  return config.TRADING_MODE === "dry_run";
 }
 
 function issueGroup(path: string): string {

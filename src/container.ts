@@ -19,8 +19,17 @@ import type { IPaperTrader } from "./paper/types.js";
 import type { IPaperTradingEngine } from "./paper/paperTypes.js";
 import { createPolymarketClient } from "./polymarket/index.js";
 import type { IPolymarketClient } from "./polymarket/types.js";
+import { createClobClient } from "./polymarket/clobClient.js";
+import type { IClobClient } from "./polymarket/clobTypes.js";
 import { createPublicClient } from "./polymarket/publicClient.js";
 import type { IPublicClient } from "./polymarket/publicClient.js";
+import { createPriceCache } from "./polymarket/priceCache.js";
+import type { IPriceCache } from "./polymarket/priceCache.js";
+import { createWsClient } from "./polymarket/wsClient.js";
+import type { IWsClient, IWsMonitorService } from "./polymarket/wsTypes.js";
+import { createWsMonitorService } from "./polymarket/wsMonitorService.js";
+import { createExecutionEngine } from "./execution/createExecutionEngine.js";
+import type { IExecutionEngine } from "./execution/executionEngineTypes.js";
 import { createPositionMonitor } from "./positions/positionMonitor.js";
 import type { IPositionMonitor } from "./positions/positionMonitorTypes.js";
 import { createPositionStore } from "./positions/index.js";
@@ -34,6 +43,9 @@ import type { IMarketScanner } from "./scanner/types.js";
 import { createStrategy, createLongshotScorer } from "./strategy/index.js";
 import type { IStrategy } from "./strategy/types.js";
 import type { ILongshotScorer } from "./strategy/longshotScorer.js";
+import { createFeeService } from "./fees/index.js";
+import type { IFeeService } from "./fees/feeTypes.js";
+import { stopWorkers } from "./jobs/worker.js";
 
 export class AppContainer {
   private _logger?: ILogger;
@@ -42,6 +54,8 @@ export class AppContainer {
   private _queueManager?: IQueueManager;
   private _polymarket?: IPolymarketClient;
   private _publicClient?: IPublicClient;
+  private _clobClient?: IClobClient;
+  private _executionEngine?: IExecutionEngine;
   private _scanner?: IMarketScanner;
   private _strategy?: IStrategy;
   private _riskManager?: IRiskManager;
@@ -55,6 +69,10 @@ export class AppContainer {
   private _entryEngine?: IEntryEngine;
   private _exitEngine?: IExitEngine;
   private _positionMonitor?: IPositionMonitor;
+  private _priceCache?: IPriceCache;
+  private _wsClient?: IWsClient;
+  private _wsMonitorService?: IWsMonitorService;
+  private _feeService?: IFeeService;
 
   constructor(readonly config: Config) {}
 
@@ -98,6 +116,27 @@ export class AppContainer {
       this._publicClient = createPublicClient(this.config, this.logger);
     }
     return this._publicClient;
+  }
+
+  get clobClient(): IClobClient {
+    if (!this._clobClient) {
+      this._clobClient = createClobClient(this.config, this.logger);
+    }
+    return this._clobClient;
+  }
+
+  get executionEngine(): IExecutionEngine {
+    if (!this._executionEngine) {
+      this._executionEngine = createExecutionEngine({
+        config: this.config,
+        repositories: this.repositories,
+        logger: this.logger,
+        riskEngine: this.riskEngine,
+        paperTradingEngine: this.paperTradingEngine,
+        clobClient: this.clobClient,
+      });
+    }
+    return this._executionEngine;
   }
 
   get scanner(): IMarketScanner {
@@ -151,6 +190,13 @@ export class AppContainer {
     return this._paperTrader;
   }
 
+  get feeService(): IFeeService {
+    if (!this._feeService) {
+      this._feeService = createFeeService(this.config);
+    }
+    return this._feeService;
+  }
+
   get paperTradingEngine(): IPaperTradingEngine {
     if (!this._paperTradingEngine) {
       this._paperTradingEngine = createPaperTradingEngine({
@@ -158,6 +204,7 @@ export class AppContainer {
         repositories: this.repositories,
         logger: this.logger,
         riskEngine: this.riskEngine,
+        feeService: this.feeService,
       });
     }
     return this._paperTradingEngine;
@@ -177,9 +224,11 @@ export class AppContainer {
         scanner: this.scanner,
         scorer: this.longshotScorer,
         riskEngine: this.riskEngine,
-        paperTradingEngine: this.paperTradingEngine,
+        executionEngine: this.executionEngine,
         publicClient: this.publicClient,
         repositories: this.repositories,
+        paperTradingEngine: this.paperTradingEngine,
+        feeService: this.feeService,
         logger: this.logger,
       });
     }
@@ -192,8 +241,10 @@ export class AppContainer {
         config: this.config,
         repositories: this.repositories,
         publicClient: this.publicClient,
+        executionEngine: this.executionEngine,
         paperTradingEngine: this.paperTradingEngine,
         riskEngine: this.riskEngine,
+        feeService: this.feeService,
         logger: this.logger,
       });
     }
@@ -214,6 +265,36 @@ export class AppContainer {
     return this._positionMonitor;
   }
 
+  get priceCache(): IPriceCache {
+    if (!this._priceCache) {
+      this._priceCache = createPriceCache();
+    }
+    return this._priceCache;
+  }
+
+  get wsClient(): IWsClient {
+    if (!this._wsClient) {
+      this._wsClient = createWsClient(this.config, this.logger);
+    }
+    return this._wsClient;
+  }
+
+  get wsMonitorService(): IWsMonitorService {
+    if (!this._wsMonitorService) {
+      this._wsMonitorService = createWsMonitorService({
+        config: this.config,
+        logger: this.logger,
+        repositories: this.repositories,
+        wsClient: this.wsClient,
+        priceCache: this.priceCache,
+        publicClient: this.publicClient,
+        exitEngine: this.exitEngine,
+        paperTradingEngine: this.paperTradingEngine,
+      });
+    }
+    return this._wsMonitorService;
+  }
+
   get positionStore(): IPositionStore {
     if (!this._positionStore) {
       this._positionStore = createPositionStore(this.logger);
@@ -229,6 +310,8 @@ export class AppContainer {
   }
 
   async shutdown(): Promise<void> {
+    await stopWorkers();
+
     const tasks: Promise<void>[] = [];
 
     if (this._queueManager) {

@@ -1,17 +1,22 @@
+import type { Signal } from "@prisma/client";
+
 import type { Config } from "../config/index.js";
 import { isPaperMode } from "../config/index.js";
+import { isLiveMode } from "../config/index.js";
 import type { IRepositories } from "../db/repositories/index.js";
+import type { IFeeService } from "../fees/feeTypes.js";
 import type { ILogger } from "../logger/types.js";
 import type { IPublicClient } from "../polymarket/publicClient.js";
-import type { IPaperTradingEngine } from "../paper/paperTypes.js";
 import type { IRiskEngine } from "../risk/riskTypes.js";
-import type { IMarketScanner } from "../scanner/types.js";
+import type { CandidateOutcome, IMarketScanner } from "../scanner/types.js";
 import type { ILongshotScorer } from "../strategy/longshotScorer.js";
 import { buildScoreInput, roundDownShares, toNumber } from "./entryHelpers.js";
+import type { IExecutionEngine } from "./executionEngineTypes.js";
 import type {
   AcceptedEntry,
   EntryCandidateRecord,
   EntryRejectStage,
+  EntryRunOptions,
   IEntryEngine,
   RejectedEntry,
 } from "./entryTypes.js";
@@ -22,9 +27,11 @@ export interface EntryEngineDeps {
   scanner: IMarketScanner;
   scorer: ILongshotScorer;
   riskEngine: IRiskEngine;
-  paperTradingEngine: IPaperTradingEngine;
+  executionEngine: IExecutionEngine;
   publicClient: IPublicClient;
   repositories: IRepositories;
+  paperTradingEngine: import("../paper/paperTypes.js").IPaperTradingEngine;
+  feeService: IFeeService;
   logger: ILogger;
 }
 
@@ -33,10 +40,11 @@ export function createEntryEngine(deps: EntryEngineDeps): IEntryEngine {
     config,
     scanner,
     scorer,
-    riskEngine,
-    paperTradingEngine,
+    executionEngine,
     publicClient,
     repositories,
+    paperTradingEngine,
+    feeService,
     logger,
   } = deps;
 
@@ -52,15 +60,61 @@ export function createEntryEngine(deps: EntryEngineDeps): IEntryEngine {
     logger.debug({ entry }, "Entry rejected");
   }
 
-  return {
-    async run(options) {
-      if (!isPaperMode(config)) {
-        throw new Error("entry:paper requires TRADING_MODE=paper");
+  function dedupSince(): Date {
+    return new Date(Date.now() - config.ENTRY_SIGNAL_DEDUP_MINUTES * 60 * 1000);
+  }
+
+  async function findPendingBuy(tokenId: string) {
+    if (isLiveMode(config)) {
+      return repositories.order.findPendingBuyByTokenIdLive(tokenId);
+    }
+    return repositories.order.findPendingBuyByTokenId(tokenId);
+  }
+
+  async function resolveSignalForEntry(
+    candidate: CandidateOutcome,
+    bidPrice: number,
+    sizeUsd: number,
+    score: number,
+    reasons: string[],
+  ): Promise<Signal | null> {
+    const pendingBuy = await findPendingBuy(candidate.tokenId);
+    if (pendingBuy) {
+      return null;
+    }
+
+    const recentSignal = await repositories.signal.findRecentEntrySignal(
+      candidate.tokenId,
+      dedupSince(),
+    );
+
+    if (recentSignal) {
+      const hasOrder = await repositories.signal.hasPaperOrder(recentSignal.id);
+      if (hasOrder) {
+        return null;
       }
+      return recentSignal;
+    }
 
-      await paperTradingEngine.initialize();
+    return repositories.signal.create({
+      marketId: candidate.marketId,
+      outcomeId: candidate.outcomeId,
+      tokenId: candidate.tokenId,
+      signalType: "LONGSHOT_ENTRY",
+      score,
+      reason: reasons.join("; "),
+      entryPrice: bidPrice,
+      suggestedSizeUsd: sizeUsd,
+      status: "APPROVED",
+    });
+  }
 
-      const scan = await scanner.scanMarkets(options);
+  return {
+    async run(options?: EntryRunOptions) {
+      await executionEngine.initialize();
+
+      const { scan: providedScan, ...scanOptions } = options ?? {};
+      const scan = providedScan ?? (await scanner.scanMarkets(scanOptions));
       const candidates: EntryCandidateRecord[] = [];
       const accepted: AcceptedEntry[] = [];
       const rejected: RejectedEntry[] = [];
@@ -75,14 +129,51 @@ export function createEntryEngine(deps: EntryEngineDeps): IEntryEngine {
           continue;
         }
 
+        const pendingBuy = await findPendingBuy(candidate.tokenId);
+        if (pendingBuy) {
+          reject(
+            rejected,
+            {
+              tokenId: candidate.tokenId,
+              question: candidate.question,
+              stage: "idempotency",
+              reason: "Pending BUY order already exists",
+            },
+            riskRejectionReasons,
+          );
+          continue;
+        }
+
+        const recentSignal = await repositories.signal.findRecentEntrySignal(
+          candidate.tokenId,
+          dedupSince(),
+        );
+        if (recentSignal && (await repositories.signal.hasPaperOrder(recentSignal.id))) {
+          reject(
+            rejected,
+            {
+              tokenId: candidate.tokenId,
+              question: candidate.question,
+              stage: "idempotency",
+              reason: "Recent entry signal already has order",
+            },
+            riskRejectionReasons,
+          );
+          continue;
+        }
+
         const orderBook = await publicClient.getOrderBook(candidate.tokenId);
         if (!orderBook) {
-          reject(rejected, {
-            tokenId: candidate.tokenId,
-            question: candidate.question,
-            stage: "bid",
-            reason: "Order book unavailable",
-          }, riskRejectionReasons);
+          reject(
+            rejected,
+            {
+              tokenId: candidate.tokenId,
+              question: candidate.question,
+              stage: "bid",
+              reason: "Order book unavailable",
+            },
+            riskRejectionReasons,
+          );
           continue;
         }
 
@@ -99,28 +190,36 @@ export function createEntryEngine(deps: EntryEngineDeps): IEntryEngine {
         });
 
         if (scoreResult.decision !== "entry_candidate") {
-          reject(rejected, {
-            tokenId: candidate.tokenId,
-            question: candidate.question,
-            stage: "score",
-            reason: `Decision: ${scoreResult.decision} (${scoreResult.reasons.join("; ")})`,
-          }, riskRejectionReasons);
+          reject(
+            rejected,
+            {
+              tokenId: candidate.tokenId,
+              question: candidate.question,
+              stage: "score",
+              reason: `Decision: ${scoreResult.decision} (${scoreResult.reasons.join("; ")})`,
+            },
+            riskRejectionReasons,
+          );
           continue;
         }
 
         const bidResult = computePassiveBidPrice(orderBook, config);
         if ("rejected" in bidResult) {
-          reject(rejected, {
-            tokenId: candidate.tokenId,
-            question: candidate.question,
-            stage: "bid",
-            reason: bidResult.reason,
-          }, riskRejectionReasons);
+          reject(
+            rejected,
+            {
+              tokenId: candidate.tokenId,
+              question: candidate.question,
+              stage: "bid",
+              reason: bidResult.reason,
+            },
+            riskRejectionReasons,
+          );
           continue;
         }
 
-        let sizeUsd = scoreResult.suggestedSizeUsd;
-        let shares = roundDownShares(sizeUsd / bidResult.bidPrice);
+        const sizeUsd = scoreResult.suggestedSizeUsd;
+        const shares = roundDownShares(sizeUsd / bidResult.bidPrice);
         const notionalFromShares = shares * bidResult.bidPrice;
 
         if (
@@ -128,88 +227,104 @@ export function createEntryEngine(deps: EntryEngineDeps): IEntryEngine {
           shares <= 0 ||
           notionalFromShares < config.MIN_ORDER_SIZE_USD
         ) {
-          reject(rejected, {
-            tokenId: candidate.tokenId,
-            question: candidate.question,
-            stage: "size",
-            reason: `Order size $${sizeUsd.toFixed(2)} below minimum $${config.MIN_ORDER_SIZE_USD}`,
-          }, riskRejectionReasons);
+          reject(
+            rejected,
+            {
+              tokenId: candidate.tokenId,
+              question: candidate.question,
+              stage: "size",
+              reason: `Order size $${sizeUsd.toFixed(2)} below minimum $${config.MIN_ORDER_SIZE_USD}`,
+            },
+            riskRejectionReasons,
+          );
           continue;
         }
 
-        const riskResult = await riskEngine.checkOrder({
+        const signal = await resolveSignalForEntry(
+          candidate,
+          bidResult.bidPrice,
+          sizeUsd,
+          scoreResult.score,
+          scoreResult.reasons,
+        );
+
+        if (!signal) {
+          reject(
+            rejected,
+            {
+              tokenId: candidate.tokenId,
+              question: candidate.question,
+              stage: "idempotency",
+              reason: "Duplicate entry blocked by idempotency guard",
+            },
+            riskRejectionReasons,
+          );
+          continue;
+        }
+
+        const feeParams = market
+          ? feeService.getMarketFeeParams(market)
+          : { feesEnabled: false, feeRate: 0, takerOnly: true, makerBaseFeeBps: 0, takerBaseFeeBps: 0 };
+        const liquidityRole = feeService.estimateLiquidityRole({
+          side: "BUY",
+          limitPrice: bidResult.bidPrice,
+          bestBid: orderBook.bestBid,
+          bestAsk: orderBook.bestAsk,
+        });
+        const buyEconomics = feeService.calculateBuyEconomics({
+          side: "BUY",
+          price: bidResult.bidPrice,
+          shares,
+          liquidityRole,
+          feeParams,
+        });
+
+        if (
+          isPaperMode(config) &&
+          buyEconomics.totalCostUsd > paperTradingEngine.getCashBalance()
+        ) {
+          await repositories.signal.updateStatus(signal.id, "REJECTED");
+          reject(
+            rejected,
+            {
+              tokenId: candidate.tokenId,
+              question: candidate.question,
+              stage: "order",
+              reason: "Insufficient cash balance (including estimated fees)",
+            },
+            riskRejectionReasons,
+          );
+          continue;
+        }
+
+        const orderResult = await executionEngine.placeBuyLimitOrder({
           marketId: candidate.marketId,
           outcomeId: candidate.outcomeId,
           tokenId: candidate.tokenId,
-          side: "BUY",
           limitPrice: bidResult.bidPrice,
           sizeUsd,
+          signalId: signal.id,
           isNewEntry: true,
           spread: orderBook.spread,
           liquidityUsd: toNumber(outcome.liquidity),
           dataUpdatedAt: outcome.updatedAt,
         });
 
-        if (!riskResult.allowed) {
-          reject(rejected, {
-            tokenId: candidate.tokenId,
-            question: candidate.question,
-            stage: "risk",
-            reason: riskResult.reason,
-          }, riskRejectionReasons);
-          continue;
-        }
-
-        if (riskResult.adjustedSizeUsd != null) {
-          sizeUsd = riskResult.adjustedSizeUsd;
-          shares = roundDownShares(sizeUsd / bidResult.bidPrice);
-          if (shares * bidResult.bidPrice < config.MIN_ORDER_SIZE_USD) {
-            reject(rejected, {
+        if (orderResult.status === "rejected" || !orderResult.orderId) {
+          if (orderResult.rejectedReason) {
+            riskRejectionReasons.push(orderResult.rejectedReason);
+          }
+          await repositories.signal.updateStatus(signal.id, "REJECTED");
+          reject(
+            rejected,
+            {
               tokenId: candidate.tokenId,
               question: candidate.question,
-              stage: "size",
-              reason: `Adjusted size $${sizeUsd.toFixed(2)} below minimum`,
-            }, riskRejectionReasons);
-            continue;
-          }
-        }
-
-        const signal = await repositories.signal.create({
-          marketId: candidate.marketId,
-          outcomeId: candidate.outcomeId,
-          tokenId: candidate.tokenId,
-          signalType: "LONGSHOT_ENTRY",
-          score: scoreResult.score,
-          reason: scoreResult.reasons.join("; "),
-          entryPrice: bidResult.bidPrice,
-          suggestedSizeUsd: sizeUsd,
-          status: "APPROVED",
-        });
-
-        const { order, rejectedReason } = await paperTradingEngine.placeLimitOrder({
-          marketId: candidate.marketId,
-          outcomeId: candidate.outcomeId,
-          tokenId: candidate.tokenId,
-          side: "BUY",
-          limitPrice: bidResult.bidPrice,
-          sizeUsd,
-          signalId: signal.id,
-          skipRiskCheck: true,
-          riskContext: {
-            spread: orderBook.spread,
-            liquidityUsd: toNumber(outcome.liquidity),
-            dataUpdatedAt: outcome.updatedAt,
-            isNewEntry: true,
-          },
-        });
-
-        if (rejectedReason || !order || order.status === "FAILED") {
-          reject(rejected, {
-            tokenId: candidate.tokenId,
-            question: candidate.question,
-            stage: "order",
-            reason: rejectedReason ?? "Order creation failed",
-          }, riskRejectionReasons);
+              stage: "order",
+              reason: orderResult.rejectedReason ?? "Order creation failed",
+            },
+            riskRejectionReasons,
+          );
           continue;
         }
 
@@ -217,12 +332,12 @@ export function createEntryEngine(deps: EntryEngineDeps): IEntryEngine {
           tokenId: candidate.tokenId,
           question: candidate.question,
           bidPrice: bidResult.bidPrice,
-          sizeUsd,
-          shares,
-          orderId: order.id,
+          sizeUsd: orderResult.notionalUsd ?? sizeUsd,
+          shares: orderResult.sizeShares ?? shares,
+          orderId: orderResult.orderId,
           signalId: signal.id,
         });
-        totalNotionalUsd += sizeUsd;
+        totalNotionalUsd += orderResult.notionalUsd ?? sizeUsd;
       }
 
       return {

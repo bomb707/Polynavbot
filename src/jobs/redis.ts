@@ -3,6 +3,7 @@ import { Redis } from "ioredis";
 import type { Config } from "../config/index.js";
 import type { IRedisConnection } from "./types.js";
 import { ok, err, type Result } from "../utils/result.js";
+import { sanitizeError } from "../utils/sanitizeError.js";
 
 export function createRedisConnection(config: Config): IRedisConnection {
   const client = new Redis(config.REDIS_URL, {
@@ -36,7 +37,6 @@ export async function checkRedisHealth(
     }
     return ok({ latencyMs: Date.now() - start });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown Redis error";
-    return err(message);
+    return err(sanitizeError(error));
   }
 }

@@ -1,0 +1,33 @@
+{
+  "start": "2026-01-01T00:00:00.000Z",
+  "end": "2026-03-01T00:00:00.000Z",
+  "config": {
+    "interval": "1h",
+    "slippageBps": 50,
+    "fillProbability": 0.7,
+    "assumedSpread": 0.02,
+    "topOfBookDepthUsd": 25,
+    "minLiquidityForExit": 1000,
+    "startingCapitalUsd": 500,
+    "seed": 42
+  },
+  "metrics": {
+    "totalRoi": 0,
+    "realizedPnlUsd": 0,
+    "unrealizedPnlUsd": 0,
+    "finalEquityUsd": 500,
+    "maxDrawdown": 0,
+    "hitRate": 0,
+    "averageWinner": 0,
+    "averageLoser": 0,
+    "payoffSkew": 0,
+    "capitalUtilization": 0,
+    "worstLosingStreak": 0,
+    "totalTrades": 0,
+    "winningTrades": 0,
+    "losingTrades": 0
+  },
+  "trades": [],
+  "equityCurve": [],
+  "tokensTraded": 0
+}

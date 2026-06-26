@@ -18,20 +18,30 @@
     "paper:run": "tsx src/index.ts paper:run",
     "entry:paper": "tsx src/index.ts entry:paper",
     "exit:paper": "tsx src/index.ts exit:paper",
-    "positions:update": "tsx src/index.ts positions:update"
+    "positions:update": "tsx src/index.ts positions:update",
+    "backtest": "tsx src/index.ts backtest",
+    "worker": "tsx src/index.ts worker",
+    "scheduler": "tsx src/index.ts scheduler",
+    "ws:monitor": "tsx src/index.ts ws:monitor",
+    "report": "tsx src/index.ts report",
+    "dashboard": "tsx src/index.ts dashboard"
   },
   "dependencies": {
+    "@polymarket/clob-client-v2": "^1.0.6",
     "@prisma/client": "^6.9.0",
     "bullmq": "^5.53.2",
     "commander": "^14.0.0",
     "dotenv": "^16.5.0",
     "ioredis": "^5.6.1",
     "pino": "^9.7.0",
+    "viem": "^2.53.1",
+    "ws": "^8.21.0",
     "zod": "^3.25.56"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
     "@types/node": "^22.15.30",
+    "@types/ws": "^8.18.1",
     "@typescript-eslint/eslint-plugin": "^8.33.1",
     "@typescript-eslint/parser": "^8.33.1",
     "eslint": "^9.28.0",

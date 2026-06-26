@@ -1,4 +1,5 @@
 import type { AppContainer } from "../container.js";
+import { isPaperMode } from "../config/index.js";
 import type { EntryPaperSummary } from "../execution/entryTypes.js";
 import type { ScanOptions } from "../scanner/types.js";
 
@@ -63,6 +64,10 @@ export async function runEntryPaper(
   container: AppContainer,
   options?: ScanOptions,
 ): Promise<EntryPaperSummary> {
+  if (!isPaperMode(container.config)) {
+    throw new Error("entry:paper requires TRADING_MODE=paper");
+  }
+
   await container.db.connect();
   return container.entryEngine.run(options);
 }

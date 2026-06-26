@@ -104,6 +104,21 @@ export const rawGammaMarketsResponseSchema = z.union([
   z.object({ data: z.array(rawGammaMarketSchema).optional() }).passthrough(),
 ]);
 
+export const rawClobMarketInfoSchema = z
+  .object({
+    mbf: z.coerce.number().optional(),
+    tbf: z.coerce.number().optional(),
+    fd: z
+      .object({
+        r: z.coerce.number().optional(),
+        e: z.coerce.number().optional().nullable(),
+        to: z.coerce.boolean().optional(),
+      })
+      .optional()
+      .nullable(),
+  })
+  .passthrough();
+
 export function extractLiquidity(rawMarket: unknown): number {
   const parsed = rawGammaMarketSchema.safeParse(rawMarket);
   if (!parsed.success) {

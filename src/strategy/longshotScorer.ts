@@ -39,8 +39,8 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
 
-function daysUntil(date: Date): number {
-  return (date.getTime() - Date.now()) / (1000 * 60 * 60 * 24);
+function daysUntil(date: Date, asOf: Date = new Date()): number {
+  return (date.getTime() - asOf.getTime()) / (1000 * 60 * 60 * 24);
 }
 
 function round2(value: number): number {
@@ -199,7 +199,7 @@ export function createLongshotScorer(
       return buildResult(HARD_REJECT_MAX_SCORE, "reject");
     }
 
-    const daysToExpiry = daysUntil(market.endDate);
+    const daysToExpiry = daysUntil(market.endDate, input.asOf);
     if (daysToExpiry < config.MIN_DAYS_TO_EXPIRY) {
       reasons.push(
         `End date too soon (${Math.floor(daysToExpiry)} days, min ${config.MIN_DAYS_TO_EXPIRY})`,

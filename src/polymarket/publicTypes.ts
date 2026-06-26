@@ -17,6 +17,8 @@ export interface NormalizedMarket {
   archived: boolean;
   enableOrderBook: boolean;
   endDate: Date | null;
+  liquidityUsd: number | null;
+  volumeUsd: number | null;
   outcomes: NormalizedOutcome[];
 }
 
@@ -31,6 +33,14 @@ export interface GetActiveMarketsResult {
   markets: NormalizedMarket[];
   total: number;
   skipped: number;
+}
+
+export interface GetBacktestMarketsParams {
+  start: Date;
+  end: Date;
+  limit: number;
+  offset: number;
+  closed: boolean;
 }
 
 export interface OrderBookLevel {
@@ -60,4 +70,19 @@ export interface ActivityItem {
   size: number | null;
   price: number | null;
   raw: Record<string, unknown>;
+}
+
+export interface ClobMarketFeeDetails {
+  feeRate: number;
+  feeExponent: number | null;
+  takerOnly: boolean;
+}
+
+export interface ClobMarketInfo {
+  conditionId: string;
+  makerBaseFeeBps: number;
+  takerBaseFeeBps: number;
+  feesEnabled: boolean;
+  feeDetails: ClobMarketFeeDetails | null;
+  feeCategory: string | null;
 }

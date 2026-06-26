@@ -40,6 +40,9 @@ export interface FillSimulationResult {
   tradeId?: string;
   position?: Position;
   orderStatus: OrderStatus;
+  totalFeeUsd?: number;
+  netRealizedPnlUsd?: number;
+  grossRealizedPnlUsd?: number;
 }
 
 export interface PortfolioSummary {

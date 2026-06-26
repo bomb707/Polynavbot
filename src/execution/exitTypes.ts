@@ -33,6 +33,7 @@ export interface ExitEvaluation {
   reason: ExitReason;
   message: string;
   nextExitState: PositionExitState;
+  milestoneFlag?: keyof Pick<PositionExitState, "soldAt5x" | "soldAt10x" | "soldAt25x">;
 }
 
 export interface ExitActionRecord {
@@ -44,6 +45,8 @@ export interface ExitActionRecord {
   sellPrice: number;
   filled: boolean;
   realizedPnlUsd?: number;
+  estimatedFeeUsd?: number;
+  netProceedsUsd?: number;
 }
 
 export interface ExitPaperSummary {
@@ -57,5 +60,7 @@ export interface ExitPaperSummary {
 
 export interface IExitEngine {
   run(): Promise<ExitPaperSummary>;
+  runForToken(tokenId: string): Promise<ExitActionRecord | null>;
+  previewExits(): Promise<ExitActionRecord[]>;
   evaluateExit(input: ExitEvaluationInput): ExitEvaluation;
 }

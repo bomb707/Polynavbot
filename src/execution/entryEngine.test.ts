@@ -3,6 +3,7 @@ import type { PaperOrder } from "@prisma/client";
 
 import type { Config } from "../config/index.js";
 import type { IRepositories } from "../db/repositories/index.js";
+import { createFeeService } from "../fees/feeService.js";
 import { createEntryEngine } from "./entryEngine.js";
 import type { OrderBook } from "../polymarket/publicTypes.js";
 
@@ -12,6 +13,7 @@ const config = {
   MAX_ENTRY_PRICE: 0.04,
   MAX_SPREAD: 0.03,
   MIN_ORDER_SIZE_USD: 0.5,
+  ENTRY_SIGNAL_DEDUP_MINUTES: 10,
 } as Config;
 
 const orderBook: OrderBook = {
@@ -21,6 +23,14 @@ const orderBook: OrderBook = {
   bestBid: 0.02,
   bestAsk: 0.022,
   spread: 0.002,
+};
+
+const entryEngineExtras = {
+  feeService: createFeeService({ BUILDER_FEE_BPS: 0 }),
+  paperTradingEngine: {
+    getCashBalance: vi.fn().mockReturnValue(1000),
+    initialize: vi.fn().mockResolvedValue(undefined),
+  },
 };
 
 function makePaperOrder(id: string): PaperOrder {
@@ -75,9 +85,13 @@ describe("createEntryEngine", () => {
         }),
       },
       riskEngine: { checkOrder: vi.fn() },
-      paperTradingEngine: {
+      executionEngine: {
         initialize: vi.fn(),
-        placeLimitOrder: vi.fn(),
+        placeBuyLimitOrder: vi.fn(),
+        placeSellLimitOrder: vi.fn(),
+        cancelOrder: vi.fn(),
+        getOpenOrders: vi.fn(),
+        syncTrades: vi.fn(),
       },
       publicClient: {
         getOrderBook: vi.fn().mockResolvedValue(orderBook),
@@ -106,9 +120,15 @@ describe("createEntryEngine", () => {
             updatedAt: new Date(),
           }),
         },
-        signal: { create: vi.fn() },
+        signal: {
+          create: vi.fn(),
+          findRecentEntrySignal: vi.fn().mockResolvedValue(null),
+          hasPaperOrder: vi.fn().mockResolvedValue(false),
+        },
+        order: { findPendingBuyByTokenId: vi.fn().mockResolvedValue(null) },
       } as unknown as IRepositories,
       logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
+      ...entryEngineExtras,
     });
 
     const summary = await engine.run();
@@ -150,15 +170,18 @@ describe("createEntryEngine", () => {
           suggestedSizeUsd: 1.5,
         }),
       },
-      riskEngine: {
-        checkOrder: vi.fn().mockResolvedValue({
-          allowed: false,
-          reason: "Daily spend limit exceeded",
-        }),
-      },
-      paperTradingEngine: {
+      riskEngine: { checkOrder: vi.fn() },
+      executionEngine: {
         initialize: vi.fn(),
-        placeLimitOrder: vi.fn(),
+        placeBuyLimitOrder: vi.fn().mockResolvedValue({
+          orderId: null,
+          status: "rejected",
+          rejectedReason: "Daily spend limit exceeded",
+        }),
+        placeSellLimitOrder: vi.fn(),
+        cancelOrder: vi.fn(),
+        getOpenOrders: vi.fn(),
+        syncTrades: vi.fn(),
       },
       publicClient: {
         getOrderBook: vi.fn().mockResolvedValue(orderBook),
@@ -187,21 +210,31 @@ describe("createEntryEngine", () => {
             updatedAt: new Date(),
           }),
         },
-        signal: { create: vi.fn() },
+        signal: {
+          create: vi.fn().mockResolvedValue({ id: "signal-1" }),
+          findRecentEntrySignal: vi.fn().mockResolvedValue(null),
+          hasPaperOrder: vi.fn().mockResolvedValue(false),
+          updateStatus: vi.fn(),
+        },
+        order: { findPendingBuyByTokenId: vi.fn().mockResolvedValue(null) },
       } as unknown as IRepositories,
       logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
+      ...entryEngineExtras,
     });
 
     const summary = await engine.run();
 
     expect(summary.rejected).toHaveLength(1);
-    expect(summary.rejected[0]?.stage).toBe("risk");
+    expect(summary.rejected[0]?.stage).toBe("order");
     expect(summary.riskRejectionReasons).toContain("Daily spend limit exceeded");
   });
 
   it("accepts entry and sums notional on happy path", async () => {
-    const placeLimitOrder = vi.fn().mockResolvedValue({
-      order: makePaperOrder("order-1"),
+    const placeBuyLimitOrder = vi.fn().mockResolvedValue({
+      orderId: "order-1",
+      status: "placed",
+      sizeShares: 71.42857142,
+      notionalUsd: 1.5,
     });
 
     const engine = createEntryEngine({
@@ -235,12 +268,14 @@ describe("createEntryEngine", () => {
           suggestedSizeUsd: 1.5,
         }),
       },
-      riskEngine: {
-        checkOrder: vi.fn().mockResolvedValue({ allowed: true, reason: "Approved" }),
-      },
-      paperTradingEngine: {
+      riskEngine: { checkOrder: vi.fn() },
+      executionEngine: {
         initialize: vi.fn(),
-        placeLimitOrder,
+        placeBuyLimitOrder,
+        placeSellLimitOrder: vi.fn(),
+        cancelOrder: vi.fn(),
+        getOpenOrders: vi.fn(),
+        syncTrades: vi.fn(),
       },
       publicClient: {
         getOrderBook: vi.fn().mockResolvedValue(orderBook),
@@ -271,9 +306,13 @@ describe("createEntryEngine", () => {
         },
         signal: {
           create: vi.fn().mockResolvedValue({ id: "signal-1" }),
+          findRecentEntrySignal: vi.fn().mockResolvedValue(null),
+          hasPaperOrder: vi.fn().mockResolvedValue(false),
         },
+        order: { findPendingBuyByTokenId: vi.fn().mockResolvedValue(null) },
       } as unknown as IRepositories,
       logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
+      ...entryEngineExtras,
     });
 
     const summary = await engine.run();
@@ -281,12 +320,157 @@ describe("createEntryEngine", () => {
     expect(summary.accepted).toHaveLength(1);
     expect(summary.accepted[0]?.bidPrice).toBe(0.021);
     expect(summary.totalNotionalUsd).toBe(1.5);
-    expect(placeLimitOrder).toHaveBeenCalledWith(
+    expect(placeBuyLimitOrder).toHaveBeenCalledWith(
       expect.objectContaining({
         limitPrice: 0.021,
         sizeUsd: 1.5,
-        skipRiskCheck: true,
+        isNewEntry: true,
       }),
     );
+  });
+
+  it("uses provided scan without calling scanner", async () => {
+    const scanMarkets = vi.fn();
+    const engine = createEntryEngine({
+      config,
+      scanner: { scanMarkets },
+      scorer: {
+        score: vi.fn().mockReturnValue({
+          score: 40,
+          decision: "watchlist",
+          reasons: ["Low score"],
+          suggestedEntryPrice: 0.022,
+          suggestedSizeUsd: 1.5,
+        }),
+      },
+      riskEngine: { checkOrder: vi.fn() },
+      executionEngine: {
+        initialize: vi.fn(),
+        placeBuyLimitOrder: vi.fn(),
+        placeSellLimitOrder: vi.fn(),
+        cancelOrder: vi.fn(),
+        getOpenOrders: vi.fn(),
+        syncTrades: vi.fn(),
+      },
+      publicClient: {
+        getOrderBook: vi.fn().mockResolvedValue(orderBook),
+      },
+      repositories: {
+        market: {
+          findById: vi.fn().mockResolvedValue({
+            id: "market-1",
+            question: "Will X win?",
+            category: "politics",
+            active: true,
+            closed: false,
+            archived: false,
+            enableOrderBook: true,
+            endDate: null,
+          }),
+        },
+        outcome: {
+          findByTokenId: vi.fn().mockResolvedValue({
+            id: "outcome-1",
+            tokenId: "token-1",
+            name: "Yes",
+            side: "YES",
+            liquidity: { toNumber: () => 5000 },
+            currentPrice: { toNumber: () => 0.02 },
+            updatedAt: new Date(),
+          }),
+        },
+        order: {
+          findPendingBuyByTokenId: vi.fn().mockResolvedValue(null),
+        },
+        signal: {
+          findRecentEntrySignal: vi.fn().mockResolvedValue(null),
+          hasPaperOrder: vi.fn().mockResolvedValue(false),
+          create: vi.fn(),
+        },
+      } as unknown as IRepositories,
+      logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
+      ...entryEngineExtras,
+    });
+
+    const scan = {
+      marketsScanned: 5,
+      outcomesScanned: 10,
+      candidatesFound: 1,
+      skipped: {},
+      candidates: [
+        {
+          marketId: "market-1",
+          outcomeId: "outcome-1",
+          tokenId: "token-1",
+          question: "Will X win?",
+          outcomeName: "Yes",
+          price: 0.02,
+          endDate: null,
+          outcomeCount: 2,
+        },
+      ],
+    };
+
+    await engine.run({ scan });
+
+    expect(scanMarkets).not.toHaveBeenCalled();
+  });
+
+  it("skips entry when pending BUY order exists", async () => {
+    const placeBuyLimitOrder = vi.fn();
+    const engine = createEntryEngine({
+      config,
+      scanner: {
+        scanMarkets: vi.fn().mockResolvedValue({
+          marketsScanned: 1,
+          outcomesScanned: 2,
+          candidatesFound: 1,
+          skipped: {},
+          candidates: [
+            {
+              marketId: "market-1",
+              outcomeId: "outcome-1",
+              tokenId: "token-1",
+              question: "Will X win?",
+              outcomeName: "Yes",
+              price: 0.02,
+              endDate: null,
+              outcomeCount: 2,
+            },
+          ],
+        }),
+      },
+      scorer: { score: vi.fn() },
+      riskEngine: { checkOrder: vi.fn() },
+      executionEngine: {
+        initialize: vi.fn(),
+        placeBuyLimitOrder,
+        placeSellLimitOrder: vi.fn(),
+        cancelOrder: vi.fn(),
+        getOpenOrders: vi.fn(),
+        syncTrades: vi.fn(),
+      },
+      publicClient: { getOrderBook: vi.fn() },
+      repositories: {
+        market: { findById: vi.fn().mockResolvedValue({ id: "market-1" }) },
+        outcome: { findByTokenId: vi.fn().mockResolvedValue({ id: "outcome-1" }) },
+        order: {
+          findPendingBuyByTokenId: vi.fn().mockResolvedValue(makePaperOrder("pending-1")),
+        },
+        signal: {
+          findRecentEntrySignal: vi.fn(),
+          hasPaperOrder: vi.fn(),
+          create: vi.fn(),
+        },
+      } as unknown as IRepositories,
+      logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
+      ...entryEngineExtras,
+    });
+
+    const summary = await engine.run();
+
+    expect(summary.rejected).toHaveLength(1);
+    expect(summary.rejected[0]?.stage).toBe("idempotency");
+    expect(placeBuyLimitOrder).not.toHaveBeenCalled();
   });
 });

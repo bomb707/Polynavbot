@@ -30,6 +30,7 @@ export interface LongshotScoreInput {
   market: LongshotMarketContext;
   outcome: LongshotOutcomeContext;
   pricing: LongshotPricingContext;
+  asOf?: Date;
 }
 
 export type LongshotDecision = "reject" | "watchlist" | "entry_candidate";
