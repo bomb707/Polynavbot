@@ -14,6 +14,7 @@ function createStubExitEngine(config: Config) {
     config,
     repositories: {} as never,
     publicClient: {} as never,
+    executionEngine: {} as never,
     paperTradingEngine: {} as never,
     riskEngine: {} as never,
     logger: { debug: () => {}, info: () => {}, warn: () => {}, error: () => {} } as never,

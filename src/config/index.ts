@@ -10,6 +10,7 @@ export {
   envSchema,
   isLiveMode,
   isPaperMode,
+  isDryRunMode,
 } from "./env.js";
 export {
   LIVE_TRADING_CONFIRMATION_PHRASE,

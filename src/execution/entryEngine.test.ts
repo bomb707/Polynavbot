@@ -76,9 +76,13 @@ describe("createEntryEngine", () => {
         }),
       },
       riskEngine: { checkOrder: vi.fn() },
-      paperTradingEngine: {
+      executionEngine: {
         initialize: vi.fn(),
-        placeLimitOrder: vi.fn(),
+        placeBuyLimitOrder: vi.fn(),
+        placeSellLimitOrder: vi.fn(),
+        cancelOrder: vi.fn(),
+        getOpenOrders: vi.fn(),
+        syncTrades: vi.fn(),
       },
       publicClient: {
         getOrderBook: vi.fn().mockResolvedValue(orderBook),
@@ -156,15 +160,18 @@ describe("createEntryEngine", () => {
           suggestedSizeUsd: 1.5,
         }),
       },
-      riskEngine: {
-        checkOrder: vi.fn().mockResolvedValue({
-          allowed: false,
-          reason: "Daily spend limit exceeded",
-        }),
-      },
-      paperTradingEngine: {
+      riskEngine: { checkOrder: vi.fn() },
+      executionEngine: {
         initialize: vi.fn(),
-        placeLimitOrder: vi.fn(),
+        placeBuyLimitOrder: vi.fn().mockResolvedValue({
+          orderId: null,
+          status: "rejected",
+          rejectedReason: "Daily spend limit exceeded",
+        }),
+        placeSellLimitOrder: vi.fn(),
+        cancelOrder: vi.fn(),
+        getOpenOrders: vi.fn(),
+        syncTrades: vi.fn(),
       },
       publicClient: {
         getOrderBook: vi.fn().mockResolvedValue(orderBook),
@@ -194,9 +201,10 @@ describe("createEntryEngine", () => {
           }),
         },
         signal: {
-          create: vi.fn(),
+          create: vi.fn().mockResolvedValue({ id: "signal-1" }),
           findRecentEntrySignal: vi.fn().mockResolvedValue(null),
           hasPaperOrder: vi.fn().mockResolvedValue(false),
+          updateStatus: vi.fn(),
         },
         order: { findPendingBuyByTokenId: vi.fn().mockResolvedValue(null) },
       } as unknown as IRepositories,
@@ -206,13 +214,16 @@ describe("createEntryEngine", () => {
     const summary = await engine.run();
 
     expect(summary.rejected).toHaveLength(1);
-    expect(summary.rejected[0]?.stage).toBe("risk");
+    expect(summary.rejected[0]?.stage).toBe("order");
     expect(summary.riskRejectionReasons).toContain("Daily spend limit exceeded");
   });
 
   it("accepts entry and sums notional on happy path", async () => {
-    const placeLimitOrder = vi.fn().mockResolvedValue({
-      order: makePaperOrder("order-1"),
+    const placeBuyLimitOrder = vi.fn().mockResolvedValue({
+      orderId: "order-1",
+      status: "placed",
+      sizeShares: 71.42857142,
+      notionalUsd: 1.5,
     });
 
     const engine = createEntryEngine({
@@ -246,12 +257,14 @@ describe("createEntryEngine", () => {
           suggestedSizeUsd: 1.5,
         }),
       },
-      riskEngine: {
-        checkOrder: vi.fn().mockResolvedValue({ allowed: true, reason: "Approved" }),
-      },
-      paperTradingEngine: {
+      riskEngine: { checkOrder: vi.fn() },
+      executionEngine: {
         initialize: vi.fn(),
-        placeLimitOrder,
+        placeBuyLimitOrder,
+        placeSellLimitOrder: vi.fn(),
+        cancelOrder: vi.fn(),
+        getOpenOrders: vi.fn(),
+        syncTrades: vi.fn(),
       },
       publicClient: {
         getOrderBook: vi.fn().mockResolvedValue(orderBook),
@@ -295,11 +308,11 @@ describe("createEntryEngine", () => {
     expect(summary.accepted).toHaveLength(1);
     expect(summary.accepted[0]?.bidPrice).toBe(0.021);
     expect(summary.totalNotionalUsd).toBe(1.5);
-    expect(placeLimitOrder).toHaveBeenCalledWith(
+    expect(placeBuyLimitOrder).toHaveBeenCalledWith(
       expect.objectContaining({
         limitPrice: 0.021,
         sizeUsd: 1.5,
-        skipRiskCheck: true,
+        isNewEntry: true,
       }),
     );
   });
@@ -319,9 +332,13 @@ describe("createEntryEngine", () => {
         }),
       },
       riskEngine: { checkOrder: vi.fn() },
-      paperTradingEngine: {
+      executionEngine: {
         initialize: vi.fn(),
-        placeLimitOrder: vi.fn(),
+        placeBuyLimitOrder: vi.fn(),
+        placeSellLimitOrder: vi.fn(),
+        cancelOrder: vi.fn(),
+        getOpenOrders: vi.fn(),
+        syncTrades: vi.fn(),
       },
       publicClient: {
         getOrderBook: vi.fn().mockResolvedValue(orderBook),
@@ -387,7 +404,7 @@ describe("createEntryEngine", () => {
   });
 
   it("skips entry when pending BUY order exists", async () => {
-    const placeLimitOrder = vi.fn();
+    const placeBuyLimitOrder = vi.fn();
     const engine = createEntryEngine({
       config,
       scanner: {
@@ -412,9 +429,13 @@ describe("createEntryEngine", () => {
       },
       scorer: { score: vi.fn() },
       riskEngine: { checkOrder: vi.fn() },
-      paperTradingEngine: {
+      executionEngine: {
         initialize: vi.fn(),
-        placeLimitOrder,
+        placeBuyLimitOrder,
+        placeSellLimitOrder: vi.fn(),
+        cancelOrder: vi.fn(),
+        getOpenOrders: vi.fn(),
+        syncTrades: vi.fn(),
       },
       publicClient: { getOrderBook: vi.fn() },
       repositories: {
@@ -436,6 +457,6 @@ describe("createEntryEngine", () => {
 
     expect(summary.rejected).toHaveLength(1);
     expect(summary.rejected[0]?.stage).toBe("idempotency");
-    expect(placeLimitOrder).not.toHaveBeenCalled();
+    expect(placeBuyLimitOrder).not.toHaveBeenCalled();
   });
 });

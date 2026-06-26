@@ -1,6 +1,7 @@
 import type { Market, Outcome, PaperOrder, Position, Prisma, RiskEventType } from "@prisma/client";
 
 import type { Config } from "../config/index.js";
+import { isLiveMode } from "../config/index.js";
 import type { IRepositories } from "../db/repositories/index.js";
 import type { ILogger } from "../logger/types.js";
 import type { IRiskEngine, OrderRiskCheckInput, RiskCheckResult } from "./riskTypes.js";
@@ -11,9 +12,17 @@ export interface RiskEngineDeps {
   logger: ILogger;
 }
 
+interface PendingOrderSnapshot {
+  id: string;
+  marketId: string;
+  tokenId: string;
+  side: PaperOrder["side"];
+  notionalUsd: { toNumber(): number } | number;
+}
+
 interface PortfolioSnapshot {
   openPositions: Position[];
-  pendingOrders: PaperOrder[];
+  pendingOrders: PendingOrderSnapshot[];
   todayBuyNotional: number;
   todayRealizedPnl: number;
   pendingOrderCount: number;
@@ -55,14 +64,40 @@ export function createRiskEngine(deps: RiskEngineDeps): IRiskEngine {
 
   async function loadSnapshot(): Promise<PortfolioSnapshot> {
     const since = startOfUtcDay();
-    const [openPositions, pendingOrders, todayBuyNotional, todayRealizedPnl, pendingOrderCount] =
-      await Promise.all([
-        repositories.position.findOpen(),
-        repositories.order.findPendingPaperOrders(),
-        repositories.trade.sumNotionalSince("PAPER", "BUY", since),
-        repositories.position.sumRealizedPnlSince(since),
-        repositories.order.countPendingPaperOrders(),
-      ]);
+    const useLiveOrders = isLiveMode(config);
+    const tradeSource = useLiveOrders ? "LIVE" : "PAPER";
+
+    const [
+      openPositions,
+      pendingPaperOrders,
+      pendingLiveOrders,
+      todayBuyNotional,
+      todayRealizedPnl,
+      pendingPaperCount,
+    ] = await Promise.all([
+      repositories.position.findOpen(),
+      useLiveOrders ? Promise.resolve([]) : repositories.order.findPendingPaperOrders(),
+      useLiveOrders ? repositories.order.findPendingLiveOrders() : Promise.resolve([]),
+      repositories.trade.sumNotionalSince(tradeSource, "BUY", since),
+      repositories.position.sumRealizedPnlSince(since),
+      useLiveOrders ? Promise.resolve(0) : repositories.order.countPendingPaperOrders(),
+    ]);
+
+    const pendingOrders: PendingOrderSnapshot[] = useLiveOrders
+      ? pendingLiveOrders.map((order) => ({
+          id: order.id,
+          marketId: order.marketId,
+          tokenId: order.tokenId,
+          side: order.side,
+          notionalUsd: order.notionalUsd,
+        }))
+      : pendingPaperOrders.map((order) => ({
+          id: order.id,
+          marketId: order.marketId,
+          tokenId: order.tokenId,
+          side: order.side,
+          notionalUsd: order.notionalUsd,
+        }));
 
     const filledNotionalByOrderId = new Map<string, number>();
     for (const order of pendingOrders) {
@@ -76,7 +111,7 @@ export function createRiskEngine(deps: RiskEngineDeps): IRiskEngine {
       pendingOrders,
       todayBuyNotional,
       todayRealizedPnl,
-      pendingOrderCount,
+      pendingOrderCount: useLiveOrders ? pendingOrders.length : pendingPaperCount,
       filledNotionalByOrderId,
     };
   }

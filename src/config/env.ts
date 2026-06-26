@@ -116,6 +116,10 @@ export function isPaperMode(config: Pick<Env, "TRADING_MODE">): boolean {
   return config.TRADING_MODE === "paper";
 }
 
+export function isDryRunMode(config: Pick<Env, "TRADING_MODE">): boolean {
+  return config.TRADING_MODE === "dry_run";
+}
+
 function issueGroup(path: string): string {
   if (path === "TRADING_MODE" || LIVE_REQUIRED_FIELDS.includes(path as LiveRequiredField)) {
     return "Trading mode";

@@ -23,6 +23,8 @@ import { createClobClient } from "./polymarket/clobClient.js";
 import type { IClobClient } from "./polymarket/clobTypes.js";
 import { createPublicClient } from "./polymarket/publicClient.js";
 import type { IPublicClient } from "./polymarket/publicClient.js";
+import { createExecutionEngine } from "./execution/createExecutionEngine.js";
+import type { IExecutionEngine } from "./execution/executionEngineTypes.js";
 import { createPositionMonitor } from "./positions/positionMonitor.js";
 import type { IPositionMonitor } from "./positions/positionMonitorTypes.js";
 import { createPositionStore } from "./positions/index.js";
@@ -46,6 +48,7 @@ export class AppContainer {
   private _polymarket?: IPolymarketClient;
   private _publicClient?: IPublicClient;
   private _clobClient?: IClobClient;
+  private _executionEngine?: IExecutionEngine;
   private _scanner?: IMarketScanner;
   private _strategy?: IStrategy;
   private _riskManager?: IRiskManager;
@@ -109,6 +112,20 @@ export class AppContainer {
       this._clobClient = createClobClient(this.config, this.logger);
     }
     return this._clobClient;
+  }
+
+  get executionEngine(): IExecutionEngine {
+    if (!this._executionEngine) {
+      this._executionEngine = createExecutionEngine({
+        config: this.config,
+        repositories: this.repositories,
+        logger: this.logger,
+        riskEngine: this.riskEngine,
+        paperTradingEngine: this.paperTradingEngine,
+        clobClient: this.clobClient,
+      });
+    }
+    return this._executionEngine;
   }
 
   get scanner(): IMarketScanner {
@@ -188,7 +205,7 @@ export class AppContainer {
         scanner: this.scanner,
         scorer: this.longshotScorer,
         riskEngine: this.riskEngine,
-        paperTradingEngine: this.paperTradingEngine,
+        executionEngine: this.executionEngine,
         publicClient: this.publicClient,
         repositories: this.repositories,
         logger: this.logger,
@@ -203,6 +220,7 @@ export class AppContainer {
         config: this.config,
         repositories: this.repositories,
         publicClient: this.publicClient,
+        executionEngine: this.executionEngine,
         paperTradingEngine: this.paperTradingEngine,
         riskEngine: this.riskEngine,
         logger: this.logger,

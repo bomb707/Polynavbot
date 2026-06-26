@@ -1,6 +1,18 @@
 import type { ILogger } from "../logger/types.js";
 import type { IExecutionService } from "./types.js";
 
+export { createExecutionEngine, type CreateExecutionEngineDeps } from "./createExecutionEngine.js";
+export { createDryRunExecutionEngine } from "./dryRunExecutionEngine.js";
+export { createLiveExecutionEngine } from "./liveExecutionEngine.js";
+export { createPaperExecutionEngine } from "./paperExecutionEngine.js";
+export type {
+  CancelOrderResult,
+  ExecutionOpenOrder,
+  ExecutionOrderResult,
+  IExecutionEngine,
+  PlaceLimitOrderInput,
+  SyncTradesResult,
+} from "./executionEngineTypes.js";
 export { createEntryEngine, type EntryEngineDeps } from "./entryEngine.js";
 export { buildScoreInput, roundDownShares, toNumber } from "./entryHelpers.js";
 export {

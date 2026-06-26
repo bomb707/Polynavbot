@@ -82,6 +82,7 @@ function createTestEngine() {
     config,
     repositories: {} as never,
     publicClient: {} as never,
+    executionEngine: {} as never,
     paperTradingEngine: {} as never,
     riskEngine: {} as never,
     logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
