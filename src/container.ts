@@ -19,6 +19,8 @@ import type { IPaperTrader } from "./paper/types.js";
 import type { IPaperTradingEngine } from "./paper/paperTypes.js";
 import { createPolymarketClient } from "./polymarket/index.js";
 import type { IPolymarketClient } from "./polymarket/types.js";
+import { createClobClient } from "./polymarket/clobClient.js";
+import type { IClobClient } from "./polymarket/clobTypes.js";
 import { createPublicClient } from "./polymarket/publicClient.js";
 import type { IPublicClient } from "./polymarket/publicClient.js";
 import { createPositionMonitor } from "./positions/positionMonitor.js";
@@ -43,6 +45,7 @@ export class AppContainer {
   private _queueManager?: IQueueManager;
   private _polymarket?: IPolymarketClient;
   private _publicClient?: IPublicClient;
+  private _clobClient?: IClobClient;
   private _scanner?: IMarketScanner;
   private _strategy?: IStrategy;
   private _riskManager?: IRiskManager;
@@ -99,6 +102,13 @@ export class AppContainer {
       this._publicClient = createPublicClient(this.config, this.logger);
     }
     return this._publicClient;
+  }
+
+  get clobClient(): IClobClient {
+    if (!this._clobClient) {
+      this._clobClient = createClobClient(this.config, this.logger);
+    }
+    return this._clobClient;
   }
 
   get scanner(): IMarketScanner {

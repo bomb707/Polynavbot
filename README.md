@@ -120,6 +120,8 @@ When `TRADING_MODE=live`, these variables are **required**:
 - `POLY_API_SECRET`
 - `POLY_API_PASSPHRASE`
 
+Order placement additionally requires `LIVE_TRADING_CONFIRMATION=I_UNDERSTAND_THE_RISKS`. Read-only CLOB calls (`getOpenOrders`, `getTrades`) and cancellations work in live mode without the confirmation phrase.
+
 For `paper` and `dry_run`, live credentials are optional and should remain unset or commented out.
 
 ### Variable groups
@@ -134,7 +136,7 @@ Validation errors are grouped by section and printed at startup if `.env` is mis
 ## Safety
 
 - **No private keys** are stored in this repository.
-- **No live trades** — execution is stubbed to paper/simulated mode only.
+- **Default is paper mode** — live CLOB infrastructure exists in `src/polymarket/clobClient.ts` but is gated by `TRADING_MODE=live` and a confirmation phrase for order placement.
 - Copy `.env.example` to `.env` locally; never commit `.env`.
 
 ## Development
