@@ -5,6 +5,8 @@ import { createExecutionService } from "./execution/index.js";
 import type { IExecutionService } from "./execution/types.js";
 import { createEntryEngine } from "./execution/entryEngine.js";
 import type { IEntryEngine } from "./execution/entryTypes.js";
+import { createExitEngine } from "./execution/exitEngine.js";
+import type { IExitEngine } from "./execution/exitTypes.js";
 import { createQueueManager } from "./jobs/queue.js";
 import { createRedisConnection } from "./jobs/redis.js";
 import type { IQueueManager } from "./jobs/queue.js";
@@ -49,6 +51,7 @@ export class AppContainer {
   private _repositories?: IRepositories;
   private _longshotScorer?: ILongshotScorer;
   private _entryEngine?: IEntryEngine;
+  private _exitEngine?: IExitEngine;
 
   constructor(readonly config: Config) {}
 
@@ -178,6 +181,20 @@ export class AppContainer {
       });
     }
     return this._entryEngine;
+  }
+
+  get exitEngine(): IExitEngine {
+    if (!this._exitEngine) {
+      this._exitEngine = createExitEngine({
+        config: this.config,
+        repositories: this.repositories,
+        publicClient: this.publicClient,
+        paperTradingEngine: this.paperTradingEngine,
+        riskEngine: this.riskEngine,
+        logger: this.logger,
+      });
+    }
+    return this._exitEngine;
   }
 
   get positionStore(): IPositionStore {

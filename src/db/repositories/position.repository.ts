@@ -7,6 +7,15 @@ import type {
   PrismaClient,
 } from "@prisma/client";
 
+export interface PositionExitState {
+  originalSize: number;
+  soldAt5x: boolean;
+  soldAt10x: boolean;
+  soldAt25x: boolean;
+  hasReached5x: boolean;
+  recentHighPrice: number;
+}
+
 export interface CreatePositionInput {
   marketId: string;
   outcomeId: string;
@@ -31,6 +40,7 @@ export interface UpdatePositionInput {
   currentValueUsd?: Decimal | number | null;
   unrealizedPnlUsd?: Decimal | number | null;
   realizedPnlUsd?: Decimal | number;
+  exitState?: Prisma.InputJsonValue;
   status?: PositionStatus;
 }
 
@@ -47,6 +57,7 @@ export interface IPositionRepository {
   findByTokenId(tokenId: string): Promise<Position[]>;
   sumRealizedPnlSince(since: Date): Promise<number>;
   update(id: string, data: UpdatePositionInput): Promise<Position>;
+  updateExitState(id: string, exitState: PositionExitState): Promise<Position>;
   close(id: string, data: ClosePositionInput): Promise<Position>;
 }
 
@@ -116,6 +127,13 @@ export function createPositionRepository(
       return prisma.position.update({
         where: { id },
         data,
+      });
+    },
+
+    updateExitState(id, exitState) {
+      return prisma.position.update({
+        where: { id },
+        data: { exitState: exitState as unknown as Prisma.InputJsonValue },
       });
     },
 

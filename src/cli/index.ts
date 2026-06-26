@@ -2,6 +2,7 @@ import { Command } from "commander";
 
 import type { AppContainer } from "../container.js";
 import { formatEntryPaperSummary, runEntryPaper } from "./entryPaper.js";
+import { formatExitPaperSummary, runExitPaper } from "./exitPaper.js";
 import { runHealthCheck } from "./health.js";
 import { formatPaperRunSummary, runPaperTrading } from "./paperRun.js";
 import { formatScanSummary, runScan } from "./scan.js";
@@ -73,6 +74,23 @@ export function createCli(container: AppContainer): Command {
           maxPages: Number(options.maxPages),
         });
         console.log(formatEntryPaperSummary(summary));
+        await container.shutdown();
+        process.exit(0);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(message);
+        await container.shutdown();
+        process.exit(1);
+      }
+    });
+
+  program
+    .command("exit:paper")
+    .description("Evaluate open positions and place partial paper exit orders")
+    .action(async () => {
+      try {
+        const summary = await runExitPaper(container);
+        console.log(formatExitPaperSummary(summary));
         await container.shutdown();
         process.exit(0);
       } catch (error) {

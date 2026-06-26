@@ -25,6 +25,7 @@ export {
   type ClosePositionInput,
   type CreatePositionInput,
   type IPositionRepository,
+  type PositionExitState,
   type UpdatePositionInput,
 } from "./position.repository.js";
 export {

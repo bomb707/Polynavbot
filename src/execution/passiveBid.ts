@@ -5,6 +5,10 @@ export type PassiveBidResult =
   | { bidPrice: number }
   | { rejected: true; reason: string };
 
+export type PassiveSellResult =
+  | { sellPrice: number }
+  | { rejected: true; reason: string };
+
 export function getTickSize(price: number): number {
   return price < 0.1 ? 0.001 : 0.01;
 }
@@ -88,4 +92,35 @@ export function computePassiveBidPrice(
   }
 
   return { bidPrice };
+}
+
+export function computePassiveSellPrice(orderBook: OrderBook): PassiveSellResult {
+  const { bestBid, bestAsk } = orderBook;
+
+  if (bestBid == null && bestAsk == null) {
+    return { rejected: true, reason: "No order book quotes" };
+  }
+
+  const referencePrice = bestBid ?? bestAsk ?? 0.01;
+  const tick = getTickSize(referencePrice);
+
+  let sellPrice: number;
+
+  if (bestBid != null) {
+    sellPrice = roundToTick(bestBid, tick, "down");
+  } else if (bestAsk != null) {
+    sellPrice = addTicks(bestAsk, tick, -1);
+  } else {
+    return { rejected: true, reason: "No order book quotes" };
+  }
+
+  if (bestBid != null) {
+    sellPrice = Math.max(sellPrice, roundToTick(bestBid, tick, "down"));
+  }
+
+  if (sellPrice <= 0) {
+    return { rejected: true, reason: "Invalid sell price" };
+  }
+
+  return { sellPrice };
 }

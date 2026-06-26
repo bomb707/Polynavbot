@@ -26,6 +26,7 @@ export interface CreateTradeInput {
 export interface ITradeRepository {
   create(data: CreateTradeInput): Promise<Trade>;
   findByOrderId(orderId: string): Promise<Trade[]>;
+  findByTokenId(tokenId: string): Promise<Trade[]>;
   sumNotionalBySide(source: TradeSource, side: OrderSide): Promise<number>;
   sumNotionalSince(
     source: TradeSource,
@@ -66,6 +67,13 @@ export function createTradeRepository(prisma: PrismaClient): ITradeRepository {
     findByOrderId(orderId) {
       return prisma.trade.findMany({
         where: { orderId },
+        orderBy: { timestamp: "asc" },
+      });
+    },
+
+    findByTokenId(tokenId) {
+      return prisma.trade.findMany({
+        where: { tokenId },
         orderBy: { timestamp: "asc" },
       });
     },

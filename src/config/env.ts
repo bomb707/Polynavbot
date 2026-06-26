@@ -55,6 +55,10 @@ export const envSchema = z
     MAX_DAILY_LOSS_USD: z.coerce.number().positive().default(10),
     DATA_STALE_SECONDS: z.coerce.number().int().positive().default(300),
 
+    EXIT_NEAR_EXPIRY_HOURS: z.coerce.number().positive().default(48),
+    EXIT_TRAILING_STOP_PCT: z.coerce.number().positive().max(1).default(0.6),
+    EXIT_MIN_LIQUIDITY_USD: z.coerce.number().positive().default(1000),
+
     PRIVATE_KEY: z.string().min(1).optional(),
     DEPOSIT_WALLET_ADDRESS: z.string().min(1).optional(),
     POLY_API_KEY: z.string().min(1).optional(),

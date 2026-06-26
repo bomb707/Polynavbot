@@ -5,11 +5,23 @@ export { createEntryEngine, type EntryEngineDeps } from "./entryEngine.js";
 export { buildScoreInput, roundDownShares, toNumber } from "./entryHelpers.js";
 export {
   computePassiveBidPrice,
+  computePassiveSellPrice,
   getTickSize,
   roundToTick,
   addTicks,
   type PassiveBidResult,
+  type PassiveSellResult,
 } from "./passiveBid.js";
+export { createExitEngine, type ExitEngineDeps } from "./exitEngine.js";
+export type {
+  ExitAction,
+  ExitActionRecord,
+  ExitEvaluation,
+  ExitEvaluationInput,
+  ExitPaperSummary,
+  ExitReason,
+  IExitEngine,
+} from "./exitTypes.js";
 export type {
   AcceptedEntry,
   EntryCandidateRecord,

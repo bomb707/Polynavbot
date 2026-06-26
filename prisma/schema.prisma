@@ -247,6 +247,7 @@ model Position {
   currentValueUsd  Decimal?       @db.Decimal(18, 8)
   realizedPnlUsd   Decimal        @default(0) @db.Decimal(18, 8)
   unrealizedPnlUsd Decimal?       @db.Decimal(18, 8)
+  exitState        Json?
   status           PositionStatus @default(OPEN)
   openedAt         DateTime       @default(now())
   closedAt         DateTime?
