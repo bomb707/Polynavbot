@@ -1,6 +1,17 @@
 import type { ILogger } from "../logger/types.js";
 import type { IPaperTrader, PaperPosition } from "./types.js";
 
+export { createPaperTradingEngine, type PaperTradingEngineDeps } from "./paperTradingEngine.js";
+export type {
+  FillSimulationResult,
+  IPaperTradingEngine,
+  PaperFillContext,
+  PaperOrderResult,
+  PaperRunSummary,
+  PlacePaperLimitOrderInput,
+  PortfolioSummary,
+} from "./paperTypes.js";
+
 /** Future: paper trading simulator with PnL tracking. */
 export function createPaperTrader(logger: ILogger): IPaperTrader {
   const positions: PaperPosition[] = [];

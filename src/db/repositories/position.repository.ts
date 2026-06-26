@@ -7,6 +7,15 @@ import type {
   PrismaClient,
 } from "@prisma/client";
 
+export interface PositionExitState {
+  originalSize: number;
+  soldAt5x: boolean;
+  soldAt10x: boolean;
+  soldAt25x: boolean;
+  hasReached5x: boolean;
+  recentHighPrice: number;
+}
+
 export interface CreatePositionInput {
   marketId: string;
   outcomeId: string;
@@ -24,11 +33,14 @@ export interface CreatePositionInput {
 }
 
 export interface UpdatePositionInput {
+  avgEntryPrice?: Decimal | number;
   currentPrice?: Decimal | number | null;
   size?: Decimal | number;
   costBasisUsd?: Decimal | number;
   currentValueUsd?: Decimal | number | null;
   unrealizedPnlUsd?: Decimal | number | null;
+  realizedPnlUsd?: Decimal | number;
+  exitState?: Prisma.InputJsonValue;
   status?: PositionStatus;
 }
 
@@ -41,8 +53,11 @@ export interface IPositionRepository {
   create(data: CreatePositionInput): Promise<Position>;
   findById(id: string): Promise<Position | null>;
   findOpen(): Promise<Position[]>;
+  findOpenByTokenId(tokenId: string): Promise<Position | null>;
   findByTokenId(tokenId: string): Promise<Position[]>;
+  sumRealizedPnlSince(since: Date): Promise<number>;
   update(id: string, data: UpdatePositionInput): Promise<Position>;
+  updateExitState(id: string, exitState: PositionExitState): Promise<Position>;
   close(id: string, data: ClosePositionInput): Promise<Position>;
 }
 
@@ -81,6 +96,13 @@ export function createPositionRepository(
       });
     },
 
+    findOpenByTokenId(tokenId) {
+      return prisma.position.findFirst({
+        where: { tokenId, status: "OPEN" },
+        orderBy: { openedAt: "desc" },
+      });
+    },
+
     findByTokenId(tokenId) {
       return prisma.position.findMany({
         where: { tokenId },
@@ -88,10 +110,30 @@ export function createPositionRepository(
       });
     },
 
+    async sumRealizedPnlSince(since) {
+      const result = await prisma.position.aggregate({
+        where: { updatedAt: { gte: since } },
+        _sum: { realizedPnlUsd: true },
+      });
+
+      const total = result._sum.realizedPnlUsd;
+      if (total == null) {
+        return 0;
+      }
+      return typeof total === "number" ? total : total.toNumber();
+    },
+
     update(id, data) {
       return prisma.position.update({
         where: { id },
         data,
+      });
+    },
+
+    updateExitState(id, exitState) {
+      return prisma.position.update({
+        where: { id },
+        data: { exitState: exitState as unknown as Prisma.InputJsonValue },
       });
     },
 

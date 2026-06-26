@@ -43,6 +43,21 @@ export const envSchema = z
     MIN_LIQUIDITY_USD: z.coerce.number().positive().default(1000),
     MAX_SPREAD: z.coerce.number().positive().default(0.03),
     PAPER_STARTING_BALANCE_USD: z.coerce.number().positive().default(500),
+    PAPER_PASSIVE_FILL_ON_CROSS: z.coerce.boolean().default(true),
+
+    MAX_OPEN_EXPOSURE_USD: z.coerce.number().positive().default(50),
+    MAX_OPEN_POSITIONS: z.coerce.number().int().positive().default(25),
+    MAX_OPEN_ORDERS: z.coerce.number().int().positive().default(10),
+    MIN_ORDER_SIZE_USD: z.coerce.number().positive().default(0.5),
+    MAX_ORDER_SIZE_USD: z.coerce.number().positive().default(2),
+    MAX_OUTCOMES_PER_MARKET: z.coerce.number().int().positive().default(2),
+    ALLOW_BOTH_SIDES_SAME_MARKET: z.coerce.boolean().default(false),
+    MAX_DAILY_LOSS_USD: z.coerce.number().positive().default(10),
+    DATA_STALE_SECONDS: z.coerce.number().int().positive().default(300),
+
+    EXIT_NEAR_EXPIRY_HOURS: z.coerce.number().positive().default(48),
+    EXIT_TRAILING_STOP_PCT: z.coerce.number().positive().max(1).default(0.6),
+    EXIT_MIN_LIQUIDITY_USD: z.coerce.number().positive().default(1000),
 
     PRIVATE_KEY: z.string().min(1).optional(),
     DEPOSIT_WALLET_ADDRESS: z.string().min(1).optional(),

@@ -39,10 +39,16 @@ export interface IOrderRepository {
   findPaperById(id: string): Promise<PaperOrder | null>;
   findLiveById(id: string): Promise<LiveOrder | null>;
   findLiveByExternalId(externalOrderId: string): Promise<LiveOrder | null>;
+  findPendingPaperOrders(): Promise<PaperOrder[]>;
+  countPendingPaperOrders(): Promise<number>;
   updatePaperStatus(
     id: string,
     status: OrderStatus,
     filledAt?: Date,
+  ): Promise<PaperOrder>;
+  updatePaperFill(
+    id: string,
+    data: { status: OrderStatus; filledAt?: Date },
   ): Promise<PaperOrder>;
   updateLiveStatus(id: string, status: OrderStatus): Promise<LiveOrder>;
 }
@@ -96,10 +102,34 @@ export function createOrderRepository(prisma: PrismaClient): IOrderRepository {
       return prisma.liveOrder.findUnique({ where: { externalOrderId } });
     },
 
+    findPendingPaperOrders() {
+      return prisma.paperOrder.findMany({
+        where: {
+          status: { in: ["PENDING", "PARTIALLY_FILLED"] },
+        },
+        orderBy: { createdAt: "asc" },
+      });
+    },
+
+    countPendingPaperOrders() {
+      return prisma.paperOrder.count({
+        where: {
+          status: { in: ["PENDING", "PARTIALLY_FILLED"] },
+        },
+      });
+    },
+
     updatePaperStatus(id, status, filledAt) {
       return prisma.paperOrder.update({
         where: { id },
         data: { status, filledAt },
+      });
+    },
+
+    updatePaperFill(id, data) {
+      return prisma.paperOrder.update({
+        where: { id },
+        data: { status: data.status, filledAt: data.filledAt },
       });
     },
 

@@ -3,6 +3,10 @@ import { createDbClient, createRepositories } from "./db/client.js";
 import type { IDbClient, IRepositories } from "./db/types.js";
 import { createExecutionService } from "./execution/index.js";
 import type { IExecutionService } from "./execution/types.js";
+import { createEntryEngine } from "./execution/entryEngine.js";
+import type { IEntryEngine } from "./execution/entryTypes.js";
+import { createExitEngine } from "./execution/exitEngine.js";
+import type { IExitEngine } from "./execution/exitTypes.js";
 import { createQueueManager } from "./jobs/queue.js";
 import { createRedisConnection } from "./jobs/redis.js";
 import type { IQueueManager } from "./jobs/queue.js";
@@ -10,19 +14,26 @@ import type { IRedisConnection } from "./jobs/types.js";
 import { createLogger } from "./logger/index.js";
 import type { ILogger } from "./logger/types.js";
 import { createPaperTrader } from "./paper/index.js";
+import { createPaperTradingEngine } from "./paper/paperTradingEngine.js";
 import type { IPaperTrader } from "./paper/types.js";
+import type { IPaperTradingEngine } from "./paper/paperTypes.js";
 import { createPolymarketClient } from "./polymarket/index.js";
 import type { IPolymarketClient } from "./polymarket/types.js";
 import { createPublicClient } from "./polymarket/publicClient.js";
 import type { IPublicClient } from "./polymarket/publicClient.js";
+import { createPositionMonitor } from "./positions/positionMonitor.js";
+import type { IPositionMonitor } from "./positions/positionMonitorTypes.js";
 import { createPositionStore } from "./positions/index.js";
 import type { IPositionStore } from "./positions/types.js";
 import { createRiskManager } from "./risk/index.js";
+import { createRiskEngine } from "./risk/riskEngine.js";
 import type { IRiskManager } from "./risk/types.js";
+import type { IRiskEngine } from "./risk/riskTypes.js";
 import { createMarketScanner } from "./scanner/marketScanner.js";
 import type { IMarketScanner } from "./scanner/types.js";
-import { createStrategy } from "./strategy/index.js";
+import { createStrategy, createLongshotScorer } from "./strategy/index.js";
 import type { IStrategy } from "./strategy/types.js";
+import type { ILongshotScorer } from "./strategy/longshotScorer.js";
 
 export class AppContainer {
   private _logger?: ILogger;
@@ -34,10 +45,16 @@ export class AppContainer {
   private _scanner?: IMarketScanner;
   private _strategy?: IStrategy;
   private _riskManager?: IRiskManager;
+  private _riskEngine?: IRiskEngine;
   private _execution?: IExecutionService;
   private _paperTrader?: IPaperTrader;
+  private _paperTradingEngine?: IPaperTradingEngine;
   private _positionStore?: IPositionStore;
   private _repositories?: IRepositories;
+  private _longshotScorer?: ILongshotScorer;
+  private _entryEngine?: IEntryEngine;
+  private _exitEngine?: IExitEngine;
+  private _positionMonitor?: IPositionMonitor;
 
   constructor(readonly config: Config) {}
 
@@ -109,6 +126,17 @@ export class AppContainer {
     return this._riskManager;
   }
 
+  get riskEngine(): IRiskEngine {
+    if (!this._riskEngine) {
+      this._riskEngine = createRiskEngine({
+        config: this.config,
+        repositories: this.repositories,
+        logger: this.logger,
+      });
+    }
+    return this._riskEngine;
+  }
+
   get execution(): IExecutionService {
     if (!this._execution) {
       this._execution = createExecutionService(this.logger);
@@ -121,6 +149,69 @@ export class AppContainer {
       this._paperTrader = createPaperTrader(this.logger);
     }
     return this._paperTrader;
+  }
+
+  get paperTradingEngine(): IPaperTradingEngine {
+    if (!this._paperTradingEngine) {
+      this._paperTradingEngine = createPaperTradingEngine({
+        config: this.config,
+        repositories: this.repositories,
+        logger: this.logger,
+        riskEngine: this.riskEngine,
+      });
+    }
+    return this._paperTradingEngine;
+  }
+
+  get longshotScorer(): ILongshotScorer {
+    if (!this._longshotScorer) {
+      this._longshotScorer = createLongshotScorer(this.config);
+    }
+    return this._longshotScorer;
+  }
+
+  get entryEngine(): IEntryEngine {
+    if (!this._entryEngine) {
+      this._entryEngine = createEntryEngine({
+        config: this.config,
+        scanner: this.scanner,
+        scorer: this.longshotScorer,
+        riskEngine: this.riskEngine,
+        paperTradingEngine: this.paperTradingEngine,
+        publicClient: this.publicClient,
+        repositories: this.repositories,
+        logger: this.logger,
+      });
+    }
+    return this._entryEngine;
+  }
+
+  get exitEngine(): IExitEngine {
+    if (!this._exitEngine) {
+      this._exitEngine = createExitEngine({
+        config: this.config,
+        repositories: this.repositories,
+        publicClient: this.publicClient,
+        paperTradingEngine: this.paperTradingEngine,
+        riskEngine: this.riskEngine,
+        logger: this.logger,
+      });
+    }
+    return this._exitEngine;
+  }
+
+  get positionMonitor(): IPositionMonitor {
+    if (!this._positionMonitor) {
+      this._positionMonitor = createPositionMonitor({
+        config: this.config,
+        repositories: this.repositories,
+        publicClient: this.publicClient,
+        paperTradingEngine: this.paperTradingEngine,
+        exitEngine: this.exitEngine,
+        logger: this.logger,
+      });
+    }
+    return this._positionMonitor;
   }
 
   get positionStore(): IPositionStore {
