@@ -41,6 +41,7 @@ export interface IPublicClient {
     rawMarket: unknown,
     outcomeIndex: number,
   ): NormalizedOutcome | null;
+  fetchActiveMarketsRaw(params: GetActiveMarketsParams): Promise<unknown[]>;
 }
 
 function toNumber(value: unknown): number | null {
@@ -186,9 +187,7 @@ export function createPublicClient(
     };
   };
 
-  const getActiveMarkets = async (
-    params: GetActiveMarketsParams,
-  ): Promise<GetActiveMarketsResult> => {
+  const buildActiveMarketsUrl = (params: GetActiveMarketsParams): URL => {
     const url = new URL("/markets", config.POLY_GAMMA_API_URL);
     url.searchParams.set("active", "true");
     url.searchParams.set("closed", "false");
@@ -200,9 +199,21 @@ export function createPublicClient(
     if (params.tag) {
       url.searchParams.set("tag", params.tag);
     }
+    return url;
+  };
 
+  const fetchActiveMarketsRaw = async (
+    params: GetActiveMarketsParams,
+  ): Promise<unknown[]> => {
+    const url = buildActiveMarketsUrl(params);
     const payload = await http.fetchJson<unknown>(url.toString());
-    const rawMarkets = extractGammaMarkets(payload);
+    return extractGammaMarkets(payload);
+  };
+
+  const getActiveMarkets = async (
+    params: GetActiveMarketsParams,
+  ): Promise<GetActiveMarketsResult> => {
+    const rawMarkets = await fetchActiveMarketsRaw(params);
     const markets: NormalizedMarket[] = [];
     let skipped = 0;
 
@@ -370,5 +381,6 @@ export function createPublicClient(
     getUserActivity,
     normalizeMarket,
     normalizeOutcome,
+    fetchActiveMarketsRaw,
   };
 }

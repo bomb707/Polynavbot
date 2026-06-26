@@ -2,6 +2,7 @@ import { Command } from "commander";
 
 import type { AppContainer } from "../container.js";
 import { runHealthCheck } from "./health.js";
+import { formatScanSummary, runScan } from "./scan.js";
 
 export function createCli(container: AppContainer): Command {
   const program = new Command();
@@ -19,6 +20,21 @@ export function createCli(container: AppContainer): Command {
       console.log(JSON.stringify(report, null, 2));
       await container.shutdown();
       process.exit(report.status === "healthy" ? 0 : 1);
+    });
+
+  program
+    .command("scan")
+    .description("Scan active Polymarket markets for longshot YES candidates")
+    .option("--limit-per-page <n>", "markets per page", "100")
+    .option("--max-pages <n>", "maximum pages to scan", "50")
+    .action(async (options: { limitPerPage: string; maxPages: string }) => {
+      const summary = await runScan(container, {
+        limitPerPage: Number(options.limitPerPage),
+        maxPages: Number(options.maxPages),
+      });
+      console.log(formatScanSummary(summary));
+      await container.shutdown();
+      process.exit(0);
     });
 
   program.action(async () => {

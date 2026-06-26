@@ -45,6 +45,11 @@ export const rawGammaMarketSchema = z
     outcome_prices: z.unknown().optional(),
     clobTokenIds: z.unknown().optional(),
     clob_token_ids: z.unknown().optional(),
+    liquidity: stringOrNumber.optional().nullable(),
+    liquidityNum: stringOrNumber.optional().nullable(),
+    volume: stringOrNumber.optional().nullable(),
+    volumeNum: stringOrNumber.optional().nullable(),
+    events: z.unknown().optional(),
   })
   .passthrough();
 
@@ -98,3 +103,22 @@ export const rawGammaMarketsResponseSchema = z.union([
   z.array(rawGammaMarketSchema),
   z.object({ data: z.array(rawGammaMarketSchema).optional() }).passthrough(),
 ]);
+
+export function extractLiquidity(rawMarket: unknown): number {
+  const parsed = rawGammaMarketSchema.safeParse(rawMarket);
+  if (!parsed.success) {
+    return 0;
+  }
+  const market = parsed.data;
+  const candidates = [market.liquidityNum, market.liquidity, market.volumeNum, market.volume];
+  for (const value of candidates) {
+    if (value === null || value === undefined) {
+      continue;
+    }
+    const num = Number(value);
+    if (Number.isFinite(num)) {
+      return num;
+    }
+  }
+  return 0;
+}

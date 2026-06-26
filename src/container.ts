@@ -13,12 +13,14 @@ import { createPaperTrader } from "./paper/index.js";
 import type { IPaperTrader } from "./paper/types.js";
 import { createPolymarketClient } from "./polymarket/index.js";
 import type { IPolymarketClient } from "./polymarket/types.js";
+import { createPublicClient } from "./polymarket/publicClient.js";
+import type { IPublicClient } from "./polymarket/publicClient.js";
 import { createPositionStore } from "./positions/index.js";
 import type { IPositionStore } from "./positions/types.js";
 import { createRiskManager } from "./risk/index.js";
 import type { IRiskManager } from "./risk/types.js";
-import { createScanner } from "./scanner/index.js";
-import type { IScanner } from "./scanner/types.js";
+import { createMarketScanner } from "./scanner/marketScanner.js";
+import type { IMarketScanner } from "./scanner/types.js";
 import { createStrategy } from "./strategy/index.js";
 import type { IStrategy } from "./strategy/types.js";
 
@@ -28,7 +30,8 @@ export class AppContainer {
   private _redis?: IRedisConnection;
   private _queueManager?: IQueueManager;
   private _polymarket?: IPolymarketClient;
-  private _scanner?: IScanner;
+  private _publicClient?: IPublicClient;
+  private _scanner?: IMarketScanner;
   private _strategy?: IStrategy;
   private _riskManager?: IRiskManager;
   private _execution?: IExecutionService;
@@ -73,9 +76,21 @@ export class AppContainer {
     return this._polymarket;
   }
 
-  get scanner(): IScanner {
+  get publicClient(): IPublicClient {
+    if (!this._publicClient) {
+      this._publicClient = createPublicClient(this.config, this.logger);
+    }
+    return this._publicClient;
+  }
+
+  get scanner(): IMarketScanner {
     if (!this._scanner) {
-      this._scanner = createScanner(this.polymarket, this.logger);
+      this._scanner = createMarketScanner({
+        publicClient: this.publicClient,
+        repositories: this.repositories,
+        config: this.config,
+        logger: this.logger,
+      });
     }
     return this._scanner;
   }
