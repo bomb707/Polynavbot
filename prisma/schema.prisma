@@ -7,8 +7,311 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model HealthCheck {
+enum OutcomeSide {
+  YES
+  NO
+}
+
+enum OrderSide {
+  BUY
+  SELL
+}
+
+enum SignalType {
+  LONGSHOT_ENTRY
+  EXIT
+  REBALANCE
+}
+
+enum SignalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  EXECUTED
+  EXPIRED
+}
+
+enum OrderStatus {
+  PENDING
+  OPEN
+  PARTIALLY_FILLED
+  FILLED
+  CANCELLED
+  FAILED
+}
+
+enum PositionStatus {
+  OPEN
+  CLOSED
+}
+
+enum OrderType {
+  PAPER
+  LIVE
+}
+
+enum TradeSource {
+  PAPER
+  LIVE
+}
+
+enum RiskLevel {
+  INFO
+  WARNING
+  ERROR
+  CRITICAL
+}
+
+enum RiskEventType {
+  DAILY_LIMIT
+  POSITION_LIMIT
+  MARKET_EXPOSURE
+  THEME_EXPOSURE
+  SPREAD
+  LIQUIDITY
+  OTHER
+}
+
+enum StrategyRunMode {
+  paper
+  dry_run
+  live
+}
+
+model Market {
+  id                 String   @id @default(cuid())
+  polymarketMarketId String   @unique
+  conditionId        String
+  question           String
+  slug               String?
+  category           String?
+  active             Boolean  @default(true)
+  closed             Boolean  @default(false)
+  archived           Boolean  @default(false)
+  enableOrderBook    Boolean  @default(true)
+  endDate            DateTime?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  outcomes   Outcome[]
+  snapshots  MarketSnapshot[]
+  signals    Signal[]
+  paperOrders PaperOrder[]
+  liveOrders  LiveOrder[]
+  positions   Position[]
+  trades      Trade[]
+
+  @@index([polymarketMarketId])
+  @@index([active])
+  @@index([endDate])
+  @@index([createdAt])
+}
+
+model Outcome {
+  id           String      @id @default(cuid())
+  marketId     String
+  tokenId      String      @unique
+  name         String
+  side         OutcomeSide
+  currentPrice Decimal?    @db.Decimal(18, 8)
+  bestBid      Decimal?    @db.Decimal(18, 8)
+  bestAsk      Decimal?    @db.Decimal(18, 8)
+  spread       Decimal?    @db.Decimal(18, 8)
+  liquidity    Decimal?    @db.Decimal(18, 8)
+  volume       Decimal?    @db.Decimal(18, 8)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  market    Market           @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  snapshots MarketSnapshot[]
+  signals   Signal[]
+  paperOrders PaperOrder[]
+  liveOrders  LiveOrder[]
+  positions   Position[]
+  trades      Trade[]
+
+  @@index([marketId])
+  @@index([tokenId])
+  @@index([updatedAt])
+}
+
+model MarketSnapshot {
   id        String   @id @default(cuid())
-  checkedAt DateTime @default(now())
-  status    String
+  marketId  String
+  outcomeId String
+  tokenId   String
+  price     Decimal  @db.Decimal(18, 8)
+  bestBid   Decimal? @db.Decimal(18, 8)
+  bestAsk   Decimal? @db.Decimal(18, 8)
+  spread    Decimal? @db.Decimal(18, 8)
+  liquidity Decimal? @db.Decimal(18, 8)
+  volume    Decimal? @db.Decimal(18, 8)
+  timestamp DateTime @default(now())
+
+  market  Market  @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  outcome Outcome @relation(fields: [outcomeId], references: [id], onDelete: Cascade)
+
+  @@index([marketId])
+  @@index([outcomeId])
+  @@index([tokenId])
+  @@index([timestamp])
+}
+
+model Signal {
+  id              String       @id @default(cuid())
+  marketId        String
+  outcomeId       String
+  tokenId         String
+  signalType      SignalType
+  score           Decimal      @db.Decimal(18, 8)
+  reason          String
+  entryPrice      Decimal      @db.Decimal(18, 8)
+  suggestedSizeUsd Decimal     @db.Decimal(18, 8)
+  status          SignalStatus @default(PENDING)
+  createdAt       DateTime     @default(now())
+
+  market     Market      @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  outcome    Outcome     @relation(fields: [outcomeId], references: [id], onDelete: Cascade)
+  paperOrder PaperOrder?
+
+  @@index([marketId])
+  @@index([outcomeId])
+  @@index([tokenId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model PaperOrder {
+  id          String      @id @default(cuid())
+  signalId    String?     @unique
+  marketId    String
+  outcomeId   String
+  tokenId     String
+  side        OrderSide
+  price       Decimal     @db.Decimal(18, 8)
+  size        Decimal     @db.Decimal(18, 8)
+  notionalUsd Decimal     @db.Decimal(18, 8)
+  status      OrderStatus @default(PENDING)
+  filledAt    DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  signal  Signal? @relation(fields: [signalId], references: [id], onDelete: SetNull)
+  market  Market  @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  outcome Outcome @relation(fields: [outcomeId], references: [id], onDelete: Cascade)
+
+  @@index([signalId])
+  @@index([marketId])
+  @@index([outcomeId])
+  @@index([tokenId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model LiveOrder {
+  id              String      @id @default(cuid())
+  externalOrderId String?     @unique
+  marketId        String
+  outcomeId       String
+  tokenId         String
+  side            OrderSide
+  price           Decimal     @db.Decimal(18, 8)
+  size            Decimal     @db.Decimal(18, 8)
+  notionalUsd     Decimal     @db.Decimal(18, 8)
+  status          OrderStatus @default(PENDING)
+  rawResponse     Json?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  market  Market  @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  outcome Outcome @relation(fields: [outcomeId], references: [id], onDelete: Cascade)
+
+  @@index([externalOrderId])
+  @@index([marketId])
+  @@index([outcomeId])
+  @@index([tokenId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Position {
+  id               String         @id @default(cuid())
+  marketId         String
+  outcomeId        String
+  tokenId          String
+  side             OrderSide
+  avgEntryPrice    Decimal        @db.Decimal(18, 8)
+  currentPrice     Decimal?       @db.Decimal(18, 8)
+  size             Decimal        @db.Decimal(18, 8)
+  costBasisUsd     Decimal        @db.Decimal(18, 8)
+  currentValueUsd  Decimal?       @db.Decimal(18, 8)
+  realizedPnlUsd   Decimal        @default(0) @db.Decimal(18, 8)
+  unrealizedPnlUsd Decimal?       @db.Decimal(18, 8)
+  status           PositionStatus @default(OPEN)
+  openedAt         DateTime       @default(now())
+  closedAt         DateTime?
+  updatedAt        DateTime       @updatedAt
+
+  market  Market  @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  outcome Outcome @relation(fields: [outcomeId], references: [id], onDelete: Cascade)
+
+  @@index([marketId])
+  @@index([outcomeId])
+  @@index([tokenId])
+  @@index([status])
+  @@index([openedAt])
+  @@index([updatedAt])
+}
+
+model Trade {
+  id          String      @id @default(cuid())
+  orderId     String
+  orderType   OrderType
+  marketId    String
+  outcomeId   String
+  tokenId     String
+  side        OrderSide
+  price       Decimal     @db.Decimal(18, 8)
+  size        Decimal     @db.Decimal(18, 8)
+  notionalUsd Decimal     @db.Decimal(18, 8)
+  feeUsd      Decimal     @default(0) @db.Decimal(18, 8)
+  source      TradeSource
+  timestamp   DateTime    @default(now())
+
+  market  Market  @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  outcome Outcome @relation(fields: [outcomeId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([marketId])
+  @@index([outcomeId])
+  @@index([tokenId])
+  @@index([timestamp])
+}
+
+model RiskEvent {
+  id        String        @id @default(cuid())
+  level     RiskLevel
+  type      RiskEventType
+  message   String
+  metadata  Json?
+  createdAt DateTime      @default(now())
+
+  @@index([level])
+  @@index([type])
+  @@index([createdAt])
+}
+
+model StrategyRun {
+  id             String          @id @default(cuid())
+  mode           StrategyRunMode
+  startedAt      DateTime        @default(now())
+  finishedAt     DateTime?
+  marketsScanned Int             @default(0)
+  signalsCreated Int             @default(0)
+  ordersCreated  Int             @default(0)
+  errorsCount    Int             @default(0)
+  metadata       Json?
+
+  @@index([mode])
+  @@index([startedAt])
 }
