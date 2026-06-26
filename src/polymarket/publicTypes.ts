@@ -61,3 +61,18 @@ export interface ActivityItem {
   price: number | null;
   raw: Record<string, unknown>;
 }
+
+export interface ClobMarketFeeDetails {
+  feeRate: number;
+  feeExponent: number | null;
+  takerOnly: boolean;
+}
+
+export interface ClobMarketInfo {
+  conditionId: string;
+  makerBaseFeeBps: number;
+  takerBaseFeeBps: number;
+  feesEnabled: boolean;
+  feeDetails: ClobMarketFeeDetails | null;
+  feeCategory: string | null;
+}

@@ -8,6 +8,7 @@ import { buildPriceHistory, evaluateEntry } from "./entrySimulator.js";
 import { evaluateExitForBar } from "./exitSimulator.js";
 import { simulateConservativeFill } from "./fillSimulator.js";
 import { computeMetrics } from "./metrics.js";
+import { createFeeService } from "../fees/index.js";
 import {
   BacktestPortfolio,
   resetBacktestCounters,
@@ -43,13 +44,14 @@ function barIndex(series: BacktestTokenSeries, timestamp: number): number {
 
 export function createBacktestEngine(deps: BacktestEngineDeps): IBacktestEngine {
   const { config, repositories, publicClient, logger } = deps;
-  const backtestConfig = createBacktestConfig(config);
+  const feeService = createFeeService(config);
+  const baseBacktestConfig = createBacktestConfig(config);
 
   const dataLoader = createDataLoader({
     repositories,
     publicClient,
     logger,
-    config: backtestConfig,
+    config: baseBacktestConfig,
   });
 
   return {
@@ -57,6 +59,11 @@ export function createBacktestEngine(deps: BacktestEngineDeps): IBacktestEngine 
       if (options.start >= options.end) {
         throw new Error("backtest start must be before end");
       }
+
+      const backtestConfig = {
+        ...baseBacktestConfig,
+        feeMode: options.feeMode ?? baseBacktestConfig.feeMode,
+      };
 
       resetBacktestCounters();
       const rng = createSeededRng(backtestConfig.seed);
@@ -68,6 +75,12 @@ export function createBacktestEngine(deps: BacktestEngineDeps): IBacktestEngine 
       const portfolio = new BacktestPortfolio(
         backtestConfig.startingCapitalUsd,
         backtestConfig.startingCapitalUsd,
+        new Map(),
+        [],
+        0,
+        "",
+        feeService,
+        backtestConfig,
       );
 
       for (const tokenSeries of dataset.series) {
@@ -99,8 +112,24 @@ export function createBacktestEngine(deps: BacktestEngineDeps): IBacktestEngine 
           const question = meta?.question ?? order.tokenId;
           const trade =
             order.side === "BUY"
-              ? portfolio.applyBuyFill(order, fill.fillPrice, fill.fillSize, timestamp, question, order.reason ?? "fill")
-              : portfolio.applySellFill(order, fill.fillPrice, fill.fillSize, timestamp, question, order.reason ?? "fill");
+              ? portfolio.applyBuyFill(
+                  order,
+                  fill.fillPrice,
+                  fill.fillSize,
+                  timestamp,
+                  question,
+                  order.reason ?? "fill",
+                  meta?.feeParams,
+                )
+              : portfolio.applySellFill(
+                  order,
+                  fill.fillPrice,
+                  fill.fillSize,
+                  timestamp,
+                  question,
+                  order.reason ?? "fill",
+                  meta?.feeParams,
+                );
           portfolio.trades.push(trade);
         }
 
@@ -166,6 +195,7 @@ export function createBacktestEngine(deps: BacktestEngineDeps): IBacktestEngine 
           tokenSeries.meta.question,
           backtestConfig,
           "backtest_end_close",
+          tokenSeries.meta.feeParams,
         );
       }
 

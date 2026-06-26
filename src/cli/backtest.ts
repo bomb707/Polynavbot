@@ -8,6 +8,7 @@ export interface BacktestCliOptions {
   start: string;
   end: string;
   outputDir?: string;
+  feeMode?: "maker_only" | "taker_only" | "mixed" | "actual_if_available";
 }
 
 function parseDate(value: string, label: string): Date {
@@ -42,7 +43,7 @@ export async function runBacktest(
     logger: container.logger,
   });
 
-  const result = await engine.run({ start, end, outputDir });
+  const result = await engine.run({ start, end, outputDir, feeMode: options.feeMode });
   const files = await writeBacktestReports(outputDir, result);
 
   container.logger.info(

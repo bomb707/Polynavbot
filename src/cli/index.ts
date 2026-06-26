@@ -153,9 +153,23 @@ export function createCli(container: AppContainer): Command {
     .requiredOption("--start <date>", "Start date (YYYY-MM-DD)")
     .requiredOption("--end <date>", "End date (YYYY-MM-DD)")
     .option("--output-dir <path>", "Output directory for reports")
-    .action(async (options: { start: string; end: string; outputDir?: string }) => {
+    .option(
+      "--fee-mode <mode>",
+      "Fee assumption: maker_only, taker_only, mixed, or actual_if_available",
+    )
+    .action(async (options: { start: string; end: string; outputDir?: string; feeMode?: string }) => {
       try {
-        await runBacktest(container, options);
+        await runBacktest(container, {
+          start: options.start,
+          end: options.end,
+          outputDir: options.outputDir,
+          feeMode: options.feeMode as
+            | "maker_only"
+            | "taker_only"
+            | "mixed"
+            | "actual_if_available"
+            | undefined,
+        });
         await container.shutdown();
         process.exit(0);
       } catch (error) {

@@ -1,6 +1,8 @@
 import type { OrderSide } from "@prisma/client";
 
+import type { IFeeService } from "../fees/feeTypes.js";
 import type { PositionExitState } from "../db/repositories/position.repository.js";
+import { resolveBacktestFeeParams, resolveBacktestLiquidityRole } from "./feeMode.js";
 import type {
   BacktestOrder,
   BacktestPosition,
@@ -9,6 +11,7 @@ import type {
 } from "./backtestTypes.js";
 import { conservativeBidPrice } from "./syntheticOrderBook.js";
 import type { BacktestConfig, PriceBar } from "./backtestTypes.js";
+import type { FeeParams } from "../fees/feeTypes.js";
 
 function round8(value: number): number {
   return Math.round(value * 1e8) / 1e8;
@@ -44,6 +47,8 @@ export class BacktestPortfolio {
     public pendingOrders: BacktestOrder[] = [],
     public todayBuyNotional = 0,
     private lastDayKey = "",
+    private readonly feeService?: IFeeService,
+    private readonly config?: BacktestConfig,
   ) {}
 
   hasOpenPosition(tokenId: string): boolean {
@@ -97,16 +102,36 @@ export class BacktestPortfolio {
     timestamp: Date,
     question: string,
     reason: string,
+    feeParams?: FeeParams,
   ): BacktestTrade {
-    const notional = round8(fillPrice * fillSize);
-    this.cashUsd = round8(this.cashUsd - notional);
-    this.todayBuyNotional = round8(this.todayBuyNotional + notional);
+    const params = resolveBacktestFeeParams(feeParams);
+    const liquidityRole = this.feeService && this.config
+      ? resolveBacktestLiquidityRole(this.config.feeMode, "BUY", params)
+      : "maker";
+
+    const feeBreakdown = this.feeService?.calculateTotalFee({
+      side: "BUY",
+      price: fillPrice,
+      shares: fillSize,
+      liquidityRole,
+      feeParams: params,
+    }) ?? {
+      grossNotionalUsd: round8(fillPrice * fillSize),
+      totalFeeUsd: 0,
+      platformFeeUsd: 0,
+      builderFeeUsd: 0,
+      netNotionalUsd: round8(fillPrice * fillSize),
+    };
+
+    const totalCost = feeBreakdown.netNotionalUsd;
+    this.cashUsd = round8(this.cashUsd - totalCost);
+    this.todayBuyNotional = round8(this.todayBuyNotional + feeBreakdown.grossNotionalUsd);
     order.filledShares = round8(order.filledShares + fillSize);
 
     const existing = this.positions.get(order.tokenId);
     if (existing) {
       const newSize = round8(existing.sizeShares + fillSize);
-      const newCost = round8(existing.costBasisUsd + notional);
+      const newCost = round8(existing.costBasisUsd + totalCost);
       existing.sizeShares = newSize;
       existing.costBasisUsd = newCost;
       existing.avgEntryPrice = round8(newCost / newSize);
@@ -118,7 +143,7 @@ export class BacktestPortfolio {
         outcomeId: order.outcomeId,
         sizeShares: fillSize,
         avgEntryPrice: fillPrice,
-        costBasisUsd: notional,
+        costBasisUsd: totalCost,
         exitState: {
           originalSize: fillSize,
           soldAt5x: false,
@@ -141,8 +166,10 @@ export class BacktestPortfolio {
       side: "BUY",
       price: fillPrice,
       sizeShares: fillSize,
-      notionalUsd: notional,
+      notionalUsd: feeBreakdown.grossNotionalUsd,
       realizedPnlUsd: 0,
+      totalFeeUsd: feeBreakdown.totalFeeUsd,
+      liquidityRole,
       reason,
     };
   }
@@ -154,15 +181,37 @@ export class BacktestPortfolio {
     timestamp: Date,
     question: string,
     reason: string,
+    feeParams?: FeeParams,
   ): BacktestTrade {
     const position = this.positions.get(order.tokenId);
     if (!position) {
       throw new Error(`No position for sell fill ${order.tokenId}`);
     }
 
-    const notional = round8(fillPrice * fillSize);
-    const realizedPnl = round8((fillPrice - position.avgEntryPrice) * fillSize);
-    this.cashUsd = round8(this.cashUsd + notional);
+    const params = resolveBacktestFeeParams(feeParams);
+    const liquidityRole = this.feeService && this.config
+      ? resolveBacktestLiquidityRole(this.config.feeMode, "SELL", params)
+      : "taker";
+
+    const feeBreakdown = this.feeService?.calculateTotalFee({
+      side: "SELL",
+      price: fillPrice,
+      shares: fillSize,
+      liquidityRole,
+      feeParams: params,
+    }) ?? {
+      grossNotionalUsd: round8(fillPrice * fillSize),
+      totalFeeUsd: 0,
+      platformFeeUsd: 0,
+      builderFeeUsd: 0,
+      netNotionalUsd: round8(fillPrice * fillSize),
+    };
+
+    const notional = feeBreakdown.grossNotionalUsd;
+    const netProceeds = feeBreakdown.netNotionalUsd;
+    const costBasisPortion = round8(position.avgEntryPrice * fillSize);
+    const realizedPnl = round8(netProceeds - costBasisPortion);
+    this.cashUsd = round8(this.cashUsd + netProceeds);
     order.filledShares = round8(order.filledShares + fillSize);
 
     const remaining = round8(position.sizeShares - fillSize);
@@ -187,6 +236,8 @@ export class BacktestPortfolio {
       sizeShares: fillSize,
       notionalUsd: notional,
       realizedPnlUsd: realizedPnl,
+      totalFeeUsd: feeBreakdown.totalFeeUsd,
+      liquidityRole,
       reason,
     };
   }
@@ -198,6 +249,7 @@ export class BacktestPortfolio {
     question: string,
     config: BacktestConfig,
     reason: string,
+    feeParams?: FeeParams,
   ): BacktestTrade | null {
     const position = this.positions.get(tokenId);
     if (!position) {
@@ -223,6 +275,7 @@ export class BacktestPortfolio {
       timestamp,
       question,
       reason,
+      feeParams,
     );
     this.trades.push(trade);
     return trade;

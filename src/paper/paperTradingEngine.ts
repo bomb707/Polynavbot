@@ -3,6 +3,8 @@ import type { OrderSide, OrderStatus, PaperOrder, Position } from "@prisma/clien
 import type { Config } from "../config/index.js";
 import { isPaperMode } from "../config/index.js";
 import type { IRepositories } from "../db/repositories/index.js";
+import type { IFeeService } from "../fees/feeTypes.js";
+import { FEE_FREE_PARAMS } from "../fees/feeTypes.js";
 import type { ILogger } from "../logger/types.js";
 import type { OrderBook } from "../polymarket/publicTypes.js";
 import type { IRiskEngine } from "../risk/riskTypes.js";
@@ -19,6 +21,7 @@ export interface PaperTradingEngineDeps {
   repositories: IRepositories;
   logger: ILogger;
   riskEngine: IRiskEngine;
+  feeService: IFeeService;
 }
 
 function toNumber(value: { toNumber(): number } | number): number {
@@ -89,15 +92,20 @@ function shouldFillSell(
 export function createPaperTradingEngine(
   deps: PaperTradingEngineDeps,
 ): IPaperTradingEngine {
-  const { config, repositories, logger, riskEngine } = deps;
+  const { config, repositories, logger, riskEngine, feeService } = deps;
   let cashBalanceUsd = config.PAPER_STARTING_BALANCE_USD;
 
+  async function loadMarketFeeParams(marketId: string) {
+    const market = await repositories.market.findById(marketId);
+    if (!market) {
+      return FEE_FREE_PARAMS;
+    }
+    return feeService.getMarketFeeParams(market);
+  }
+
   async function loadCashBalance(): Promise<void> {
-    const buyNotional = await repositories.trade.sumNotionalBySide("PAPER", "BUY");
-    const sellNotional = await repositories.trade.sumNotionalBySide("PAPER", "SELL");
-    cashBalanceUsd = round8(
-      config.PAPER_STARTING_BALANCE_USD - buyNotional + sellNotional,
-    );
+    const netFlow = await repositories.trade.sumNetCashFlow("PAPER");
+    cashBalanceUsd = round8(config.PAPER_STARTING_BALANCE_USD - netFlow);
   }
 
   async function getFilledSize(orderId: string): Promise<number> {
@@ -109,25 +117,32 @@ export function createPaperTradingEngine(
     order: PaperOrder,
     fillSize: number,
     fillPrice: number,
-    notionalUsd: number,
+    totalCostUsd: number,
+    totalFeeUsd: number,
   ): Promise<Position> {
-    cashBalanceUsd = round8(cashBalanceUsd - notionalUsd);
+    cashBalanceUsd = round8(cashBalanceUsd - totalCostUsd);
 
     const existing = await repositories.position.findOpenByTokenId(order.tokenId);
     if (existing) {
       const existingSize = toNumber(existing.size);
       const existingCost = toNumber(existing.costBasisUsd);
+      const existingFees = toNumber(existing.totalFeesPaidUsd) ?? 0;
       const newSize = round8(existingSize + fillSize);
-      const newCost = round8(existingCost + notionalUsd);
+      const newCost = round8(existingCost + totalCostUsd);
       const avgEntryPrice = round8(newCost / newSize);
+      const currentValueUsd = round8(newSize * fillPrice);
+      const grossUnrealized = round8(currentValueUsd - newCost);
 
       return repositories.position.update(existing.id, {
         size: newSize,
         costBasisUsd: newCost,
         avgEntryPrice,
         currentPrice: fillPrice,
-        currentValueUsd: round8(newSize * fillPrice),
-        unrealizedPnlUsd: round8(newSize * fillPrice - newCost),
+        currentValueUsd,
+        unrealizedPnlUsd: grossUnrealized,
+        grossUnrealizedPnlUsd: grossUnrealized,
+        netUnrealizedPnlUsd: grossUnrealized,
+        totalFeesPaidUsd: round8(existingFees + totalFeeUsd),
       });
     }
 
@@ -139,10 +154,15 @@ export function createPaperTradingEngine(
       avgEntryPrice: fillPrice,
       currentPrice: fillPrice,
       size: fillSize,
-      costBasisUsd: notionalUsd,
-      currentValueUsd: notionalUsd,
+      costBasisUsd: totalCostUsd,
+      currentValueUsd: totalCostUsd,
       unrealizedPnlUsd: 0,
+      grossUnrealizedPnlUsd: 0,
+      netUnrealizedPnlUsd: 0,
+      totalFeesPaidUsd: totalFeeUsd,
       realizedPnlUsd: 0,
+      grossRealizedPnlUsd: 0,
+      netRealizedPnlUsd: 0,
     });
   }
 
@@ -150,37 +170,56 @@ export function createPaperTradingEngine(
     order: PaperOrder,
     fillSize: number,
     fillPrice: number,
-    notionalUsd: number,
-  ): Promise<Position | undefined> {
-    cashBalanceUsd = round8(cashBalanceUsd + notionalUsd);
+    netProceedsUsd: number,
+    totalFeeUsd: number,
+  ): Promise<{ position?: Position; netRealizedIncrement: number; grossRealizedIncrement: number }> {
+    cashBalanceUsd = round8(cashBalanceUsd + netProceedsUsd);
 
     const existing = await repositories.position.findOpenByTokenId(order.tokenId);
     if (!existing) {
       logger.warn({ orderId: order.id, tokenId: order.tokenId }, "Sell fill without open position");
-      return undefined;
+      return { netRealizedIncrement: 0, grossRealizedIncrement: 0 };
     }
 
     const existingSize = toNumber(existing.size);
     const avgEntryPrice = toNumber(existing.avgEntryPrice);
-    const realizedIncrement = round8((fillPrice - avgEntryPrice) * fillSize);
-    const newRealized = round8(toNumber(existing.realizedPnlUsd) + realizedIncrement);
+    const costBasisPortion = round8(avgEntryPrice * fillSize);
+    const grossProceeds = round8(fillPrice * fillSize);
+    const grossRealizedIncrement = round8(grossProceeds - costBasisPortion);
+    const netRealizedIncrement = round8(netProceedsUsd - costBasisPortion);
+    const existingFees = toNumber(existing.totalFeesPaidUsd) ?? 0;
+    const newGrossRealized = round8(toNumber(existing.grossRealizedPnlUsd) + grossRealizedIncrement);
+    const newNetRealized = round8(toNumber(existing.netRealizedPnlUsd) + netRealizedIncrement);
     const remainingSize = round8(existingSize - fillSize);
 
     if (isNearZero(remainingSize) || remainingSize < 0) {
-      return repositories.position.close(existing.id, {
-        realizedPnlUsd: newRealized,
+      const closed = await repositories.position.close(existing.id, {
+        realizedPnlUsd: newNetRealized,
+        grossRealizedPnlUsd: newGrossRealized,
+        netRealizedPnlUsd: newNetRealized,
       });
+      return { position: closed, netRealizedIncrement, grossRealizedIncrement };
     }
 
     const remainingCost = round8(avgEntryPrice * remainingSize);
-    return repositories.position.update(existing.id, {
+    const currentValueUsd = round8(remainingSize * fillPrice);
+    const grossUnrealized = round8(currentValueUsd - remainingCost);
+
+    const updated = await repositories.position.update(existing.id, {
       size: remainingSize,
       costBasisUsd: remainingCost,
-      realizedPnlUsd: newRealized,
+      realizedPnlUsd: newNetRealized,
+      grossRealizedPnlUsd: newGrossRealized,
+      netRealizedPnlUsd: newNetRealized,
       currentPrice: fillPrice,
-      currentValueUsd: round8(remainingSize * fillPrice),
-      unrealizedPnlUsd: round8(remainingSize * fillPrice - remainingCost),
+      currentValueUsd,
+      unrealizedPnlUsd: grossUnrealized,
+      grossUnrealizedPnlUsd: grossUnrealized,
+      netUnrealizedPnlUsd: grossUnrealized,
+      totalFeesPaidUsd: round8(existingFees + totalFeeUsd),
     });
+
+    return { position: updated, netRealizedIncrement, grossRealizedIncrement };
   }
 
   return {
@@ -243,15 +282,43 @@ export function createPaperTradingEngine(
       const size = round8(effectiveSizeUsd / input.limitPrice);
       const notionalUsd = round8(effectiveSizeUsd);
 
-      if (input.side === "BUY" && notionalUsd > cashBalanceUsd) {
-        const order = await repositories.order.createPaperOrder({
-          ...baseOrder,
-          price: input.limitPrice,
-          size,
-          notionalUsd,
-          status: "FAILED",
-        });
-        return { order, rejectedReason: "Insufficient cash balance" };
+      const feeParams = await loadMarketFeeParams(input.marketId);
+      const liquidityRole =
+        input.side === "BUY" ? ("maker" as const) : ("maker" as const);
+
+      const feeInput = {
+        side: input.side,
+        price: input.limitPrice,
+        shares: size,
+        liquidityRole,
+        feeParams,
+      };
+
+      const orderEconomics =
+        input.side === "BUY"
+          ? feeService.calculateBuyEconomics(feeInput)
+          : feeService.calculateSellEconomics(feeInput);
+
+      const estimatedPlatformFeeUsd = orderEconomics.platformFeeUsd;
+      const estimatedBuilderFeeUsd = orderEconomics.builderFeeUsd;
+      const estimatedTotalFeeUsd = orderEconomics.totalFeeUsd;
+
+      if (input.side === "BUY") {
+        const totalCostUsd = (orderEconomics as { totalCostUsd: number }).totalCostUsd;
+        if (totalCostUsd > cashBalanceUsd) {
+          const order = await repositories.order.createPaperOrder({
+            ...baseOrder,
+            price: input.limitPrice,
+            size,
+            notionalUsd,
+            estimatedPlatformFeeUsd,
+            estimatedBuilderFeeUsd,
+            estimatedTotalFeeUsd,
+            liquidityRole,
+            status: "FAILED",
+          });
+          return { order, rejectedReason: "Insufficient cash balance (including fees)" };
+        }
       }
 
       if (input.side === "SELL") {
@@ -263,6 +330,10 @@ export function createPaperTradingEngine(
             price: input.limitPrice,
             size,
             notionalUsd,
+            estimatedPlatformFeeUsd,
+            estimatedBuilderFeeUsd,
+            estimatedTotalFeeUsd,
+            liquidityRole,
             status: "FAILED",
           });
           return { order, rejectedReason: "Insufficient position size" };
@@ -274,6 +345,10 @@ export function createPaperTradingEngine(
         price: input.limitPrice,
         size,
         notionalUsd,
+        estimatedPlatformFeeUsd,
+        estimatedBuilderFeeUsd,
+        estimatedTotalFeeUsd,
+        liquidityRole,
         status: "PENDING",
       });
 
@@ -331,7 +406,24 @@ export function createPaperTradingEngine(
 
       const availableSize = topOfBookSize(orderBook, order.side);
       const fillSize = round8(Math.min(remainingSize, availableSize > 0 ? availableSize : remainingSize));
-      const notionalUsd = round8(fillSize * fillPrice);
+
+      const fillLiquidityRole = feeService.estimateLiquidityRole({
+        side: order.side,
+        limitPrice,
+        bestBid: orderBook.bestBid,
+        bestAsk: orderBook.bestAsk,
+      });
+
+      const feeParams = await loadMarketFeeParams(order.marketId);
+      const feeBreakdown = feeService.calculateTotalFee({
+        side: order.side,
+        price: fillPrice,
+        shares: fillSize,
+        liquidityRole: fillLiquidityRole,
+        feeParams,
+      });
+
+      const notionalUsd = feeBreakdown.grossNotionalUsd;
 
       const trade = await repositories.trade.create({
         orderId: order.id,
@@ -343,6 +435,13 @@ export function createPaperTradingEngine(
         price: fillPrice,
         size: fillSize,
         notionalUsd,
+        feeUsd: feeBreakdown.totalFeeUsd,
+        grossNotionalUsd: feeBreakdown.grossNotionalUsd,
+        platformFeeUsd: feeBreakdown.platformFeeUsd,
+        builderFeeUsd: feeBreakdown.builderFeeUsd,
+        totalFeeUsd: feeBreakdown.totalFeeUsd,
+        netNotionalUsd: feeBreakdown.netNotionalUsd,
+        liquidityRole: fillLiquidityRole,
         source: "PAPER",
       });
 
@@ -356,10 +455,27 @@ export function createPaperTradingEngine(
       });
 
       let position: Position | undefined;
+      let netRealizedIncrement = 0;
+      let grossRealizedIncrement = 0;
       if (order.side === "BUY") {
-        position = await applyBuyFill(order, fillSize, fillPrice, notionalUsd);
+        position = await applyBuyFill(
+          order,
+          fillSize,
+          fillPrice,
+          feeBreakdown.netNotionalUsd,
+          feeBreakdown.totalFeeUsd,
+        );
       } else {
-        position = await applySellFill(order, fillSize, fillPrice, notionalUsd);
+        const sellResult = await applySellFill(
+          order,
+          fillSize,
+          fillPrice,
+          feeBreakdown.netNotionalUsd,
+          feeBreakdown.totalFeeUsd,
+        );
+        position = sellResult.position;
+        netRealizedIncrement = sellResult.netRealizedIncrement;
+        grossRealizedIncrement = sellResult.grossRealizedIncrement;
       }
 
       if (isFullyFilled && order.signalId) {
@@ -384,6 +500,9 @@ export function createPaperTradingEngine(
         tradeId: trade.id,
         position,
         orderStatus: newStatus,
+        totalFeeUsd: feeBreakdown.totalFeeUsd,
+        netRealizedPnlUsd: order.side === "SELL" ? netRealizedIncrement : undefined,
+        grossRealizedPnlUsd: order.side === "SELL" ? grossRealizedIncrement : undefined,
       };
     },
 
@@ -421,12 +540,14 @@ export function createPaperTradingEngine(
       const size = toNumber(position.size);
       const costBasis = toNumber(position.costBasisUsd);
       const currentValueUsd = round8(size * currentPrice);
-      const unrealizedPnlUsd = round8(currentValueUsd - costBasis);
+      const grossUnrealized = round8(currentValueUsd - costBasis);
 
       return repositories.position.update(position.id, {
         currentPrice,
         currentValueUsd,
-        unrealizedPnlUsd,
+        unrealizedPnlUsd: grossUnrealized,
+        grossUnrealizedPnlUsd: grossUnrealized,
+        netUnrealizedPnlUsd: grossUnrealized,
       });
     },
 
@@ -453,7 +574,13 @@ export function createPaperTradingEngine(
       const totalRealizedPnlUsd = await repositories.trade.sumRealizedPnl();
       const totalUnrealizedPnlUsd = round8(
         openPositions.reduce(
-          (sum, position) => sum + (position.unrealizedPnlUsd ? toNumber(position.unrealizedPnlUsd) : 0),
+          (sum, position) =>
+            sum +
+            (position.netUnrealizedPnlUsd
+              ? toNumber(position.netUnrealizedPnlUsd)
+              : position.unrealizedPnlUsd
+                ? toNumber(position.unrealizedPnlUsd)
+                : 0),
           0,
         ),
       );

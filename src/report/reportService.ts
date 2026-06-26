@@ -5,6 +5,7 @@ import { isLiveMode, isPaperMode } from "../config/index.js";
 import type { IRepositories } from "../db/repositories/index.js";
 import { toNumber } from "../execution/entryHelpers.js";
 import type { IExitEngine } from "../execution/exitTypes.js";
+import type { IFeeService } from "../fees/feeTypes.js";
 import type { IPaperTradingEngine } from "../paper/paperTypes.js";
 import type {
   IReportService,
@@ -22,6 +23,7 @@ export interface ReportServiceDeps {
   repositories: IRepositories;
   paperTradingEngine: IPaperTradingEngine;
   exitEngine: IExitEngine;
+  feeService: IFeeService;
 }
 
 function round8(value: number): number {
@@ -54,21 +56,32 @@ function toSignalRow(signal: Signal): SignalRow {
 }
 
 function toTradeRow(trade: Trade, question: string): TradeRow {
+  const grossNotional = toNumber(trade.grossNotionalUsd) ?? toNumber(trade.notionalUsd) ?? 0;
+  const platformFee = toNumber(trade.platformFeeUsd) ?? 0;
+  const builderFee = toNumber(trade.builderFeeUsd) ?? 0;
+  const totalFee = toNumber(trade.totalFeeUsd) ?? toNumber(trade.feeUsd) ?? 0;
+  const netNotional = toNumber(trade.netNotionalUsd) ?? grossNotional - totalFee;
+
   return {
     timestamp: trade.timestamp.toISOString(),
     tokenId: trade.tokenId,
     side: trade.side,
     price: toNumber(trade.price) ?? 0,
     size: toNumber(trade.size) ?? 0,
-    notionalUsd: toNumber(trade.notionalUsd) ?? 0,
-    feeUsd: toNumber(trade.feeUsd) ?? 0,
+    notionalUsd: grossNotional,
+    feeUsd: totalFee,
+    platformFeeUsd: platformFee,
+    builderFeeUsd: builderFee,
+    totalFeeUsd: totalFee,
+    netNotionalUsd: netNotional,
+    liquidityRole: trade.liquidityRole,
     source: trade.source,
     question,
   };
 }
 
 export function createReportService(deps: ReportServiceDeps): IReportService {
-  const { config, repositories, paperTradingEngine, exitEngine } = deps;
+  const { config, repositories, paperTradingEngine, exitEngine, feeService } = deps;
 
   async function loadMarketQuestions(marketIds: string[]): Promise<Map<string, string>> {
     const uniqueIds = [...new Set(marketIds)];
@@ -82,6 +95,34 @@ export function createReportService(deps: ReportServiceDeps): IReportService {
     }
 
     return questions;
+  }
+
+  async function estimateFutureExitFees(openPositions: Position[]): Promise<number> {
+    let total = 0;
+    for (const position of openPositions) {
+      const market = await repositories.market.findById(position.marketId);
+      const feeParams = market ? feeService.getMarketFeeParams(market) : undefined;
+      const price = toNumber(position.currentPrice) ?? toNumber(position.avgEntryPrice) ?? 0;
+      const size = toNumber(position.size) ?? 0;
+      if (price <= 0 || size <= 0) {
+        continue;
+      }
+      const breakdown = feeService.calculateTotalFee({
+        side: "SELL",
+        price,
+        shares: size,
+        liquidityRole: "taker",
+        feeParams: feeParams ?? {
+          feesEnabled: false,
+          feeRate: 0,
+          takerOnly: true,
+          makerBaseFeeBps: 0,
+          takerBaseFeeBps: 0,
+        },
+      });
+      total += breakdown.totalFeeUsd;
+    }
+    return round8(total);
   }
 
   async function buildPortfolioSummary(
@@ -126,6 +167,41 @@ export function createReportService(deps: ReportServiceDeps): IReportService {
 
     const totalPnlUsd = round8(realizedPnlUsd + unrealizedPnlUsd);
 
+    const grossRealizedPnlUsd = round8(await repositories.position.sumGrossRealizedPnl());
+
+    const netRealizedPnlUsd = round8(realizedPnlUsd);
+
+    const grossUnrealizedPnlUsd = round8(
+      openPositions.reduce(
+        (sum, position) =>
+          sum +
+          (toNumber(position.grossUnrealizedPnlUsd) ??
+            toNumber(position.unrealizedPnlUsd) ??
+            0),
+        0,
+      ),
+    );
+
+    const estimatedNetUnrealizedPnlUsd = round8(
+      openPositions.reduce(
+        (sum, position) =>
+          sum +
+          (toNumber(position.netUnrealizedPnlUsd) ??
+            toNumber(position.unrealizedPnlUsd) ??
+            0),
+        0,
+      ),
+    );
+
+    const tradeSource = isPaperMode(config) ? "PAPER" : "LIVE";
+    const totalFeesPaidUsd = round8(await repositories.trade.sumTotalFeesPaid(tradeSource));
+    const roleCounts = await repositories.trade.countByLiquidityRole(tradeSource);
+    const estimatedFutureExitFeesUsd = await estimateFutureExitFees(openPositions);
+
+    const grossTotalPnl = grossRealizedPnlUsd + grossUnrealizedPnlUsd;
+    const feesAsPercentOfGrossPnl =
+      grossTotalPnl > 0 ? round8(totalFeesPaidUsd / grossTotalPnl) : null;
+
     let openOrdersCount = 0;
     if (isLiveMode(config)) {
       openOrdersCount = await repositories.order.countOpenLiveOrders();
@@ -142,6 +218,16 @@ export function createReportService(deps: ReportServiceDeps): IReportService {
       realizedPnlUsd,
       unrealizedPnlUsd,
       totalPnlUsd,
+      grossRealizedPnlUsd,
+      netRealizedPnlUsd,
+      grossUnrealizedPnlUsd,
+      estimatedNetUnrealizedPnlUsd,
+      totalFeesPaidUsd,
+      estimatedFutureExitFeesUsd,
+      feesAsPercentOfGrossPnl,
+      makerTradeCount: roleCounts.maker,
+      takerTradeCount: roleCounts.taker,
+      unknownRoleTradeCount: roleCounts.unknown,
       openPositionsCount: openPositions.length,
       openOrdersCount,
     };

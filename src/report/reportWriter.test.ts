@@ -5,26 +5,9 @@ import path from "node:path";
 import { describe, expect, it, afterEach } from "vitest";
 
 import { writeLatestReports } from "./reportWriter.js";
-import type { ReportSnapshot } from "./reportTypes.js";
+import { makeEmptyReportSnapshot } from "./testFixtures.js";
 
-const snapshot: ReportSnapshot = {
-  portfolio: {
-    generatedAt: "2026-06-26T12:00:00.000Z",
-    mode: "paper",
-    cashBalanceUsd: 500,
-    openExposureUsd: 0,
-    portfolioValueUsd: 500,
-    realizedPnlUsd: 0,
-    unrealizedPnlUsd: 0,
-    totalPnlUsd: 0,
-    openPositionsCount: 0,
-    openOrdersCount: 0,
-  },
-  topWinners: [],
-  topLosers: [],
-  recentSignals: [],
-  riskRejections: [],
-  pendingExits: [],
+const snapshot = makeEmptyReportSnapshot({
   trades: [
     {
       timestamp: "2026-06-26T12:00:00.000Z",
@@ -34,11 +17,16 @@ const snapshot: ReportSnapshot = {
       size: 100,
       notionalUsd: 2,
       feeUsd: 0,
+      platformFeeUsd: 0,
+      builderFeeUsd: 0,
+      totalFeeUsd: 0,
+      netNotionalUsd: 2,
+      liquidityRole: "maker",
       source: "PAPER",
       question: 'Market with "quotes", comma',
     },
   ],
-};
+});
 
 describe("writeLatestReports", () => {
   let tempDir: string;

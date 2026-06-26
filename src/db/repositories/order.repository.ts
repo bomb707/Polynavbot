@@ -1,5 +1,6 @@
 import type { Decimal } from "@prisma/client/runtime/library";
 import type {
+  LiquidityRole,
   LiveOrder,
   OrderSide,
   OrderStatus,
@@ -7,6 +8,13 @@ import type {
   Prisma,
   PrismaClient,
 } from "@prisma/client";
+
+export interface OrderFeeEstimateInput {
+  estimatedPlatformFeeUsd?: Decimal | number;
+  estimatedBuilderFeeUsd?: Decimal | number;
+  estimatedTotalFeeUsd?: Decimal | number;
+  liquidityRole?: LiquidityRole;
+}
 
 export interface CreatePaperOrderInput {
   signalId?: string | null;
@@ -18,6 +26,10 @@ export interface CreatePaperOrderInput {
   size: Decimal | number;
   notionalUsd: Decimal | number;
   status?: OrderStatus;
+  estimatedPlatformFeeUsd?: Decimal | number;
+  estimatedBuilderFeeUsd?: Decimal | number;
+  estimatedTotalFeeUsd?: Decimal | number;
+  liquidityRole?: LiquidityRole;
 }
 
 export interface CreateLiveOrderInput {
@@ -31,6 +43,10 @@ export interface CreateLiveOrderInput {
   notionalUsd: Decimal | number;
   status?: OrderStatus;
   rawResponse?: Prisma.InputJsonValue;
+  estimatedPlatformFeeUsd?: Decimal | number;
+  estimatedBuilderFeeUsd?: Decimal | number;
+  estimatedTotalFeeUsd?: Decimal | number;
+  liquidityRole?: LiquidityRole;
 }
 
 export interface IOrderRepository {
@@ -67,6 +83,10 @@ export function createOrderRepository(prisma: PrismaClient): IOrderRepository {
         price: data.price,
         size: data.size,
         notionalUsd: data.notionalUsd,
+        estimatedPlatformFeeUsd: data.estimatedPlatformFeeUsd,
+        estimatedBuilderFeeUsd: data.estimatedBuilderFeeUsd,
+        estimatedTotalFeeUsd: data.estimatedTotalFeeUsd,
+        liquidityRole: data.liquidityRole,
         status: data.status,
         market: { connect: { id: data.marketId } },
         outcome: { connect: { id: data.outcomeId } },
@@ -86,6 +106,10 @@ export function createOrderRepository(prisma: PrismaClient): IOrderRepository {
         price: data.price,
         size: data.size,
         notionalUsd: data.notionalUsd,
+        estimatedPlatformFeeUsd: data.estimatedPlatformFeeUsd,
+        estimatedBuilderFeeUsd: data.estimatedBuilderFeeUsd,
+        estimatedTotalFeeUsd: data.estimatedTotalFeeUsd,
+        liquidityRole: data.liquidityRole,
         status: data.status,
         rawResponse: data.rawResponse,
         market: { connect: { id: data.marketId } },

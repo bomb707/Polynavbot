@@ -90,6 +90,12 @@ export const envSchema = z
     WS_EXIT_DEBOUNCE_MS: z.coerce.number().int().positive().default(2000),
     WS_SUBSCRIPTION_REFRESH_MS: z.coerce.number().int().positive().default(60000),
     WS_REST_RECONCILE_INTERVAL_SECONDS: z.coerce.number().int().positive().default(120),
+
+    BUILDER_FEE_BPS: z.coerce.number().int().nonnegative().default(0),
+    FEE_PARAMS_REFRESH_HOURS: z.coerce.number().positive().default(24),
+    BACKTEST_FEE_MODE: z
+      .enum(["maker_only", "taker_only", "mixed", "actual_if_available"])
+      .default("mixed"),
   })
   .superRefine((data, ctx) => {
     if (data.MIN_ENTRY_PRICE >= data.MAX_ENTRY_PRICE) {

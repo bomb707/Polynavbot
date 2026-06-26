@@ -10,6 +10,16 @@ export interface PortfolioSummary {
   realizedPnlUsd: number;
   unrealizedPnlUsd: number;
   totalPnlUsd: number;
+  grossRealizedPnlUsd: number;
+  netRealizedPnlUsd: number;
+  grossUnrealizedPnlUsd: number;
+  estimatedNetUnrealizedPnlUsd: number;
+  totalFeesPaidUsd: number;
+  estimatedFutureExitFeesUsd: number;
+  feesAsPercentOfGrossPnl: number | null;
+  makerTradeCount: number;
+  takerTradeCount: number;
+  unknownRoleTradeCount: number;
   openPositionsCount: number;
   openOrdersCount: number;
 }
@@ -59,6 +69,11 @@ export interface TradeRow {
   size: number;
   notionalUsd: number;
   feeUsd: number;
+  platformFeeUsd: number;
+  builderFeeUsd: number;
+  totalFeeUsd: number;
+  netNotionalUsd: number;
+  liquidityRole: string;
   source: string;
   question: string;
 }

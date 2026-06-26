@@ -42,6 +42,14 @@ function buildMarkdown(snapshot: ReportSnapshot): string {
     `| Realized PnL | ${formatUsd(p.realizedPnlUsd)} |`,
     `| Unrealized PnL | ${formatUsd(p.unrealizedPnlUsd)} |`,
     `| Total PnL | ${formatUsd(p.totalPnlUsd)} |`,
+    `| Gross realized PnL | ${formatUsd(p.grossRealizedPnlUsd)} |`,
+    `| Net realized PnL | ${formatUsd(p.netRealizedPnlUsd)} |`,
+    `| Gross unrealized PnL | ${formatUsd(p.grossUnrealizedPnlUsd)} |`,
+    `| Est. net unrealized PnL | ${formatUsd(p.estimatedNetUnrealizedPnlUsd)} |`,
+    `| Total fees paid | ${formatUsd(p.totalFeesPaidUsd)} |`,
+    `| Est. future exit fees | ${formatUsd(p.estimatedFutureExitFeesUsd)} |`,
+    `| Fees % of gross PnL | ${p.feesAsPercentOfGrossPnl == null ? "N/A" : `${(p.feesAsPercentOfGrossPnl * 100).toFixed(2)}%`} |`,
+    `| Maker/taker/unknown trades | ${p.makerTradeCount}/${p.takerTradeCount}/${p.unknownRoleTradeCount} |`,
     `| Open positions | ${p.openPositionsCount} |`,
     `| Open orders | ${p.openOrdersCount} |`,
     "",
@@ -126,7 +134,7 @@ function buildMarkdown(snapshot: ReportSnapshot): string {
 
 function buildCsv(snapshot: ReportSnapshot): string {
   const header =
-    "timestamp,tokenId,side,price,size,notionalUsd,feeUsd,source,question";
+    "timestamp,tokenId,side,price,size,notionalUsd,feeUsd,platformFeeUsd,builderFeeUsd,totalFeeUsd,netNotionalUsd,liquidityRole,source,question";
   const rows = snapshot.trades.map((trade) =>
     [
       trade.timestamp,
@@ -136,6 +144,11 @@ function buildCsv(snapshot: ReportSnapshot): string {
       trade.size.toFixed(8),
       trade.notionalUsd.toFixed(2),
       trade.feeUsd.toFixed(2),
+      trade.platformFeeUsd.toFixed(5),
+      trade.builderFeeUsd.toFixed(5),
+      trade.totalFeeUsd.toFixed(5),
+      trade.netNotionalUsd.toFixed(2),
+      trade.liquidityRole,
       trade.source,
       csvEscape(trade.question),
     ].join(","),

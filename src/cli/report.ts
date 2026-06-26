@@ -23,6 +23,7 @@ export async function runReport(
     repositories: container.repositories,
     paperTradingEngine: container.paperTradingEngine,
     exitEngine: container.exitEngine,
+    feeService: container.feeService,
   });
 
   const snapshot = await reportService.buildSnapshot();

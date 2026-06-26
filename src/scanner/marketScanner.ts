@@ -152,6 +152,7 @@ export function createMarketScanner(deps: MarketScannerDeps): IMarketScanner {
 
   const saveMarketAndOutcomes = async (
     normalized: NormalizedMarket,
+    feeCache: Map<string, Date>,
   ): Promise<{ market: Market; outcomes: Outcome[] }> => {
     const market = await repositories.market.upsertByPolymarketId({
       polymarketMarketId: normalized.polymarketMarketId,
@@ -166,6 +167,8 @@ export function createMarketScanner(deps: MarketScannerDeps): IMarketScanner {
       endDate: normalized.endDate,
     });
 
+    await syncMarketFeeParams(market, normalized.conditionId, feeCache);
+
     const outcomes: Outcome[] = [];
     for (const outcome of normalized.outcomes) {
       const saved = await repositories.outcome.upsertByTokenId({
@@ -179,6 +182,52 @@ export function createMarketScanner(deps: MarketScannerDeps): IMarketScanner {
     }
 
     return { market, outcomes };
+  };
+
+  const feeRefreshMs = config.FEE_PARAMS_REFRESH_HOURS * 60 * 60 * 1000;
+
+  const syncMarketFeeParams = async (
+    market: Market,
+    conditionId: string,
+    feeCache: Map<string, Date>,
+  ): Promise<void> => {
+    const cachedAt = feeCache.get(conditionId);
+    if (cachedAt && Date.now() - cachedAt.getTime() < feeRefreshMs) {
+      return;
+    }
+
+    if (
+      market.feeLastFetchedAt &&
+      Date.now() - market.feeLastFetchedAt.getTime() < feeRefreshMs
+    ) {
+      feeCache.set(conditionId, market.feeLastFetchedAt);
+      return;
+    }
+
+    try {
+      const info = await publicClient.getClobMarketInfo(conditionId);
+      if (!info) {
+        return;
+      }
+
+      await repositories.market.updateFeeParams(market.id, {
+        feesEnabled: info.feesEnabled,
+        feeRate: info.feeDetails?.feeRate ?? 0,
+        feeExponent: info.feeDetails?.feeExponent ?? null,
+        takerOnly: info.feeDetails?.takerOnly ?? true,
+        makerBaseFeeBps: info.makerBaseFeeBps,
+        takerBaseFeeBps: info.takerBaseFeeBps,
+        feeCategory: info.feeCategory,
+        feeLastFetchedAt: new Date(),
+      });
+
+      feeCache.set(conditionId, new Date());
+    } catch (error) {
+      logger.warn(
+        { conditionId, err: error instanceof Error ? error.message : String(error) },
+        "Failed to sync market fee params",
+      );
+    }
   };
 
   const createSnapshot = async (
@@ -282,6 +331,7 @@ export function createMarketScanner(deps: MarketScannerDeps): IMarketScanner {
 
     const skipped = emptySkipCounts();
     const candidates: CandidateOutcome[] = [];
+    const feeCache = new Map<string, Date>();
     let marketsScanned = 0;
     let outcomesScanned = 0;
 
@@ -311,6 +361,7 @@ export function createMarketScanner(deps: MarketScannerDeps): IMarketScanner {
 
           const { market, outcomes } = await saveMarketAndOutcomes(
             evaluation.normalized,
+            feeCache,
           );
 
           const outcomeCount = evaluation.normalized.outcomes.length;

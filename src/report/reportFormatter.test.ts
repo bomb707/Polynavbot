@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 import { formatTerminalDashboard } from "./reportFormatter.js";
-import type { ReportSnapshot } from "./reportTypes.js";
+import { makeEmptyReportSnapshot } from "./testFixtures.js";
 
-const snapshot: ReportSnapshot = {
+const snapshot = makeEmptyReportSnapshot({
   portfolio: {
     generatedAt: "2026-06-26T12:00:00.000Z",
     mode: "paper",
@@ -13,6 +13,16 @@ const snapshot: ReportSnapshot = {
     realizedPnlUsd: 1,
     unrealizedPnlUsd: 6,
     totalPnlUsd: 7,
+    grossRealizedPnlUsd: 1,
+    netRealizedPnlUsd: 1,
+    grossUnrealizedPnlUsd: 6,
+    estimatedNetUnrealizedPnlUsd: 6,
+    totalFeesPaidUsd: 0,
+    estimatedFutureExitFeesUsd: 0,
+    feesAsPercentOfGrossPnl: null,
+    makerTradeCount: 0,
+    takerTradeCount: 0,
+    unknownRoleTradeCount: 0,
     openPositionsCount: 2,
     openOrdersCount: 1,
   },
@@ -67,7 +77,7 @@ const snapshot: ReportSnapshot = {
     },
   ],
   trades: [],
-};
+});
 
 describe("formatTerminalDashboard", () => {
   it("includes all major sections", () => {
@@ -77,6 +87,9 @@ describe("formatTerminalDashboard", () => {
     expect(output).toContain("Mode:      paper");
     expect(output).toContain("--- Portfolio ---");
     expect(output).toContain("Cash balance:");
+    expect(output).toContain("Gross realized PnL:");
+    expect(output).toContain("Total fees paid:");
+    expect(output).toContain("Maker/taker/unknown trades:");
     expect(output).toContain("--- Top Winners");
     expect(output).toContain("--- Top Losers");
     expect(output).toContain("--- Recent Signals");

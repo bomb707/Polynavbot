@@ -3,6 +3,7 @@ import type { PaperOrder, Position, Trade } from "@prisma/client";
 
 import type { Config } from "../config/index.js";
 import type { IRepositories } from "../db/repositories/index.js";
+import { createFeeService } from "../fees/feeService.js";
 import { createPaperTradingEngine } from "./paperTradingEngine.js";
 import type { OrderBook } from "../polymarket/publicTypes.js";
 import type { IRiskEngine } from "../risk/riskTypes.js";
@@ -16,6 +17,21 @@ const baseConfig = {
   PAPER_STARTING_BALANCE_USD: 500,
   PAPER_PASSIVE_FILL_ON_CROSS: true,
 } as Pick<Config, "TRADING_MODE" | "PAPER_STARTING_BALANCE_USD" | "PAPER_PASSIVE_FILL_ON_CROSS"> as Config;
+
+const feeService = createFeeService({ BUILDER_FEE_BPS: 0 });
+
+function makeFeeFreeMarket() {
+  return {
+    id: "market-1",
+    feesEnabled: false,
+    feeRate: 0,
+    feeExponent: null,
+    takerOnly: true,
+    makerBaseFeeBps: 0,
+    takerBaseFeeBps: 0,
+    feeCategory: null,
+  };
+}
 
 function makeOrder(overrides: Partial<PaperOrder> = {}): PaperOrder {
   return {
@@ -50,6 +66,11 @@ function makePosition(overrides: Partial<Position> = {}): Position {
     currentValueUsd: { toNumber: () => 2 } as Position["currentValueUsd"],
     realizedPnlUsd: { toNumber: () => 0 } as Position["realizedPnlUsd"],
     unrealizedPnlUsd: { toNumber: () => 0 } as Position["unrealizedPnlUsd"],
+    totalFeesPaidUsd: { toNumber: () => 0 } as Position["totalFeesPaidUsd"],
+    grossRealizedPnlUsd: { toNumber: () => 0 } as Position["grossRealizedPnlUsd"],
+    netRealizedPnlUsd: { toNumber: () => 0 } as Position["netRealizedPnlUsd"],
+    grossUnrealizedPnlUsd: { toNumber: () => 0 } as Position["grossUnrealizedPnlUsd"],
+    netUnrealizedPnlUsd: { toNumber: () => 0 } as Position["netUnrealizedPnlUsd"],
     status: "OPEN",
     openedAt: new Date(),
     closedAt: null,
@@ -76,7 +97,9 @@ function createMockRepositories(): IRepositories {
   let positionCounter = 0;
 
   return {
-    market: {} as IRepositories["market"],
+    market: {
+      findById: vi.fn().mockResolvedValue(makeFeeFreeMarket()),
+    } as unknown as IRepositories["market"],
     outcome: {} as IRepositories["outcome"],
     signal: {
       updateStatus: vi.fn().mockResolvedValue({}),
@@ -164,8 +187,19 @@ function createMockRepositories(): IRepositories {
           .reduce((sum, trade) => sum + (trade.notionalUsd as { toNumber(): number }).toNumber(), 0);
       }),
       sumRealizedPnl: vi.fn().mockResolvedValue(0),
+      sumNetCashFlow: vi.fn().mockResolvedValue(0),
     } as unknown as IRepositories["trade"],
   };
+}
+
+function createEngine(repositories: IRepositories) {
+  return createPaperTradingEngine({
+    config: baseConfig,
+    repositories,
+    logger: { info: vi.fn(), warn: vi.fn(), debug: vi.fn(), error: vi.fn() } as never,
+    riskEngine: allowAllRiskEngine,
+    feeService,
+  });
 }
 
 describe("createPaperTradingEngine", () => {
@@ -176,12 +210,7 @@ describe("createPaperTradingEngine", () => {
   });
 
   it("fills BUY when bestAsk <= limit price", async () => {
-    const engine = createPaperTradingEngine({
-      config: baseConfig,
-      repositories,
-      logger: { info: vi.fn(), warn: vi.fn(), debug: vi.fn(), error: vi.fn() } as never,
-      riskEngine: allowAllRiskEngine,
-    });
+    const engine = createEngine(repositories);
     await engine.initialize();
 
     const { order } = await engine.placeLimitOrder({
@@ -204,12 +233,7 @@ describe("createPaperTradingEngine", () => {
   });
 
   it("keeps BUY pending when bestAsk > limit price", async () => {
-    const engine = createPaperTradingEngine({
-      config: baseConfig,
-      repositories,
-      logger: { info: vi.fn(), warn: vi.fn(), debug: vi.fn(), error: vi.fn() } as never,
-      riskEngine: allowAllRiskEngine,
-    });
+    const engine = createEngine(repositories);
     await engine.initialize();
 
     const { order } = await engine.placeLimitOrder({
@@ -236,6 +260,7 @@ describe("createPaperTradingEngine", () => {
       repositories,
       logger: { info: vi.fn(), warn: vi.fn(), debug: vi.fn(), error: vi.fn() } as never,
       riskEngine: allowAllRiskEngine,
+      feeService,
     });
     await engine.initialize();
 
@@ -248,17 +273,12 @@ describe("createPaperTradingEngine", () => {
       sizeUsd: 2,
     });
 
-    expect(rejectedReason).toBe("Insufficient cash balance");
+    expect(rejectedReason).toBe("Insufficient cash balance (including fees)");
     expect(order.status).toBe("FAILED");
   });
 
   it("updates weighted average entry on second BUY", async () => {
-    const engine = createPaperTradingEngine({
-      config: baseConfig,
-      repositories,
-      logger: { info: vi.fn(), warn: vi.fn(), debug: vi.fn(), error: vi.fn() } as never,
-      riskEngine: allowAllRiskEngine,
-    });
+    const engine = createEngine(repositories);
     await engine.initialize();
 
     vi.mocked(repositories.position.findOpenByTokenId)
@@ -297,12 +317,7 @@ describe("createPaperTradingEngine", () => {
   });
 
   it("partially fills when top-of-book size is smaller than order", async () => {
-    const engine = createPaperTradingEngine({
-      config: baseConfig,
-      repositories,
-      logger: { info: vi.fn(), warn: vi.fn(), debug: vi.fn(), error: vi.fn() } as never,
-      riskEngine: allowAllRiskEngine,
-    });
+    const engine = createEngine(repositories);
     await engine.initialize();
 
     const { order } = await engine.placeLimitOrder({
@@ -333,12 +348,7 @@ describe("createPaperTradingEngine", () => {
       }),
     );
 
-    const engine = createPaperTradingEngine({
-      config: baseConfig,
-      repositories,
-      logger: { info: vi.fn(), warn: vi.fn(), debug: vi.fn(), error: vi.fn() } as never,
-      riskEngine: allowAllRiskEngine,
-    });
+    const engine = createEngine(repositories);
     await engine.initialize();
 
     const sellOrder = makeOrder({
@@ -363,12 +373,7 @@ describe("createPaperTradingEngine", () => {
   });
 
   it("fills BUY on passive ask cross through limit", async () => {
-    const engine = createPaperTradingEngine({
-      config: baseConfig,
-      repositories,
-      logger: { info: vi.fn(), warn: vi.fn(), debug: vi.fn(), error: vi.fn() } as never,
-      riskEngine: allowAllRiskEngine,
-    });
+    const engine = createEngine(repositories);
     await engine.initialize();
 
     const { order } = await engine.placeLimitOrder({

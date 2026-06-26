@@ -3,6 +3,7 @@ import type { Signal } from "@prisma/client";
 import type { Config } from "../config/index.js";
 import { isLiveMode } from "../config/index.js";
 import type { IRepositories } from "../db/repositories/index.js";
+import type { IFeeService } from "../fees/feeTypes.js";
 import type { ILogger } from "../logger/types.js";
 import type { IPublicClient } from "../polymarket/publicClient.js";
 import type { IRiskEngine } from "../risk/riskTypes.js";
@@ -28,6 +29,8 @@ export interface EntryEngineDeps {
   executionEngine: IExecutionEngine;
   publicClient: IPublicClient;
   repositories: IRepositories;
+  paperTradingEngine: import("../paper/paperTypes.js").IPaperTradingEngine;
+  feeService: IFeeService;
   logger: ILogger;
 }
 
@@ -39,6 +42,8 @@ export function createEntryEngine(deps: EntryEngineDeps): IEntryEngine {
     executionEngine,
     publicClient,
     repositories,
+    paperTradingEngine,
+    feeService,
     logger,
   } = deps;
 
@@ -250,6 +255,38 @@ export function createEntryEngine(deps: EntryEngineDeps): IEntryEngine {
               question: candidate.question,
               stage: "idempotency",
               reason: "Duplicate entry blocked by idempotency guard",
+            },
+            riskRejectionReasons,
+          );
+          continue;
+        }
+
+        const feeParams = market
+          ? feeService.getMarketFeeParams(market)
+          : { feesEnabled: false, feeRate: 0, takerOnly: true, makerBaseFeeBps: 0, takerBaseFeeBps: 0 };
+        const liquidityRole = feeService.estimateLiquidityRole({
+          side: "BUY",
+          limitPrice: bidResult.bidPrice,
+          bestBid: orderBook.bestBid,
+          bestAsk: orderBook.bestAsk,
+        });
+        const buyEconomics = feeService.calculateBuyEconomics({
+          side: "BUY",
+          price: bidResult.bidPrice,
+          shares,
+          liquidityRole,
+          feeParams,
+        });
+
+        if (buyEconomics.totalCostUsd > paperTradingEngine.getCashBalance()) {
+          await repositories.signal.updateStatus(signal.id, "REJECTED");
+          reject(
+            rejected,
+            {
+              tokenId: candidate.tokenId,
+              question: candidate.question,
+              stage: "order",
+              reason: "Insufficient cash balance (including estimated fees)",
             },
             riskRejectionReasons,
           );

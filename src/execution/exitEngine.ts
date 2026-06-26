@@ -4,6 +4,7 @@ import type { Config } from "../config/index.js";
 import { isLiveMode, isPaperMode } from "../config/index.js";
 import type { IRepositories } from "../db/repositories/index.js";
 import type { PositionExitState } from "../db/repositories/position.repository.js";
+import type { IFeeService } from "../fees/feeTypes.js";
 import type { ILogger } from "../logger/types.js";
 import { midPrice } from "../polymarket/orderBookPricing.js";
 import type { IPublicClient } from "../polymarket/publicClient.js";
@@ -27,6 +28,7 @@ export interface ExitEngineDeps {
   executionEngine: IExecutionEngine;
   paperTradingEngine: IPaperTradingEngine;
   riskEngine: IRiskEngine;
+  feeService: IFeeService;
   logger: ILogger;
 }
 
@@ -90,6 +92,7 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
     publicClient,
     executionEngine,
     paperTradingEngine,
+    feeService,
     logger,
   } = deps;
 
@@ -235,7 +238,6 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
     rejectedReason?: string;
   }> {
     const sizeUsd = round8(sellSizeShares * sellPrice);
-    const avgEntry = toNum(position.avgEntryPrice);
 
     const orderResult = await executionEngine.placeSellLimitOrder({
       marketId: position.marketId,
@@ -269,7 +271,7 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
 
       const fillResult = await paperTradingEngine.simulateFill(order, { orderBook });
       const realizedPnlUsd = fillResult.filled
-        ? round8((fillResult.fillPrice - avgEntry) * fillResult.fillSize)
+        ? round8(fillResult.netRealizedPnlUsd ?? 0)
         : 0;
 
       return { order, filled: fillResult.filled, realizedPnlUsd };
@@ -326,6 +328,24 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
       return null;
     }
 
+    const marketRecord = await repositories.market.findById(position.marketId);
+    const feeParams = marketRecord
+      ? feeService.getMarketFeeParams(marketRecord)
+      : { feesEnabled: false, feeRate: 0, takerOnly: true, makerBaseFeeBps: 0, takerBaseFeeBps: 0 };
+    const liquidityRole = feeService.estimateLiquidityRole({
+      side: "SELL",
+      limitPrice: evaluation.sellPrice,
+      bestBid: orderBook.bestBid,
+      bestAsk: orderBook.bestAsk,
+    });
+    const sellEconomics = feeService.calculateSellEconomics({
+      side: "SELL",
+      price: evaluation.sellPrice,
+      shares: evaluation.sellSizeShares,
+      liquidityRole,
+      feeParams,
+    });
+
     return {
       tokenId: position.tokenId,
       question: market.question,
@@ -334,6 +354,8 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
       sellSizeShares: evaluation.sellSizeShares,
       sellPrice: evaluation.sellPrice,
       filled: false,
+      estimatedFeeUsd: sellEconomics.totalFeeUsd,
+      netProceedsUsd: sellEconomics.netProceedsUsd,
     };
   }
 

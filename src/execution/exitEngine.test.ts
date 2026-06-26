@@ -3,6 +3,7 @@ import type { Market, Position } from "@prisma/client";
 
 import type { Config } from "../config/index.js";
 import type { PositionExitState } from "../db/repositories/position.repository.js";
+import { createFeeService } from "../fees/feeService.js";
 import { createExitEngine } from "./exitEngine.js";
 import type { OrderBook } from "../polymarket/publicTypes.js";
 
@@ -85,6 +86,7 @@ function createTestEngine() {
     executionEngine: {} as never,
     paperTradingEngine: {} as never,
     riskEngine: {} as never,
+    feeService: createFeeService({ BUILDER_FEE_BPS: 0 }),
     logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
   });
 }
@@ -238,6 +240,7 @@ describe("createExitEngine.previewExits", () => {
         markToMarket: vi.fn(),
       } as never,
       riskEngine: {} as never,
+      feeService: createFeeService({ BUILDER_FEE_BPS: 0 }),
       logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
     });
 

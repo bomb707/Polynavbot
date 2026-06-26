@@ -10,6 +10,7 @@ import {
   rawGammaMarketsResponseSchema,
   rawOrderBookSchema,
   rawPriceHistorySchema,
+  rawClobMarketInfoSchema,
 } from "./schemas.js";
 import type {
   ActivityItem,
@@ -19,6 +20,7 @@ import type {
   NormalizedOutcome,
   OrderBook,
   PriceHistoryPoint,
+  ClobMarketInfo,
 } from "./publicTypes.js";
 
 export interface IPublicClient {
@@ -42,6 +44,7 @@ export interface IPublicClient {
     outcomeIndex: number,
   ): NormalizedOutcome | null;
   fetchActiveMarketsRaw(params: GetActiveMarketsParams): Promise<unknown[]>;
+  getClobMarketInfo(conditionId: string): Promise<ClobMarketInfo | null>;
 }
 
 function toNumber(value: unknown): number | null {
@@ -373,12 +376,63 @@ export function createPublicClient(
     return items;
   };
 
+  const getClobMarketInfo = async (conditionId: string): Promise<ClobMarketInfo | null> => {
+    const url = new URL(`/clob-markets/${conditionId}`, config.POLY_CLOB_HOST);
+
+    let payload: unknown;
+    try {
+      payload = await http.fetchJson<unknown>(url.toString());
+    } catch (error) {
+      logger.warn({ conditionId, err: String(error) }, "Failed to fetch CLOB market info");
+      return null;
+    }
+
+    const parsed = rawClobMarketInfoSchema.safeParse(payload);
+    if (!parsed.success) {
+      logger.warn({ conditionId, issues: parsed.error.issues }, "Invalid CLOB market info response");
+      return {
+        conditionId,
+        makerBaseFeeBps: 0,
+        takerBaseFeeBps: 0,
+        feesEnabled: false,
+        feeDetails: null,
+        feeCategory: null,
+      };
+    }
+
+    const data = parsed.data;
+    const makerBaseFeeBps = data.mbf ?? 0;
+    const takerBaseFeeBps = data.tbf ?? 0;
+    const feeRate = data.fd?.r ?? 0;
+    const feesEnabled = feeRate > 0 || takerBaseFeeBps > 0;
+
+    if (!data.fd) {
+      logger.debug({ conditionId }, "CLOB market info missing fee details");
+    }
+
+    return {
+      conditionId,
+      makerBaseFeeBps,
+      takerBaseFeeBps,
+      feesEnabled,
+      feeDetails: data.fd
+        ? {
+            feeRate,
+            feeExponent: data.fd.e ?? null,
+            takerOnly: data.fd.to ?? true,
+          }
+        : null,
+      feeCategory: null,
+    };
+  };
+
   return {
     getActiveMarkets,
     getMarketBySlug,
     getOrderBook,
     getPricesHistory,
     getUserActivity,
+    getClobMarketInfo,
     normalizeMarket,
     normalizeOutcome,
     fetchActiveMarketsRaw,

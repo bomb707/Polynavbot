@@ -11,5 +11,6 @@ export function createBacktestConfig(config: Config): BacktestConfig {
     minLiquidityForExit: config.BACKTEST_MIN_LIQUIDITY_FOR_EXIT,
     startingCapitalUsd: config.BACKTEST_STARTING_CAPITAL_USD,
     seed: config.BACKTEST_SEED,
+    feeMode: config.BACKTEST_FEE_MODE,
   };
 }

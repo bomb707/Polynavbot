@@ -43,6 +43,8 @@ import type { IMarketScanner } from "./scanner/types.js";
 import { createStrategy, createLongshotScorer } from "./strategy/index.js";
 import type { IStrategy } from "./strategy/types.js";
 import type { ILongshotScorer } from "./strategy/longshotScorer.js";
+import { createFeeService } from "./fees/index.js";
+import type { IFeeService } from "./fees/feeTypes.js";
 import { stopWorkers } from "./jobs/worker.js";
 
 export class AppContainer {
@@ -70,6 +72,7 @@ export class AppContainer {
   private _priceCache?: IPriceCache;
   private _wsClient?: IWsClient;
   private _wsMonitorService?: IWsMonitorService;
+  private _feeService?: IFeeService;
 
   constructor(readonly config: Config) {}
 
@@ -187,6 +190,13 @@ export class AppContainer {
     return this._paperTrader;
   }
 
+  get feeService(): IFeeService {
+    if (!this._feeService) {
+      this._feeService = createFeeService(this.config);
+    }
+    return this._feeService;
+  }
+
   get paperTradingEngine(): IPaperTradingEngine {
     if (!this._paperTradingEngine) {
       this._paperTradingEngine = createPaperTradingEngine({
@@ -194,6 +204,7 @@ export class AppContainer {
         repositories: this.repositories,
         logger: this.logger,
         riskEngine: this.riskEngine,
+        feeService: this.feeService,
       });
     }
     return this._paperTradingEngine;
@@ -216,6 +227,8 @@ export class AppContainer {
         executionEngine: this.executionEngine,
         publicClient: this.publicClient,
         repositories: this.repositories,
+        paperTradingEngine: this.paperTradingEngine,
+        feeService: this.feeService,
         logger: this.logger,
       });
     }
@@ -231,6 +244,7 @@ export class AppContainer {
         executionEngine: this.executionEngine,
         paperTradingEngine: this.paperTradingEngine,
         riskEngine: this.riskEngine,
+        feeService: this.feeService,
         logger: this.logger,
       });
     }

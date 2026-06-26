@@ -13,7 +13,10 @@ export function computeMetrics(input: {
   openUnrealizedUsd: number;
 }): {
   totalRoi: number;
+  grossRoi: number;
   realizedPnlUsd: number;
+  grossRealizedPnlUsd: number;
+  totalFeesPaidUsd: number;
   unrealizedPnlUsd: number;
   finalEquityUsd: number;
   maxDrawdown: number;
@@ -30,10 +33,18 @@ export function computeMetrics(input: {
   const realizedPnlUsd = round2(
     input.trades.filter((trade) => trade.side === "SELL").reduce((sum, trade) => sum + trade.realizedPnlUsd, 0),
   );
+  const totalFeesPaidUsd = round2(
+    input.trades.reduce((sum, trade) => sum + (trade.totalFeeUsd ?? 0), 0),
+  );
+  const grossRealizedPnlUsd = round2(realizedPnlUsd + totalFeesPaidUsd);
   const unrealizedPnlUsd = round2(input.openUnrealizedUsd);
   const finalEquityUsd = round2(input.finalEquityUsd);
   const totalRoi = round4(
     (finalEquityUsd - input.startingCapitalUsd) / input.startingCapitalUsd,
+  );
+  const grossRoi = round4(
+    (finalEquityUsd + totalFeesPaidUsd - input.startingCapitalUsd) /
+      input.startingCapitalUsd,
   );
 
   const roundTrips = buildRoundTrips(input.trades);
@@ -53,7 +64,10 @@ export function computeMetrics(input: {
 
   return {
     totalRoi,
+    grossRoi,
     realizedPnlUsd,
+    grossRealizedPnlUsd,
+    totalFeesPaidUsd,
     unrealizedPnlUsd,
     finalEquityUsd,
     maxDrawdown,

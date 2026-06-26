@@ -44,6 +44,8 @@ export interface ExitActionRecord {
   sellPrice: number;
   filled: boolean;
   realizedPnlUsd?: number;
+  estimatedFeeUsd?: number;
+  netProceedsUsd?: number;
 }
 
 export interface ExitPaperSummary {

@@ -3,6 +3,7 @@ import type { PositionExitState } from "../db/repositories/position.repository.j
 import { createExitEngine } from "../execution/exitEngine.js";
 import type { ExitEvaluation } from "../execution/exitTypes.js";
 import { computePassiveSellPrice } from "../execution/passiveBid.js";
+import { createFeeService } from "../fees/index.js";
 import { isExitLiquiditySufficient } from "./fillSimulator.js";
 import { updateExitState } from "./portfolio.js";
 import { buildSyntheticOrderBook } from "./syntheticOrderBook.js";
@@ -17,6 +18,7 @@ function createStubExitEngine(config: Config) {
     executionEngine: {} as never,
     paperTradingEngine: {} as never,
     riskEngine: {} as never,
+    feeService: createFeeService(config),
     logger: { debug: () => {}, info: () => {}, warn: () => {}, error: () => {} } as never,
   });
 }

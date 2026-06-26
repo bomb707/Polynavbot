@@ -3,6 +3,7 @@ import type { PaperOrder } from "@prisma/client";
 
 import type { Config } from "../config/index.js";
 import type { IRepositories } from "../db/repositories/index.js";
+import { createFeeService } from "../fees/feeService.js";
 import { createEntryEngine } from "./entryEngine.js";
 import type { OrderBook } from "../polymarket/publicTypes.js";
 
@@ -22,6 +23,14 @@ const orderBook: OrderBook = {
   bestBid: 0.02,
   bestAsk: 0.022,
   spread: 0.002,
+};
+
+const entryEngineExtras = {
+  feeService: createFeeService({ BUILDER_FEE_BPS: 0 }),
+  paperTradingEngine: {
+    getCashBalance: vi.fn().mockReturnValue(1000),
+    initialize: vi.fn().mockResolvedValue(undefined),
+  },
 };
 
 function makePaperOrder(id: string): PaperOrder {
@@ -119,6 +128,7 @@ describe("createEntryEngine", () => {
         order: { findPendingBuyByTokenId: vi.fn().mockResolvedValue(null) },
       } as unknown as IRepositories,
       logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
+      ...entryEngineExtras,
     });
 
     const summary = await engine.run();
@@ -209,6 +219,7 @@ describe("createEntryEngine", () => {
         order: { findPendingBuyByTokenId: vi.fn().mockResolvedValue(null) },
       } as unknown as IRepositories,
       logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
+      ...entryEngineExtras,
     });
 
     const summary = await engine.run();
@@ -301,6 +312,7 @@ describe("createEntryEngine", () => {
         order: { findPendingBuyByTokenId: vi.fn().mockResolvedValue(null) },
       } as unknown as IRepositories,
       logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
+      ...entryEngineExtras,
     });
 
     const summary = await engine.run();
@@ -377,6 +389,7 @@ describe("createEntryEngine", () => {
         },
       } as unknown as IRepositories,
       logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
+      ...entryEngineExtras,
     });
 
     const scan = {
@@ -451,6 +464,7 @@ describe("createEntryEngine", () => {
         },
       } as unknown as IRepositories,
       logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
+      ...entryEngineExtras,
     });
 
     const summary = await engine.run();

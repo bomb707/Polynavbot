@@ -78,6 +78,12 @@ enum StrategyRunMode {
   live
 }
 
+enum LiquidityRole {
+  maker
+  taker
+  unknown
+}
+
 model Market {
   id                 String   @id @default(cuid())
   polymarketMarketId String   @unique
@@ -90,6 +96,14 @@ model Market {
   archived           Boolean  @default(false)
   enableOrderBook    Boolean  @default(true)
   endDate            DateTime?
+  feesEnabled        Boolean  @default(false)
+  feeRate            Float    @default(0)
+  feeExponent        Int?
+  takerOnly          Boolean  @default(true)
+  makerBaseFeeBps    Int      @default(0)
+  takerBaseFeeBps    Int      @default(0)
+  feeCategory        String?
+  feeLastFetchedAt   DateTime?
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
@@ -190,11 +204,15 @@ model PaperOrder {
   side        OrderSide
   price       Decimal     @db.Decimal(18, 8)
   size        Decimal     @db.Decimal(18, 8)
-  notionalUsd Decimal     @db.Decimal(18, 8)
-  status      OrderStatus @default(PENDING)
-  filledAt    DateTime?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  notionalUsd              Decimal       @db.Decimal(18, 8)
+  estimatedPlatformFeeUsd  Decimal       @default(0) @db.Decimal(18, 8)
+  estimatedBuilderFeeUsd   Decimal       @default(0) @db.Decimal(18, 8)
+  estimatedTotalFeeUsd     Decimal       @default(0) @db.Decimal(18, 8)
+  liquidityRole            LiquidityRole @default(unknown)
+  status                   OrderStatus   @default(PENDING)
+  filledAt                 DateTime?
+  createdAt                DateTime      @default(now())
+  updatedAt                DateTime      @updatedAt
 
   signal  Signal? @relation(fields: [signalId], references: [id], onDelete: SetNull)
   market  Market  @relation(fields: [marketId], references: [id], onDelete: Cascade)
@@ -217,11 +235,15 @@ model LiveOrder {
   side            OrderSide
   price           Decimal     @db.Decimal(18, 8)
   size            Decimal     @db.Decimal(18, 8)
-  notionalUsd     Decimal     @db.Decimal(18, 8)
-  status          OrderStatus @default(PENDING)
-  rawResponse     Json?
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  notionalUsd              Decimal       @db.Decimal(18, 8)
+  estimatedPlatformFeeUsd  Decimal       @default(0) @db.Decimal(18, 8)
+  estimatedBuilderFeeUsd   Decimal       @default(0) @db.Decimal(18, 8)
+  estimatedTotalFeeUsd     Decimal       @default(0) @db.Decimal(18, 8)
+  liquidityRole            LiquidityRole @default(unknown)
+  status                   OrderStatus   @default(PENDING)
+  rawResponse              Json?
+  createdAt                DateTime      @default(now())
+  updatedAt                DateTime      @updatedAt
 
   market  Market  @relation(fields: [marketId], references: [id], onDelete: Cascade)
   outcome Outcome @relation(fields: [outcomeId], references: [id], onDelete: Cascade)
@@ -245,10 +267,15 @@ model Position {
   size             Decimal        @db.Decimal(18, 8)
   costBasisUsd     Decimal        @db.Decimal(18, 8)
   currentValueUsd  Decimal?       @db.Decimal(18, 8)
-  realizedPnlUsd   Decimal        @default(0) @db.Decimal(18, 8)
-  unrealizedPnlUsd Decimal?       @db.Decimal(18, 8)
-  exitState        Json?
-  status           PositionStatus @default(OPEN)
+  realizedPnlUsd        Decimal        @default(0) @db.Decimal(18, 8)
+  unrealizedPnlUsd      Decimal?       @db.Decimal(18, 8)
+  totalFeesPaidUsd      Decimal        @default(0) @db.Decimal(18, 8)
+  grossRealizedPnlUsd   Decimal        @default(0) @db.Decimal(18, 8)
+  netRealizedPnlUsd     Decimal        @default(0) @db.Decimal(18, 8)
+  grossUnrealizedPnlUsd Decimal?       @db.Decimal(18, 8)
+  netUnrealizedPnlUsd   Decimal?       @db.Decimal(18, 8)
+  exitState             Json?
+  status                PositionStatus @default(OPEN)
   openedAt         DateTime       @default(now())
   closedAt         DateTime?
   updatedAt        DateTime       @updatedAt
@@ -274,10 +301,16 @@ model Trade {
   side        OrderSide
   price       Decimal     @db.Decimal(18, 8)
   size        Decimal     @db.Decimal(18, 8)
-  notionalUsd Decimal     @db.Decimal(18, 8)
-  feeUsd      Decimal     @default(0) @db.Decimal(18, 8)
-  source      TradeSource
-  timestamp   DateTime    @default(now())
+  notionalUsd      Decimal       @db.Decimal(18, 8)
+  feeUsd           Decimal       @default(0) @db.Decimal(18, 8)
+  grossNotionalUsd Decimal       @default(0) @db.Decimal(18, 8)
+  platformFeeUsd   Decimal       @default(0) @db.Decimal(18, 8)
+  builderFeeUsd    Decimal       @default(0) @db.Decimal(18, 8)
+  totalFeeUsd      Decimal       @default(0) @db.Decimal(18, 8)
+  netNotionalUsd   Decimal       @default(0) @db.Decimal(18, 8)
+  liquidityRole    LiquidityRole @default(unknown)
+  source           TradeSource
+  timestamp        DateTime      @default(now())
 
   market  Market  @relation(fields: [marketId], references: [id], onDelete: Cascade)
   outcome Outcome @relation(fields: [outcomeId], references: [id], onDelete: Cascade)

@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { Position } from "@prisma/client";
 
 import type { Config } from "../config/index.js";
+import { createFeeService } from "../fees/feeService.js";
 import { createReportService } from "./reportService.js";
 import type { ReportSnapshot } from "./reportTypes.js";
 
@@ -56,6 +57,7 @@ describe("createReportService", () => {
       repositories: {
         position: {
           findOpen: vi.fn().mockResolvedValue(positions),
+          sumGrossRealizedPnl: vi.fn().mockResolvedValue(1),
         },
         market: {
           findById: vi.fn().mockImplementation(async (id: string) => ({
@@ -75,6 +77,8 @@ describe("createReportService", () => {
         trade: {
           findAllOrdered: vi.fn().mockResolvedValue([]),
           sumRealizedPnl: vi.fn(),
+          sumTotalFeesPaid: vi.fn().mockResolvedValue(0),
+          countByLiquidityRole: vi.fn().mockResolvedValue({ maker: 0, taker: 0, unknown: 0 }),
         },
       } as never,
       paperTradingEngine: {
@@ -89,6 +93,7 @@ describe("createReportService", () => {
       exitEngine: {
         previewExits: vi.fn().mockResolvedValue([]),
       } as never,
+      feeService: createFeeService({ BUILDER_FEE_BPS: 0 }),
     });
 
     const snapshot = await service.buildSnapshot();
@@ -104,12 +109,16 @@ describe("createReportService", () => {
     const service = createReportService({
       config,
       repositories: {
-        position: { findOpen: vi.fn().mockResolvedValue([]) },
+        position: { findOpen: vi.fn().mockResolvedValue([]), sumGrossRealizedPnl: vi.fn().mockResolvedValue(0) },
         market: { findById: vi.fn() },
         order: { countOpenPaperOrders: vi.fn().mockResolvedValue(0) },
         signal: { findRecent: vi.fn().mockResolvedValue([]) },
         riskEvent: { findRecent: vi.fn().mockResolvedValue([]) },
-        trade: { findAllOrdered: vi.fn().mockResolvedValue([]) },
+        trade: {
+          findAllOrdered: vi.fn().mockResolvedValue([]),
+          sumTotalFeesPaid: vi.fn().mockResolvedValue(0),
+          countByLiquidityRole: vi.fn().mockResolvedValue({ maker: 0, taker: 0, unknown: 0 }),
+        },
       } as never,
       paperTradingEngine: {
         initialize: vi.fn().mockResolvedValue(undefined),
@@ -121,6 +130,7 @@ describe("createReportService", () => {
         }),
       } as never,
       exitEngine: { previewExits: vi.fn().mockResolvedValue([]) } as never,
+      feeService: createFeeService({ BUILDER_FEE_BPS: 0 }),
     });
 
     const snapshot = await service.buildSnapshot();

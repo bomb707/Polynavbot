@@ -2,10 +2,17 @@ import type { OrderSide } from "@prisma/client";
 
 import type { PositionExitState } from "../db/repositories/position.repository.js";
 
+export type BacktestFeeMode =
+  | "maker_only"
+  | "taker_only"
+  | "mixed"
+  | "actual_if_available";
+
 export interface BacktestRunOptions {
   start: Date;
   end: Date;
   outputDir?: string;
+  feeMode?: BacktestFeeMode;
 }
 
 export interface BacktestConfig {
@@ -17,6 +24,7 @@ export interface BacktestConfig {
   minLiquidityForExit: number;
   startingCapitalUsd: number;
   seed: number;
+  feeMode: BacktestFeeMode;
 }
 
 export interface PriceBar {
@@ -31,6 +39,8 @@ export interface PriceBar {
   liquidity: number | null;
   source: "snapshot" | "clob";
 }
+
+import type { FeeParams } from "../fees/feeTypes.js";
 
 export interface BacktestMarketMeta {
   marketId: string;
@@ -47,6 +57,7 @@ export interface BacktestMarketMeta {
   liquidityUsd: number | null;
   volumeUsd: number | null;
   outcomeName: string;
+  feeParams?: FeeParams;
 }
 
 export interface BacktestOrder {
@@ -85,6 +96,8 @@ export interface BacktestTrade {
   sizeShares: number;
   notionalUsd: number;
   realizedPnlUsd: number;
+  totalFeeUsd: number;
+  liquidityRole: "maker" | "taker" | "unknown";
   reason: string;
 }
 
