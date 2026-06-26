@@ -41,6 +41,7 @@ export interface IPublicClient {
     limit: number,
     offset: number,
   ): Promise<ActivityItem[]>;
+  getAllUserActivity(walletAddress: string, maxItems?: number): Promise<ActivityItem[]>;
   normalizeMarket(rawMarket: unknown): NormalizedMarket | null;
   normalizeOutcome(
     rawMarket: unknown,
@@ -544,11 +545,46 @@ export function createPublicClient(
         side: item.side ?? null,
         size: toNumber(item.size),
         price: toNumber(item.price),
+        slug: typeof item.slug === "string" ? item.slug : null,
+        title: typeof item.title === "string" ? item.title : null,
+        conditionId:
+          typeof item.conditionId === "string"
+            ? item.conditionId
+            : typeof item.condition_id === "string"
+              ? item.condition_id
+              : null,
+        outcomeName:
+          typeof item.outcome === "string"
+            ? item.outcome
+            : typeof item.outcomeName === "string"
+              ? item.outcomeName
+              : null,
         raw: item as Record<string, unknown>,
       });
     }
 
     return items;
+  };
+
+  const getAllUserActivity = async (
+    walletAddress: string,
+    maxItems = 1000,
+  ): Promise<ActivityItem[]> => {
+    const pageSize = 100;
+    const collected: ActivityItem[] = [];
+
+    for (let offset = 0; collected.length < maxItems; offset += pageSize) {
+      const page = await getUserActivity(walletAddress, pageSize, offset);
+      if (page.length === 0) {
+        break;
+      }
+      collected.push(...page);
+      if (page.length < pageSize) {
+        break;
+      }
+    }
+
+    return collected.slice(0, maxItems);
   };
 
   const getClobMarketInfo = async (conditionId: string): Promise<ClobMarketInfo | null> => {
@@ -608,6 +644,7 @@ export function createPublicClient(
     getPricesHistory,
     getBacktestMarkets,
     getUserActivity,
+    getAllUserActivity,
     getClobMarketInfo,
     normalizeMarket,
     normalizeOutcome,

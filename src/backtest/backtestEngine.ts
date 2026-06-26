@@ -68,7 +68,10 @@ export function createBacktestEngine(deps: BacktestEngineDeps): IBacktestEngine 
 
       resetBacktestCounters();
       const rng = createSeededRng(backtestConfig.seed);
-      const dataset = await dataLoader.loadBacktestDataset(options.start, options.end);
+      const dataset = await dataLoader.loadBacktestDataset(options.start, options.end, {
+        mirrorWallet: options.mirrorWallet,
+        mirrorMaxItems: options.mirrorMaxItems,
+      });
       const timeline = buildTimeline(dataset);
       const startMs = options.start.getTime();
       const endMs = options.end.getTime();
@@ -118,6 +121,9 @@ export function createBacktestEngine(deps: BacktestEngineDeps): IBacktestEngine 
           }
           const meta = seriesMap.get(order.tokenId)?.meta;
           const question = meta?.question ?? order.tokenId;
+          if (order.side !== "BUY" && !portfolio.positions.has(order.tokenId)) {
+            continue;
+          }
           const trade =
             order.side === "BUY"
               ? portfolio.applyBuyFill(
@@ -246,6 +252,7 @@ export function createBacktestEngine(deps: BacktestEngineDeps): IBacktestEngine 
           tokensLoaded: dataset.series.length,
           dataSource: dataset.source,
           timelineSteps: timestamps.length,
+          mirrorWallet: options.mirrorWallet ?? null,
         },
         diagnostics: {
           entryEvaluations,

@@ -69,7 +69,7 @@ export async function writeMarkdownSummary(
     `| Worst losing streak | ${m.worstLosingStreak} |`,
     `| Total fills | ${m.totalTrades} |`,
     `| Tokens traded | ${result.tokensTraded} |`,
-    `| Data source | ${result.dataset.dataSource} |`,
+    `| Data source | ${result.dataset.dataSource}${result.dataset.mirrorWallet ? ` (${result.dataset.mirrorWallet.slice(0, 10)}…)` : ""} |`,
     `| Tokens loaded | ${result.dataset.tokensLoaded} |`,
     `| Timeline steps | ${result.dataset.timelineSteps} |`,
     "",

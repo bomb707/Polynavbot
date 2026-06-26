@@ -13,7 +13,16 @@ export interface BacktestRunOptions {
   end: Date;
   outputDir?: string;
   feeMode?: BacktestFeeMode;
+  mirrorWallet?: string;
+  mirrorMaxItems?: number;
 }
+
+export interface BacktestLoadOptions {
+  mirrorWallet?: string;
+  mirrorMaxItems?: number;
+}
+
+export type BacktestDataSource = "snapshots" | "database" | "gamma" | "wallet";
 
 export interface BacktestConfig {
   interval: string;
@@ -120,7 +129,7 @@ export interface BacktestDataset {
   start: Date;
   end: Date;
   series: BacktestTokenSeries[];
-  source: "snapshots" | "database" | "gamma";
+  source: BacktestDataSource;
 }
 
 export interface BacktestMetrics {
@@ -150,8 +159,9 @@ export interface BacktestResult {
   tokensTraded: number;
   dataset: {
     tokensLoaded: number;
-    dataSource: string;
+    dataSource: BacktestDataSource;
     timelineSteps: number;
+    mirrorWallet?: string | null;
   };
   diagnostics: {
     entryEvaluations: number;

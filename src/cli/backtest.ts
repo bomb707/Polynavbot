@@ -9,6 +9,8 @@ export interface BacktestCliOptions {
   end: string;
   outputDir?: string;
   feeMode?: "maker_only" | "taker_only" | "mixed" | "actual_if_available";
+  mirrorWallet?: string;
+  mirrorMaxItems?: number;
 }
 
 function parseDate(value: string, label: string): Date {
@@ -34,7 +36,12 @@ export async function runBacktest(
 
   const outputDir =
     options.outputDir ??
-    path.join("backtest-results", `${options.start}_${options.end}`);
+    path.join(
+      "backtest-results",
+      options.mirrorWallet
+        ? `${options.start}_${options.end}_wallet`
+        : `${options.start}_${options.end}`,
+    );
 
   const engine = createBacktestEngine({
     config: container.config,
@@ -43,7 +50,14 @@ export async function runBacktest(
     logger: container.logger,
   });
 
-  const result = await engine.run({ start, end, outputDir, feeMode: options.feeMode });
+  const result = await engine.run({
+    start,
+    end,
+    outputDir,
+    feeMode: options.feeMode,
+    mirrorWallet: options.mirrorWallet,
+    mirrorMaxItems: options.mirrorMaxItems,
+  });
   const files = await writeBacktestReports(outputDir, result);
 
   container.logger.info(

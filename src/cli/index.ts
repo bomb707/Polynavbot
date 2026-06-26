@@ -165,7 +165,22 @@ export function createCli(container: AppContainer): Command {
       "--fee-mode <mode>",
       "Fee assumption: maker_only, taker_only, mixed, or actual_if_available",
     )
-    .action(async (options: { start: string; end: string; outputDir?: string; feeMode?: string }) => {
+    .option(
+      "--mirror-wallet <address>",
+      "Backtest YES tokens from a wallet's Polymarket trade history (e.g. NyetRisk)",
+    )
+    .option(
+      "--mirror-max-items <count>",
+      "Max activity rows to fetch when mirroring a wallet (default 1000)",
+    )
+    .action(async (options: {
+      start: string;
+      end: string;
+      outputDir?: string;
+      feeMode?: string;
+      mirrorWallet?: string;
+      mirrorMaxItems?: string;
+    }) => {
       try {
         await runBacktest(container, {
           start: options.start,
@@ -177,6 +192,10 @@ export function createCli(container: AppContainer): Command {
             | "mixed"
             | "actual_if_available"
             | undefined,
+          mirrorWallet: options.mirrorWallet,
+          mirrorMaxItems: options.mirrorMaxItems
+            ? Number.parseInt(options.mirrorMaxItems, 10)
+            : undefined,
         });
         await container.shutdown();
         process.exit(0);

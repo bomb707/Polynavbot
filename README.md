@@ -131,6 +131,13 @@ pnpm backtest --start 2025-01-01 --end 2025-06-01 --fee-mode mixed
 
 Backtests load price history from local snapshots when available, then fall back to stored outcomes, then to the Polymarket Gamma + CLOB APIs for the requested date range. No prior paper-trading run is required, but the first run may take a few minutes while markets and CLOB history are fetched. Tune `BACKTEST_MAX_MARKETS` in `.env` to cap how many markets are discovered from Gamma (default `100`).
 
+Mirror a known wallet's YES longshot book (e.g. [NyetRisk](https://polymarket.com/0xc03ce4d8af842ca6251ac57228b3ffb166ed50af)):
+
+```bash
+pnpm backtest --start 2025-06-01 --end 2026-06-26 \
+  --mirror-wallet 0xc03ce4d8af842ca6251ac57228b3ffb166ed50af
+```
+
 Fee modes: `maker_only`, `taker_only`, `mixed` (default), `actual_if_available`.
 
 ## Scripts

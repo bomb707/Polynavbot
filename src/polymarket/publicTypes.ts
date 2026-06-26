@@ -69,6 +69,10 @@ export interface ActivityItem {
   side: string | null;
   size: number | null;
   price: number | null;
+  slug: string | null;
+  title: string | null;
+  conditionId: string | null;
+  outcomeName: string | null;
   raw: Record<string, unknown>;
 }
 

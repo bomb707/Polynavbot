@@ -2,10 +2,17 @@ import type { IRepositories } from "../db/repositories/index.js";
 import type { SnapshotTokenRef } from "../db/repositories/snapshot.repository.js";
 import type { ILogger } from "../logger/types.js";
 import type { IPublicClient } from "../polymarket/publicClient.js";
-import type { NormalizedMarket } from "../polymarket/publicTypes.js";
 import { toNumber } from "../execution/entryHelpers.js";
-import type { BacktestConfig, BacktestDataset, BacktestTokenSeries, PriceBar } from "./backtestTypes.js";
+import type {
+  BacktestConfig,
+  BacktestDataset,
+  BacktestDataSource,
+  BacktestLoadOptions,
+  BacktestTokenSeries,
+  PriceBar,
+} from "./backtestTypes.js";
 import { filterBarsInRange } from "./marketState.js";
+import { persistMarketForBacktest, resolveWalletTokenRefs } from "./walletMirror.js";
 
 export interface DataLoaderDeps {
   repositories: IRepositories;
@@ -78,50 +85,29 @@ function enrichClobBars(bars: PriceBar[], assumedLiquidityUsd: number): PriceBar
   );
 }
 
-async function persistMarketForBacktest(
-  repositories: IRepositories,
-  normalized: NormalizedMarket,
-): Promise<SnapshotTokenRef[]> {
-  const market = await repositories.market.upsertByPolymarketId({
-    polymarketMarketId: normalized.polymarketMarketId,
-    conditionId: normalized.conditionId,
-    question: normalized.question,
-    slug: normalized.slug,
-    category: normalized.category,
-    active: normalized.active,
-    closed: normalized.closed,
-    archived: normalized.archived,
-    enableOrderBook: normalized.enableOrderBook,
-    endDate: normalized.endDate,
-  });
-
-  const refs: SnapshotTokenRef[] = [];
-  for (const outcome of normalized.outcomes) {
-    const saved = await repositories.outcome.upsertByTokenId({
-      marketId: market.id,
-      tokenId: outcome.tokenId,
-      name: outcome.name,
-      side: outcome.side,
-      currentPrice: outcome.price,
-      liquidity: normalized.liquidityUsd,
-      volume: normalized.volumeUsd,
-    });
-    refs.push({
-      tokenId: saved.tokenId,
-      marketId: market.id,
-      outcomeId: saved.id,
-    });
-  }
-
-  return refs;
-}
-
 async function resolveTokenRefs(
   deps: DataLoaderDeps,
   start: Date,
   end: Date,
-): Promise<{ refs: SnapshotTokenRef[]; source: "snapshots" | "database" | "gamma" }> {
+  loadOptions?: BacktestLoadOptions,
+): Promise<{ refs: SnapshotTokenRef[]; source: BacktestDataSource }> {
   const { repositories, publicClient, logger, config } = deps;
+
+  if (loadOptions?.mirrorWallet) {
+    const walletResult = await resolveWalletTokenRefs(
+      publicClient,
+      repositories,
+      logger,
+      loadOptions.mirrorWallet,
+      loadOptions.mirrorMaxItems ?? 1000,
+    );
+    if (walletResult.refs.length === 0) {
+      throw new Error(
+        `No YES tokens resolved from wallet ${loadOptions.mirrorWallet} (skipped NO: ${walletResult.skippedNoTokens}, missing slug: ${walletResult.skippedMissingSlug})`,
+      );
+    }
+    return { refs: walletResult.refs, source: "wallet" };
+  }
 
   const fromSnapshots = await repositories.snapshot.findDistinctTokensInRange(start, end);
   if (fromSnapshots.length > 0) {
@@ -166,8 +152,12 @@ export function createDataLoader(deps: DataLoaderDeps) {
   const { repositories, publicClient, logger, config } = deps;
 
   return {
-    async loadBacktestDataset(start: Date, end: Date): Promise<BacktestDataset> {
-      const { refs: tokenRefs, source } = await resolveTokenRefs(deps, start, end);
+    async loadBacktestDataset(
+      start: Date,
+      end: Date,
+      loadOptions?: BacktestLoadOptions,
+    ): Promise<BacktestDataset> {
+      const { refs: tokenRefs, source } = await resolveTokenRefs(deps, start, end, loadOptions);
       const series: BacktestTokenSeries[] = [];
 
       for (const ref of tokenRefs) {
@@ -236,6 +226,7 @@ export function createDataLoader(deps: DataLoaderDeps) {
         {
           tokenCount: series.length,
           source,
+          mirrorWallet: loadOptions?.mirrorWallet ?? null,
           start: start.toISOString(),
           end: end.toISOString(),
         },
