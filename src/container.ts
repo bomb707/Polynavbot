@@ -1,6 +1,6 @@
 import type { Config } from "./config/index.js";
-import { createDbClient } from "./db/client.js";
-import type { IDbClient } from "./db/types.js";
+import { createDbClient, createRepositories } from "./db/client.js";
+import type { IDbClient, IRepositories } from "./db/types.js";
 import { createExecutionService } from "./execution/index.js";
 import type { IExecutionService } from "./execution/types.js";
 import { createQueueManager } from "./jobs/queue.js";
@@ -34,6 +34,7 @@ export class AppContainer {
   private _execution?: IExecutionService;
   private _paperTrader?: IPaperTrader;
   private _positionStore?: IPositionStore;
+  private _repositories?: IRepositories;
 
   constructor(readonly config: Config) {}
 
@@ -112,6 +113,13 @@ export class AppContainer {
       this._positionStore = createPositionStore(this.logger);
     }
     return this._positionStore;
+  }
+
+  get repositories(): IRepositories {
+    if (!this._repositories) {
+      this._repositories = createRepositories(this.db.prisma);
+    }
+    return this._repositories;
   }
 
   async shutdown(): Promise<void> {

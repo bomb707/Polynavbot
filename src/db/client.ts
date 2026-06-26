@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 
 import type { Config } from "../config/index.js";
+import { createRepositories } from "./repositories/index.js";
+import type { IRepositories } from "./repositories/index.js";
 import type { IDbClient } from "./types.js";
 
 export function createDbClient(config: Config): IDbClient {
@@ -20,3 +22,6 @@ export function createDbClient(config: Config): IDbClient {
     },
   };
 }
+
+export { createRepositories };
+export type { IRepositories };
