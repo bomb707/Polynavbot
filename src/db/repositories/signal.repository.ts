@@ -18,6 +18,8 @@ export interface ISignalRepository {
   findById(id: string): Promise<Signal | null>;
   findByStatus(status: SignalStatus): Promise<Signal[]>;
   findByTokenId(tokenId: string): Promise<Signal[]>;
+  findRecentEntrySignal(tokenId: string, since: Date): Promise<Signal | null>;
+  hasPaperOrder(signalId: string): Promise<boolean>;
   updateStatus(id: string, status: SignalStatus): Promise<Signal>;
 }
 
@@ -55,6 +57,26 @@ export function createSignalRepository(prisma: PrismaClient): ISignalRepository 
         where: { tokenId },
         orderBy: { createdAt: "desc" },
       });
+    },
+
+    findRecentEntrySignal(tokenId, since) {
+      return prisma.signal.findFirst({
+        where: {
+          tokenId,
+          signalType: "LONGSHOT_ENTRY",
+          status: { in: ["APPROVED", "EXECUTED"] },
+          createdAt: { gte: since },
+        },
+        orderBy: { createdAt: "desc" },
+      });
+    },
+
+    async hasPaperOrder(signalId) {
+      const order = await prisma.paperOrder.findUnique({
+        where: { signalId },
+        select: { id: true },
+      });
+      return order != null;
     },
 
     updateStatus(id, status) {

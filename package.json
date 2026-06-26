@@ -18,7 +18,9 @@
     "paper:run": "tsx src/index.ts paper:run",
     "entry:paper": "tsx src/index.ts entry:paper",
     "exit:paper": "tsx src/index.ts exit:paper",
-    "positions:update": "tsx src/index.ts positions:update"
+    "positions:update": "tsx src/index.ts positions:update",
+    "worker": "tsx src/index.ts worker",
+    "scheduler": "tsx src/index.ts scheduler"
   },
   "dependencies": {
     "@prisma/client": "^6.9.0",

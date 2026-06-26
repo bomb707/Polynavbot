@@ -7,6 +7,8 @@ import { runHealthCheck } from "./health.js";
 import { formatPaperRunSummary, runPaperTrading } from "./paperRun.js";
 import { formatPositionsUpdateSummary, runPositionsUpdate } from "./positionsUpdate.js";
 import { formatScanSummary, runScan } from "./scan.js";
+import { runScheduler } from "./scheduler.js";
+import { runWorker } from "./worker.js";
 
 export function createCli(container: AppContainer): Command {
   const program = new Command();
@@ -109,6 +111,36 @@ export function createCli(container: AppContainer): Command {
       try {
         const summary = await runPositionsUpdate(container);
         console.log(formatPositionsUpdateSummary(summary));
+        await container.shutdown();
+        process.exit(0);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(message);
+        await container.shutdown();
+        process.exit(1);
+      }
+    });
+
+  program
+    .command("worker")
+    .description("Run BullMQ job workers for scheduled paper trading tasks")
+    .action(async () => {
+      try {
+        await runWorker(container);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(message);
+        await container.shutdown();
+        process.exit(1);
+      }
+    });
+
+  program
+    .command("scheduler")
+    .description("Register repeatable BullMQ job schedules")
+    .action(async () => {
+      try {
+        await runScheduler(container);
         await container.shutdown();
         process.exit(0);
       } catch (error) {

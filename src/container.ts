@@ -34,6 +34,7 @@ import type { IMarketScanner } from "./scanner/types.js";
 import { createStrategy, createLongshotScorer } from "./strategy/index.js";
 import type { IStrategy } from "./strategy/types.js";
 import type { ILongshotScorer } from "./strategy/longshotScorer.js";
+import { stopWorkers } from "./jobs/worker.js";
 
 export class AppContainer {
   private _logger?: ILogger;
@@ -229,6 +230,8 @@ export class AppContainer {
   }
 
   async shutdown(): Promise<void> {
+    await stopWorkers();
+
     const tasks: Promise<void>[] = [];
 
     if (this._queueManager) {

@@ -12,6 +12,7 @@ const config = {
   MAX_ENTRY_PRICE: 0.04,
   MAX_SPREAD: 0.03,
   MIN_ORDER_SIZE_USD: 0.5,
+  ENTRY_SIGNAL_DEDUP_MINUTES: 10,
 } as Config;
 
 const orderBook: OrderBook = {
@@ -106,7 +107,12 @@ describe("createEntryEngine", () => {
             updatedAt: new Date(),
           }),
         },
-        signal: { create: vi.fn() },
+        signal: {
+          create: vi.fn(),
+          findRecentEntrySignal: vi.fn().mockResolvedValue(null),
+          hasPaperOrder: vi.fn().mockResolvedValue(false),
+        },
+        order: { findPendingBuyByTokenId: vi.fn().mockResolvedValue(null) },
       } as unknown as IRepositories,
       logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
     });
@@ -187,7 +193,12 @@ describe("createEntryEngine", () => {
             updatedAt: new Date(),
           }),
         },
-        signal: { create: vi.fn() },
+        signal: {
+          create: vi.fn(),
+          findRecentEntrySignal: vi.fn().mockResolvedValue(null),
+          hasPaperOrder: vi.fn().mockResolvedValue(false),
+        },
+        order: { findPendingBuyByTokenId: vi.fn().mockResolvedValue(null) },
       } as unknown as IRepositories,
       logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
     });
@@ -271,7 +282,10 @@ describe("createEntryEngine", () => {
         },
         signal: {
           create: vi.fn().mockResolvedValue({ id: "signal-1" }),
+          findRecentEntrySignal: vi.fn().mockResolvedValue(null),
+          hasPaperOrder: vi.fn().mockResolvedValue(false),
         },
+        order: { findPendingBuyByTokenId: vi.fn().mockResolvedValue(null) },
       } as unknown as IRepositories,
       logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
     });
@@ -288,5 +302,140 @@ describe("createEntryEngine", () => {
         skipRiskCheck: true,
       }),
     );
+  });
+
+  it("uses provided scan without calling scanner", async () => {
+    const scanMarkets = vi.fn();
+    const engine = createEntryEngine({
+      config,
+      scanner: { scanMarkets },
+      scorer: {
+        score: vi.fn().mockReturnValue({
+          score: 40,
+          decision: "watchlist",
+          reasons: ["Low score"],
+          suggestedEntryPrice: 0.022,
+          suggestedSizeUsd: 1.5,
+        }),
+      },
+      riskEngine: { checkOrder: vi.fn() },
+      paperTradingEngine: {
+        initialize: vi.fn(),
+        placeLimitOrder: vi.fn(),
+      },
+      publicClient: {
+        getOrderBook: vi.fn().mockResolvedValue(orderBook),
+      },
+      repositories: {
+        market: {
+          findById: vi.fn().mockResolvedValue({
+            id: "market-1",
+            question: "Will X win?",
+            category: "politics",
+            active: true,
+            closed: false,
+            archived: false,
+            enableOrderBook: true,
+            endDate: null,
+          }),
+        },
+        outcome: {
+          findByTokenId: vi.fn().mockResolvedValue({
+            id: "outcome-1",
+            tokenId: "token-1",
+            name: "Yes",
+            side: "YES",
+            liquidity: { toNumber: () => 5000 },
+            currentPrice: { toNumber: () => 0.02 },
+            updatedAt: new Date(),
+          }),
+        },
+        order: {
+          findPendingBuyByTokenId: vi.fn().mockResolvedValue(null),
+        },
+        signal: {
+          findRecentEntrySignal: vi.fn().mockResolvedValue(null),
+          hasPaperOrder: vi.fn().mockResolvedValue(false),
+          create: vi.fn(),
+        },
+      } as unknown as IRepositories,
+      logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
+    });
+
+    const scan = {
+      marketsScanned: 5,
+      outcomesScanned: 10,
+      candidatesFound: 1,
+      skipped: {},
+      candidates: [
+        {
+          marketId: "market-1",
+          outcomeId: "outcome-1",
+          tokenId: "token-1",
+          question: "Will X win?",
+          outcomeName: "Yes",
+          price: 0.02,
+          endDate: null,
+          outcomeCount: 2,
+        },
+      ],
+    };
+
+    await engine.run({ scan });
+
+    expect(scanMarkets).not.toHaveBeenCalled();
+  });
+
+  it("skips entry when pending BUY order exists", async () => {
+    const placeLimitOrder = vi.fn();
+    const engine = createEntryEngine({
+      config,
+      scanner: {
+        scanMarkets: vi.fn().mockResolvedValue({
+          marketsScanned: 1,
+          outcomesScanned: 2,
+          candidatesFound: 1,
+          skipped: {},
+          candidates: [
+            {
+              marketId: "market-1",
+              outcomeId: "outcome-1",
+              tokenId: "token-1",
+              question: "Will X win?",
+              outcomeName: "Yes",
+              price: 0.02,
+              endDate: null,
+              outcomeCount: 2,
+            },
+          ],
+        }),
+      },
+      scorer: { score: vi.fn() },
+      riskEngine: { checkOrder: vi.fn() },
+      paperTradingEngine: {
+        initialize: vi.fn(),
+        placeLimitOrder,
+      },
+      publicClient: { getOrderBook: vi.fn() },
+      repositories: {
+        market: { findById: vi.fn().mockResolvedValue({ id: "market-1" }) },
+        outcome: { findByTokenId: vi.fn().mockResolvedValue({ id: "outcome-1" }) },
+        order: {
+          findPendingBuyByTokenId: vi.fn().mockResolvedValue(makePaperOrder("pending-1")),
+        },
+        signal: {
+          findRecentEntrySignal: vi.fn(),
+          hasPaperOrder: vi.fn(),
+          create: vi.fn(),
+        },
+      } as unknown as IRepositories,
+      logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
+    });
+
+    const summary = await engine.run();
+
+    expect(summary.rejected).toHaveLength(1);
+    expect(summary.rejected[0]?.stage).toBe("idempotency");
+    expect(placeLimitOrder).not.toHaveBeenCalled();
   });
 });

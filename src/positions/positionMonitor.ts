@@ -4,7 +4,7 @@ import type { Config } from "../config/index.js";
 import { isPaperMode } from "../config/index.js";
 import type { IRepositories } from "../db/repositories/index.js";
 import { toNumber } from "../execution/entryHelpers.js";
-import type { IExitEngine } from "../execution/exitTypes.js";
+import type { IExitEngine, ExitPaperSummary } from "../execution/exitTypes.js";
 import type { ILogger } from "../logger/types.js";
 import { midPrice, orderBookLiquidity } from "../polymarket/orderBookPricing.js";
 import type { IPublicClient } from "../polymarket/publicClient.js";
@@ -13,8 +13,18 @@ import type {
   ExitEligiblePosition,
   IPositionMonitor,
   PositionHighlight,
+  PositionMonitorRunOptions,
   PositionMonitorSummary,
 } from "./positionMonitorTypes.js";
+
+const emptyExitResult: ExitPaperSummary = {
+  positionsEvaluated: 0,
+  holds: 0,
+  exitsPlaced: 0,
+  exitsFilled: 0,
+  totalRealizedPnlUsd: 0,
+  actions: [],
+};
 
 export interface PositionMonitorDeps {
   config: Config;
@@ -66,7 +76,8 @@ export function createPositionMonitor(deps: PositionMonitorDeps): IPositionMonit
   const { config, repositories, publicClient, paperTradingEngine, exitEngine, logger } = deps;
 
   return {
-    async run(): Promise<PositionMonitorSummary> {
+    async run(options?: PositionMonitorRunOptions): Promise<PositionMonitorSummary> {
+      const runExits = options?.runExits ?? true;
       if (!isPaperMode(config)) {
         throw new Error("positions:update requires TRADING_MODE=paper");
       }
@@ -109,7 +120,7 @@ export function createPositionMonitor(deps: PositionMonitorDeps): IPositionMonit
         snapshotsSaved += 1;
       }
 
-      const exitResult = await exitEngine.run();
+      const exitResult = runExits ? await exitEngine.run() : emptyExitResult;
       const portfolio = await paperTradingEngine.getPortfolioSummary();
 
       const openExposureUsd = round8(

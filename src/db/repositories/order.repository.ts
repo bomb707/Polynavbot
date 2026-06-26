@@ -40,6 +40,7 @@ export interface IOrderRepository {
   findLiveById(id: string): Promise<LiveOrder | null>;
   findLiveByExternalId(externalOrderId: string): Promise<LiveOrder | null>;
   findPendingPaperOrders(): Promise<PaperOrder[]>;
+  findPendingBuyByTokenId(tokenId: string): Promise<PaperOrder | null>;
   countPendingPaperOrders(): Promise<number>;
   updatePaperStatus(
     id: string,
@@ -108,6 +109,17 @@ export function createOrderRepository(prisma: PrismaClient): IOrderRepository {
           status: { in: ["PENDING", "PARTIALLY_FILLED"] },
         },
         orderBy: { createdAt: "asc" },
+      });
+    },
+
+    findPendingBuyByTokenId(tokenId) {
+      return prisma.paperOrder.findFirst({
+        where: {
+          tokenId,
+          side: "BUY",
+          status: { in: ["PENDING", "PARTIALLY_FILLED"] },
+        },
+        orderBy: { createdAt: "desc" },
       });
     },
 

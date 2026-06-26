@@ -1,5 +1,4 @@
-import type { ExitPaperSummary } from "../execution/exitTypes.js";
-import type { ExitAction, ExitReason } from "../execution/exitTypes.js";
+import type { ExitAction, ExitPaperSummary, ExitReason } from "../execution/exitTypes.js";
 
 export interface PositionHighlight {
   tokenId: string;
@@ -35,6 +34,10 @@ export interface PositionMonitorSummary {
   exitResult: ExitPaperSummary;
 }
 
+export interface PositionMonitorRunOptions {
+  runExits?: boolean;
+}
+
 export interface IPositionMonitor {
-  run(): Promise<PositionMonitorSummary>;
+  run(options?: PositionMonitorRunOptions): Promise<PositionMonitorSummary>;
 }

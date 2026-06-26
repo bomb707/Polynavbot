@@ -59,6 +59,11 @@ export const envSchema = z
     EXIT_TRAILING_STOP_PCT: z.coerce.number().positive().max(1).default(0.6),
     EXIT_MIN_LIQUIDITY_USD: z.coerce.number().positive().default(1000),
 
+    JOB_CONCURRENCY: z.coerce.number().int().positive().default(1),
+    ENTRY_SIGNAL_DEDUP_MINUTES: z.coerce.number().int().positive().default(10),
+    JOB_ATTEMPTS: z.coerce.number().int().positive().default(3),
+    JOB_BACKOFF_MS: z.coerce.number().int().positive().default(5000),
+
     PRIVATE_KEY: z.string().min(1).optional(),
     DEPOSIT_WALLET_ADDRESS: z.string().min(1).optional(),
     POLY_API_KEY: z.string().min(1).optional(),

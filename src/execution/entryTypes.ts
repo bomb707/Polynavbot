@@ -1,7 +1,11 @@
 import type { ScanOptions, ScanSummary } from "../scanner/types.js";
 import type { LongshotDecision } from "../strategy/longshotTypes.js";
 
-export type EntryRejectStage = "score" | "bid" | "size" | "risk" | "order";
+export type EntryRejectStage = "score" | "bid" | "size" | "risk" | "order" | "idempotency";
+
+export interface EntryRunOptions extends ScanOptions {
+  scan?: ScanSummary;
+}
 
 export interface EntryCandidateRecord {
   tokenId: string;
@@ -38,5 +42,5 @@ export interface EntryPaperSummary {
 }
 
 export interface IEntryEngine {
-  run(options?: ScanOptions): Promise<EntryPaperSummary>;
+  run(options?: EntryRunOptions): Promise<EntryPaperSummary>;
 }
