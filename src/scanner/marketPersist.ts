@@ -68,6 +68,10 @@ export async function saveMarketAndOutcomes(
       name: outcome.name,
       side: outcome.side,
       currentPrice: outcome.price,
+      ...(normalized.liquidityUsd != null
+        ? { liquidity: normalized.liquidityUsd }
+        : {}),
+      ...(normalized.volumeUsd != null ? { volume: normalized.volumeUsd } : {}),
     });
     outcomes.push(saved);
   }
