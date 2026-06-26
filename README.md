@@ -156,3 +156,19 @@ pnpm start -- health
 ## License
 
 Private — not for public distribution.
+
+## test
+pnpm paper:run
+pnpm paper:run -- --max-pages 1 --limit-per-page 20
+pnpm entry:paper -- --max-pages 1
+pnpm exit:paper
+pnpm positions:update
+pnpm report
+## ongoing test
+# teminal 1
+pnpm worker
+ # teminal 2
+ pnpm scheduler
+
+
+ pnpm ws:monitor
