@@ -5,6 +5,7 @@ import type { IPublicClient } from "../polymarket/publicClient.js";
 import type { NormalizedMarket } from "../polymarket/publicTypes.js";
 import { toNumber } from "../execution/entryHelpers.js";
 import type { BacktestConfig, BacktestDataset, BacktestTokenSeries, PriceBar } from "./backtestTypes.js";
+import { filterBarsInRange } from "./marketState.js";
 
 export interface DataLoaderDeps {
   repositories: IRepositories;
@@ -69,6 +70,14 @@ export function mergePriceBars(snapshots: PriceBar[], clobBars: PriceBar[]): Pri
   return [...byTs.values()].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
 }
 
+function enrichClobBars(bars: PriceBar[], assumedLiquidityUsd: number): PriceBar[] {
+  return bars.map((bar) =>
+    bar.source === "clob" && bar.liquidity == null
+      ? { ...bar, liquidity: assumedLiquidityUsd }
+      : bar,
+  );
+}
+
 async function persistMarketForBacktest(
   repositories: IRepositories,
   normalized: NormalizedMarket,
@@ -94,6 +103,8 @@ async function persistMarketForBacktest(
       name: outcome.name,
       side: outcome.side,
       currentPrice: outcome.price,
+      liquidity: normalized.liquidityUsd,
+      volume: normalized.volumeUsd,
     });
     refs.push({
       tokenId: saved.tokenId,
@@ -186,10 +197,18 @@ export function createDataLoader(deps: DataLoaderDeps) {
         );
 
         bars = mergePriceBars(bars, clobBars);
+        bars = filterBarsInRange(bars, start, end);
 
         if (bars.length === 0) {
           continue;
         }
+
+        if (outcome.side !== "YES") {
+          continue;
+        }
+
+        const assumedLiquidity = toNumber(outcome.liquidity) ?? config.minLiquidityUsd;
+        bars = enrichClobBars(bars, assumedLiquidity);
 
         series.push({
           meta: {
@@ -204,9 +223,10 @@ export function createDataLoader(deps: DataLoaderDeps) {
             archived: market.archived,
             enableOrderBook: market.enableOrderBook,
             outcomeCount: 2,
-            liquidityUsd: toNumber(outcome.liquidity),
+            liquidityUsd: toNumber(outcome.liquidity) ?? config.minLiquidityUsd,
             volumeUsd: toNumber(outcome.volume),
             outcomeName: outcome.name,
+            outcomeSide: outcome.side,
           },
           bars,
         });
@@ -222,17 +242,22 @@ export function createDataLoader(deps: DataLoaderDeps) {
         "Backtest dataset loaded",
       );
 
-      return { start, end, series };
+      return { start, end, series, source };
     },
   };
 }
 
 export function buildTimeline(dataset: BacktestDataset): Map<number, PriceBar[]> {
   const timeline = new Map<number, PriceBar[]>();
+  const startMs = dataset.start.getTime();
+  const endMs = dataset.end.getTime();
 
   for (const tokenSeries of dataset.series) {
     for (const bar of tokenSeries.bars) {
       const key = bar.timestamp.getTime();
+      if (key < startMs || key > endMs) {
+        continue;
+      }
       const bucket = timeline.get(key) ?? [];
       bucket.push(bar);
       timeline.set(key, bucket);

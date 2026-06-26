@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 const mockDataset = {
   start: new Date("2026-01-01T00:00:00.000Z"),
   end: new Date("2026-01-01T03:00:00.000Z"),
+  source: "snapshots" as const,
   series: [
     {
       meta: {
@@ -20,6 +21,7 @@ const mockDataset = {
         liquidityUsd: 5000,
         volumeUsd: 1000,
         outcomeName: "Yes",
+        outcomeSide: "YES" as const,
       },
       bars: [
         {
@@ -107,6 +109,8 @@ const config = {
   BACKTEST_MIN_LIQUIDITY_FOR_EXIT: 100,
   BACKTEST_STARTING_CAPITAL_USD: 500,
   BACKTEST_SEED: 1,
+  BACKTEST_MAX_MARKETS: 100,
+  MIN_LIQUIDITY_USD: 1000,
 } as never;
 
 describe("createBacktestEngine", () => {

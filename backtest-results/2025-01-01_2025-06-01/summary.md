@@ -19,6 +19,21 @@ Period: 2025-01-01T00:00:00.000Z → 2025-06-01T00:00:00.000Z
 | Worst losing streak | 0 |
 | Total fills | 0 |
 | Tokens traded | 0 |
+| Data source | gamma |
+| Tokens loaded | 14 |
+| Timeline steps | 98 |
+
+## Entry diagnostics
+
+| Metric | Value |
+|--------|-------|
+| Entry evaluations | 636 |
+| Orders placed | 0 |
+
+| Rejection reason | Count |
+|------------------|-------|
+| price_out_of_band | 597 |
+| score_reject | 39 |
 
 ## Top exits
 

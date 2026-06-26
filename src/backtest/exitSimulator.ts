@@ -8,6 +8,7 @@ import { isExitLiquiditySufficient } from "./fillSimulator.js";
 import { updateExitState } from "./portfolio.js";
 import { buildSyntheticOrderBook } from "./syntheticOrderBook.js";
 import type { BacktestConfig, BacktestMarketMeta, BacktestOrder, BacktestPosition, PriceBar } from "./backtestTypes.js";
+import { resolveHistoricalMarketFlags } from "./marketState.js";
 import { nextOrderId } from "./portfolio.js";
 
 function createStubExitEngine(config: Config) {
@@ -41,6 +42,7 @@ export function evaluateExitForBar(
   const orderBook = buildSyntheticOrderBook(bar, backtestConfig);
   const currentPrice = bar.price;
   const exitState = updateExitState(position.exitState, currentPrice, position.avgEntryPrice);
+  const historicalFlags = resolveHistoricalMarketFlags(meta, bar.timestamp);
 
   const evaluation = exitEngine.evaluateExit({
     position: {
@@ -66,8 +68,8 @@ export function evaluateExitForBar(
     currentPrice,
     orderBook,
     market: {
-      active: meta.active,
-      closed: meta.closed,
+      active: historicalFlags.active,
+      closed: historicalFlags.closed,
       endDate: meta.endDate,
     },
     liquidityUsd: bar.liquidity ?? meta.liquidityUsd,

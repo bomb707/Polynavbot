@@ -17,6 +17,8 @@ export interface NormalizedMarket {
   archived: boolean;
   enableOrderBook: boolean;
   endDate: Date | null;
+  liquidityUsd: number | null;
+  volumeUsd: number | null;
   outcomes: NormalizedOutcome[];
 }
 

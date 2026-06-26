@@ -26,6 +26,7 @@ export interface BacktestConfig {
   seed: number;
   feeMode: BacktestFeeMode;
   maxMarkets: number;
+  minLiquidityUsd: number;
 }
 
 export interface PriceBar {
@@ -58,6 +59,7 @@ export interface BacktestMarketMeta {
   liquidityUsd: number | null;
   volumeUsd: number | null;
   outcomeName: string;
+  outcomeSide: "YES" | "NO";
   feeParams?: FeeParams;
 }
 
@@ -118,6 +120,7 @@ export interface BacktestDataset {
   start: Date;
   end: Date;
   series: BacktestTokenSeries[];
+  source: "snapshots" | "database" | "gamma";
 }
 
 export interface BacktestMetrics {
@@ -145,6 +148,16 @@ export interface BacktestResult {
   trades: BacktestTrade[];
   equityCurve: EquityPoint[];
   tokensTraded: number;
+  dataset: {
+    tokensLoaded: number;
+    dataSource: string;
+    timelineSteps: number;
+  };
+  diagnostics: {
+    entryEvaluations: number;
+    ordersPlaced: number;
+    entryRejections: Record<string, number>;
+  };
 }
 
 export interface IBacktestEngine {

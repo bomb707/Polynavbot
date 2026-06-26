@@ -69,10 +69,30 @@ export async function writeMarkdownSummary(
     `| Worst losing streak | ${m.worstLosingStreak} |`,
     `| Total fills | ${m.totalTrades} |`,
     `| Tokens traded | ${result.tokensTraded} |`,
+    `| Data source | ${result.dataset.dataSource} |`,
+    `| Tokens loaded | ${result.dataset.tokensLoaded} |`,
+    `| Timeline steps | ${result.dataset.timelineSteps} |`,
     "",
-    "## Top exits",
+    "## Entry diagnostics",
+    "",
+    `| Metric | Value |`,
+    `|--------|-------|`,
+    `| Entry evaluations | ${result.diagnostics.entryEvaluations} |`,
+    `| Orders placed | ${result.diagnostics.ordersPlaced} |`,
     "",
   ];
+
+  const rejectionEntries = Object.entries(result.diagnostics.entryRejections);
+  if (rejectionEntries.length === 0) {
+    lines.push("_No entry evaluations recorded._");
+  } else {
+    lines.push("| Rejection reason | Count |", "|------------------|-------|");
+    for (const [reason, count] of rejectionEntries) {
+      lines.push(`| ${reason} | ${count} |`);
+    }
+  }
+
+  lines.push("", "## Top exits", "");
 
   if (topTrades.length === 0) {
     lines.push("(none)");

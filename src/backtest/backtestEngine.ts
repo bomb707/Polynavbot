@@ -8,6 +8,7 @@ import { buildPriceHistory, evaluateEntry } from "./entrySimulator.js";
 import { evaluateExitForBar } from "./exitSimulator.js";
 import { simulateConservativeFill } from "./fillSimulator.js";
 import { computeMetrics } from "./metrics.js";
+import { EntryRejectionTracker } from "./marketState.js";
 import { createFeeService } from "../fees/index.js";
 import {
   BacktestPortfolio,
@@ -69,8 +70,15 @@ export function createBacktestEngine(deps: BacktestEngineDeps): IBacktestEngine 
       const rng = createSeededRng(backtestConfig.seed);
       const dataset = await dataLoader.loadBacktestDataset(options.start, options.end);
       const timeline = buildTimeline(dataset);
-      const timestamps = [...timeline.keys()].sort((a, b) => a - b);
+      const startMs = options.start.getTime();
+      const endMs = options.end.getTime();
+      const timestamps = [...timeline.keys()]
+        .filter((ts) => ts >= startMs && ts <= endMs)
+        .sort((a, b) => a - b);
       const seriesMap = seriesByToken(dataset.series);
+      const entryRejections = new EntryRejectionTracker();
+      let entryEvaluations = 0;
+      let ordersPlaced = 0;
 
       const portfolio = new BacktestPortfolio(
         backtestConfig.startingCapitalUsd,
@@ -172,8 +180,12 @@ export function createBacktestEngine(deps: BacktestEngineDeps): IBacktestEngine 
             priceHistory,
             feeService,
           );
+          entryEvaluations += 1;
           if (entry.placed && entry.order) {
+            ordersPlaced += 1;
             portfolio.placeOrder(entry.order);
+          } else if (entry.reason) {
+            entryRejections.record(entry.reason);
           }
         }
 
@@ -230,6 +242,16 @@ export function createBacktestEngine(deps: BacktestEngineDeps): IBacktestEngine 
         trades: portfolio.trades,
         equityCurve: portfolio.equityCurve,
         tokensTraded,
+        dataset: {
+          tokensLoaded: dataset.series.length,
+          dataSource: dataset.source,
+          timelineSteps: timestamps.length,
+        },
+        diagnostics: {
+          entryEvaluations,
+          ordersPlaced,
+          entryRejections: entryRejections.toSortedRecord(),
+        },
       };
     },
   };

@@ -2,6 +2,7 @@ import type { Config } from "../config/index.js";
 import type { ILogger } from "../logger/types.js";
 import { createHttpClient, type HttpClient } from "./http.js";
 import {
+  extractLiquidity,
   parseNumberArrayField,
   parseStringArrayField,
   rawActivityItemSchema,
@@ -192,6 +193,22 @@ export function createPublicClient(
       enableOrderBook:
         market.enableOrderBook ?? market.enable_order_book ?? false,
       endDate: parseDate(market.endDate ?? market.end_date_iso),
+      liquidityUsd: (() => {
+        const value = extractLiquidity(rawMarket);
+        return value > 0 ? value : null;
+      })(),
+      volumeUsd: (() => {
+        for (const candidate of [market.volumeNum, market.volume]) {
+          if (candidate === null || candidate === undefined) {
+            continue;
+          }
+          const num = Number(candidate);
+          if (Number.isFinite(num) && num > 0) {
+            return num;
+          }
+        }
+        return null;
+      })(),
       outcomes,
     };
   };
@@ -392,6 +409,19 @@ export function createPublicClient(
       .filter((point): point is PriceHistoryPoint => point !== null);
   };
 
+  const filterPointsInRange = (
+    points: PriceHistoryPoint[],
+    startTs: number,
+    endTs: number,
+  ): PriceHistoryPoint[] => {
+    const startMs = startTs * 1000;
+    const endMs = endTs * 1000;
+    return points.filter((point) => {
+      const ts = point.timestamp.getTime();
+      return ts >= startMs && ts <= endMs;
+    });
+  };
+
   const fetchPricesHistoryChunk = async (
     tokenId: string,
     startTs: number,
@@ -413,11 +443,17 @@ export function createPublicClient(
     }
 
     const points = parsePriceHistoryPayload(payload);
-    if (points.length === 0 && interval !== "max") {
-      return fetchPricesHistoryChunk(tokenId, startTs, endTs, "max");
+    const inRange = filterPointsInRange(points, startTs, endTs);
+    if (inRange.length === 0 && interval !== "max") {
+      const fallback = filterPointsInRange(
+        await fetchPricesHistoryChunk(tokenId, startTs, endTs, "max"),
+        startTs,
+        endTs,
+      );
+      return fallback;
     }
 
-    return points;
+    return inRange;
   };
 
   const getPricesHistory = async (
@@ -431,7 +467,11 @@ export function createPublicClient(
     }
 
     if (endTs - startTs <= CLOB_PRICE_HISTORY_MAX_CHUNK_SECONDS) {
-      return fetchPricesHistoryChunk(tokenId, startTs, endTs, interval);
+      return filterPointsInRange(
+        await fetchPricesHistoryChunk(tokenId, startTs, endTs, interval),
+        startTs,
+        endTs,
+      );
     }
 
     const byTs = new Map<number, PriceHistoryPoint>();
@@ -439,14 +479,22 @@ export function createPublicClient(
 
     while (chunkStart < endTs) {
       const chunkEnd = Math.min(chunkStart + CLOB_PRICE_HISTORY_MAX_CHUNK_SECONDS, endTs);
-      const chunk = await fetchPricesHistoryChunk(tokenId, chunkStart, chunkEnd, interval);
+      const chunk = filterPointsInRange(
+        await fetchPricesHistoryChunk(tokenId, chunkStart, chunkEnd, interval),
+        chunkStart,
+        chunkEnd,
+      );
       for (const point of chunk) {
         byTs.set(point.timestamp.getTime(), point);
       }
       chunkStart = chunkEnd;
     }
 
-    return [...byTs.values()].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+    return filterPointsInRange(
+      [...byTs.values()].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime()),
+      startTs,
+      endTs,
+    );
   };
 
   const getUserActivity = async (

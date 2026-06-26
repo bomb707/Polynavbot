@@ -11,7 +11,8 @@
     "startingCapitalUsd": 500,
     "seed": 42,
     "feeMode": "mixed",
-    "maxMarkets": 100
+    "maxMarkets": 20,
+    "minLiquidityUsd": 1000
   },
   "metrics": {
     "totalRoi": 0,
@@ -275,965 +276,366 @@
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-21T00:00:03.000Z",
+      "timestamp": "2025-05-03T00:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-21T12:00:03.000Z",
+      "timestamp": "2025-05-03T12:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-22T00:00:03.000Z",
+      "timestamp": "2025-05-04T00:00:05.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-22T12:00:03.000Z",
+      "timestamp": "2025-05-04T12:00:05.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-23T00:00:04.000Z",
+      "timestamp": "2025-05-05T00:00:05.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-23T12:00:04.000Z",
+      "timestamp": "2025-05-05T12:00:05.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-24T00:00:03.000Z",
+      "timestamp": "2025-05-06T00:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-24T12:00:03.000Z",
+      "timestamp": "2025-05-06T12:00:05.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-25T00:00:05.000Z",
+      "timestamp": "2025-05-07T00:00:05.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-25T12:00:03.000Z",
+      "timestamp": "2025-05-07T12:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-26T00:00:04.000Z",
+      "timestamp": "2025-05-08T00:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-26T12:00:04.000Z",
+      "timestamp": "2025-05-08T12:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-27T00:00:04.000Z",
+      "timestamp": "2025-05-09T00:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-27T12:00:04.000Z",
+      "timestamp": "2025-05-09T12:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-28T00:00:04.000Z",
+      "timestamp": "2025-05-10T00:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-28T12:00:04.000Z",
+      "timestamp": "2025-05-10T12:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-29T00:00:04.000Z",
+      "timestamp": "2025-05-11T00:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-29T12:00:04.000Z",
+      "timestamp": "2025-05-11T12:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-30T00:00:05.000Z",
+      "timestamp": "2025-05-12T00:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-30T12:00:04.000Z",
+      "timestamp": "2025-05-12T12:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-31T00:00:04.000Z",
+      "timestamp": "2025-05-13T00:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-01-31T12:00:04.000Z",
+      "timestamp": "2025-05-13T12:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-02-01T00:00:05.000Z",
+      "timestamp": "2025-05-14T00:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-02-01T12:00:05.000Z",
+      "timestamp": "2025-05-14T12:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-02-02T00:00:04.000Z",
+      "timestamp": "2025-05-15T00:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-02-02T12:00:04.000Z",
+      "timestamp": "2025-05-15T12:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-02-03T00:00:05.000Z",
+      "timestamp": "2025-05-16T00:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-02-03T12:00:04.000Z",
+      "timestamp": "2025-05-16T12:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-02-04T00:00:04.000Z",
+      "timestamp": "2025-05-17T00:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-02-04T12:00:04.000Z",
+      "timestamp": "2025-05-17T12:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-02-05T00:00:04.000Z",
+      "timestamp": "2025-05-18T00:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-02-05T12:00:04.000Z",
+      "timestamp": "2025-05-18T12:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-02-06T00:00:05.000Z",
+      "timestamp": "2025-05-19T00:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-02-06T12:00:04.000Z",
+      "timestamp": "2025-05-19T12:00:05.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-02-07T00:00:04.000Z",
+      "timestamp": "2025-05-20T00:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-02-07T12:00:06.000Z",
+      "timestamp": "2025-05-20T12:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-02-08T00:00:04.000Z",
+      "timestamp": "2025-05-21T00:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-02-08T12:00:05.000Z",
+      "timestamp": "2025-05-21T12:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-02-09T00:00:06.000Z",
+      "timestamp": "2025-05-22T00:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-02-09T12:00:05.000Z",
+      "timestamp": "2025-05-22T12:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2025-02-10T00:00:05.000Z",
+      "timestamp": "2025-05-23T00:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2026-06-26T17:32:04.000Z",
+      "timestamp": "2025-05-23T12:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2026-06-26T17:33:04.000Z",
+      "timestamp": "2025-05-24T00:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2026-06-26T17:34:04.000Z",
+      "timestamp": "2025-05-24T12:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2026-06-26T17:34:05.000Z",
+      "timestamp": "2025-05-25T00:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2026-06-26T17:35:04.000Z",
+      "timestamp": "2025-05-25T12:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2026-06-26T17:35:05.000Z",
+      "timestamp": "2025-05-26T00:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2026-06-26T17:36:04.000Z",
+      "timestamp": "2025-05-26T12:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2026-06-26T17:36:05.000Z",
+      "timestamp": "2025-05-27T00:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2026-06-26T17:37:03.000Z",
+      "timestamp": "2025-05-27T12:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2026-06-26T17:37:04.000Z",
+      "timestamp": "2025-05-28T00:00:06.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2026-06-26T17:38:03.000Z",
+      "timestamp": "2025-05-28T12:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2026-06-26T17:38:05.000Z",
+      "timestamp": "2025-05-29T00:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2026-06-26T17:38:06.000Z",
+      "timestamp": "2025-05-29T12:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2026-06-26T17:38:07.000Z",
+      "timestamp": "2025-05-30T00:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2026-06-26T17:39:03.000Z",
+      "timestamp": "2025-05-30T12:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2026-06-26T17:39:04.000Z",
+      "timestamp": "2025-05-31T00:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     },
     {
-      "timestamp": "2026-06-26T17:40:17.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:40:18.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:41:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:41:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:42:03.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:42:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:43:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:43:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:44:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:44:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:45:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:45:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:46:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:46:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:47:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:47:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:48:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:48:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:48:06.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:48:07.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:49:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:49:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:50:03.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:50:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:50:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:51:03.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:51:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:52:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:53:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:53:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:54:03.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:54:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:55:15.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:55:16.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:56:03.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:56:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:57:03.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:57:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:58:03.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:58:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T17:59:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:00:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:00:06.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:00:07.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:00:08.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:00:09.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:01:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:02:03.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:02:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:03:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:03:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:04:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:05:03.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:05:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:06:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:07:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:08:03.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:08:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:09:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:09:06.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:10:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:10:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:11:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:11:06.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:12:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:12:06.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:13:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:13:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:14:03.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:14:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:14:06.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:14:07.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:15:17.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:15:18.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:15:19.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:16:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:17:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:18:03.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:18:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:19:03.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:19:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:20:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:21:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:22:03.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:22:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:23:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:23:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:24:03.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:24:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:25:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:25:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:26:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:26:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:27:03.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:27:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:28:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:28:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:29:03.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:29:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:30:04.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:30:05.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:30:06.000Z",
-      "equityUsd": 500,
-      "cashUsd": 500,
-      "deployedUsd": 0
-    },
-    {
-      "timestamp": "2026-06-26T18:31:04.000Z",
+      "timestamp": "2025-05-31T12:00:07.000Z",
       "equityUsd": 500,
       "cashUsd": 500,
       "deployedUsd": 0
     }
   ],
-  "tokensTraded": 0
+  "tokensTraded": 0,
+  "dataset": {
+    "tokensLoaded": 14,
+    "dataSource": "gamma",
+    "timelineSteps": 98
+  },
+  "diagnostics": {
+    "entryEvaluations": 636,
+    "ordersPlaced": 0,
+    "entryRejections": {
+      "price_out_of_band": 597,
+      "score_reject": 39
+    }
+  }
 }

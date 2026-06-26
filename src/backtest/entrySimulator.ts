@@ -11,6 +11,7 @@ import { buildSyntheticOrderBook } from "./syntheticOrderBook.js";
 import type { IFeeService } from "../fees/feeTypes.js";
 import { resolveBacktestFeeParams, resolveBacktestLiquidityRole } from "./feeMode.js";
 import type { BacktestConfig, BacktestMarketMeta, BacktestOrder, PriceBar } from "./backtestTypes.js";
+import { resolveHistoricalMarketFlags } from "./marketState.js";
 
 export interface EntryEvaluation {
   placed: boolean;
@@ -32,24 +33,27 @@ export function buildScoreInputFromBar(
   asOf: Date,
 ): LongshotScoreInput {
   const orderBook = buildSyntheticOrderBook(bar, { assumedSpread: bar.spread ?? 0.02 });
+  const historicalFlags = resolveHistoricalMarketFlags(meta, asOf);
+  const liquidityUsd = bar.liquidity ?? meta.liquidityUsd ?? 0;
+
   return {
     asOf,
     market: {
       question: meta.question,
       category: meta.category,
-      active: meta.active,
-      closed: meta.closed,
+      active: historicalFlags.active,
+      closed: historicalFlags.closed,
       archived: meta.archived,
       enableOrderBook: meta.enableOrderBook,
       endDate: meta.endDate,
       outcomeCount: meta.outcomeCount,
-      liquidityUsd: bar.liquidity ?? meta.liquidityUsd,
+      liquidityUsd,
       volumeUsd: meta.volumeUsd,
     },
     outcome: {
       tokenId: meta.tokenId,
       name: meta.outcomeName,
-      side: "YES",
+      side: meta.outcomeSide,
       price: bar.price,
     },
     pricing: {

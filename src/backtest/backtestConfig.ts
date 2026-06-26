@@ -13,5 +13,6 @@ export function createBacktestConfig(config: Config): BacktestConfig {
     seed: config.BACKTEST_SEED,
     feeMode: config.BACKTEST_FEE_MODE,
     maxMarkets: config.BACKTEST_MAX_MARKETS,
+    minLiquidityUsd: config.MIN_LIQUIDITY_USD,
   };
 }
