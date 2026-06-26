@@ -1,6 +1,7 @@
 import type { Signal } from "@prisma/client";
 
 import type { Config } from "../config/index.js";
+import { isPaperMode } from "../config/index.js";
 import { isLiveMode } from "../config/index.js";
 import type { IRepositories } from "../db/repositories/index.js";
 import type { IFeeService } from "../fees/feeTypes.js";
@@ -278,7 +279,10 @@ export function createEntryEngine(deps: EntryEngineDeps): IEntryEngine {
           feeParams,
         });
 
-        if (buyEconomics.totalCostUsd > paperTradingEngine.getCashBalance()) {
+        if (
+          isPaperMode(config) &&
+          buyEconomics.totalCostUsd > paperTradingEngine.getCashBalance()
+        ) {
           await repositories.signal.updateStatus(signal.id, "REJECTED");
           reject(
             rejected,

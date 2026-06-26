@@ -1,4 +1,5 @@
 import type { AppContainer } from "../container.js";
+import { isPaperMode } from "../config/index.js";
 import type { ExitPaperSummary } from "../execution/exitTypes.js";
 
 export function formatExitPaperSummary(summary: ExitPaperSummary): string {
@@ -31,6 +32,10 @@ export function formatExitPaperSummary(summary: ExitPaperSummary): string {
 }
 
 export async function runExitPaper(container: AppContainer): Promise<ExitPaperSummary> {
+  if (!isPaperMode(container.config)) {
+    throw new Error("exit:paper requires TRADING_MODE=paper");
+  }
+
   await container.db.connect();
   return container.exitEngine.run();
 }

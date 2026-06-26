@@ -1,6 +1,7 @@
 import { Command } from "commander";
 
 import type { AppContainer } from "../container.js";
+import { isLiveMode } from "../config/index.js";
 import { formatTerminalDashboard } from "../report/reportFormatter.js";
 import { runBacktest } from "./backtest.js";
 import { formatEntryPaperSummary, runEntryPaper } from "./entryPaper.js";
@@ -16,6 +17,12 @@ import { runWsMonitor } from "./wsMonitor.js";
 
 export function createCli(container: AppContainer): Command {
   const program = new Command();
+
+  if (isLiveMode(container.config)) {
+    console.warn(
+      "WARNING: TRADING_MODE=live is active. Live CLOB placement requires LIVE_TRADING_CONFIRMATION=I_UNDERSTAND_THE_RISKS.",
+    );
+  }
 
   program
     .name("polynavbot")

@@ -337,7 +337,16 @@ export function createMarketScanner(deps: MarketScannerDeps): IMarketScanner {
 
     for (let page = 0; page < maxPages; page++) {
       const offset = page * limitPerPage;
-      const { rawMarkets } = await scanMarketPage(limitPerPage, offset);
+      let rawMarkets: unknown[] = [];
+      try {
+        ({ rawMarkets } = await scanMarketPage(limitPerPage, offset));
+      } catch (error) {
+        logger.warn(
+          { offset, err: error instanceof Error ? error.message : String(error) },
+          "Market page fetch failed, skipping page",
+        );
+        continue;
+      }
 
       if (rawMarkets.length === 0) {
         break;

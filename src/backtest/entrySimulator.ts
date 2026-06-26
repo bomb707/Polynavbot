@@ -8,6 +8,8 @@ import { applyBacktestRiskCaps } from "./positionSizer.js";
 import type { BacktestPortfolio } from "./portfolio.js";
 import { nextOrderId } from "./portfolio.js";
 import { buildSyntheticOrderBook } from "./syntheticOrderBook.js";
+import type { IFeeService } from "../fees/feeTypes.js";
+import { resolveBacktestFeeParams, resolveBacktestLiquidityRole } from "./feeMode.js";
 import type { BacktestConfig, BacktestMarketMeta, BacktestOrder, PriceBar } from "./backtestTypes.js";
 
 export interface EntryEvaluation {
@@ -65,6 +67,7 @@ export function evaluateEntry(
   meta: BacktestMarketMeta,
   bar: PriceBar,
   priceHistory: PriceHistoryPoint[],
+  feeService: IFeeService,
 ): EntryEvaluation {
   if (bar.price < config.MIN_ENTRY_PRICE || bar.price > config.MAX_ENTRY_PRICE) {
     return { placed: false, reason: "price_out_of_band" };
@@ -105,7 +108,17 @@ export function evaluateEntry(
     return { placed: false, reason: "size_too_small" };
   }
 
-  if (cappedSizeUsd > portfolio.cashUsd) {
+  const feeParams = resolveBacktestFeeParams(meta.feeParams);
+  const liquidityRole = resolveBacktestLiquidityRole(backtestConfig.feeMode, "BUY", feeParams);
+  const buyEconomics = feeService.calculateBuyEconomics({
+    side: "BUY",
+    price: bidResult.bidPrice,
+    shares,
+    liquidityRole,
+    feeParams,
+  });
+
+  if (buyEconomics.totalCostUsd > portfolio.cashUsd) {
     return { placed: false, reason: "insufficient_cash" };
   }
 

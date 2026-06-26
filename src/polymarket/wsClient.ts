@@ -3,6 +3,7 @@ import WebSocket from "ws";
 import type { Config } from "../config/index.js";
 import { isLiveMode } from "../config/index.js";
 import type { ILogger } from "../logger/types.js";
+import { sanitizeError } from "../utils/sanitizeError.js";
 import {
   parseWsMarketEvent,
   parseWsUserEvent,
@@ -345,7 +346,7 @@ export function createWsClient(
 
     marketSocket.on("message", handleMarketMessage);
     marketSocket.on("error", (error) => {
-      logger.warn({ err: String(error) }, "Market WebSocket error");
+      logger.warn({ err: sanitizeError(error) }, "Market WebSocket error");
     });
     marketSocket.on("close", () => {
       logger.warn("Market WebSocket closed");
@@ -386,7 +387,7 @@ export function createWsClient(
 
     userSocket.on("message", handleUserMessage);
     userSocket.on("error", (error) => {
-      logger.warn({ err: String(error) }, "User WebSocket error");
+      logger.warn({ err: sanitizeError(error) }, "User WebSocket error");
     });
     userSocket.on("close", () => {
       logger.warn("User WebSocket closed");

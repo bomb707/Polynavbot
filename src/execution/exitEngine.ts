@@ -124,7 +124,7 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
 
   function evaluateExit(input: ExitEvaluationInput): ExitEvaluation {
     const { position, market, liquidityUsd, riskForced } = input;
-    let exitState = bumpExitState(
+    const exitState = bumpExitState(
       input.exitState,
       input.currentPrice,
       toNum(position.avgEntryPrice),
@@ -210,8 +210,6 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
         continue;
       }
 
-      exitState = { ...exitState, [milestone.flag]: true };
-
       return {
         action: "sell_partial",
         sellSizeShares,
@@ -219,6 +217,7 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
         reason: milestone.reason,
         message: `Partial exit at ${milestone.label} milestone`,
         nextExitState: exitState,
+        milestoneFlag: milestone.flag,
       };
     }
 
@@ -231,6 +230,7 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
     sellPrice: number,
     orderBook: OrderBook,
     liquidityUsd: number | null,
+    dataUpdatedAt: Date,
   ): Promise<{
     order?: PaperOrder;
     filled: boolean;
@@ -248,7 +248,7 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
       isNewEntry: false,
       spread: orderBook.spread,
       liquidityUsd,
-      dataUpdatedAt: new Date(),
+      dataUpdatedAt,
     });
 
     if (orderResult.status === "rejected") {
@@ -414,15 +414,38 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
       };
     }
 
+    const pendingSell = isPaperMode(config)
+      ? await repositories.order.findPendingSellByTokenId(position.tokenId)
+      : await repositories.order.findPendingSellByTokenIdLive(position.tokenId);
+
+    if (pendingSell) {
+      await updatePositionAfterExit(position.id, evaluation.nextExitState);
+      return {
+        tokenId: position.tokenId,
+        question: market.question,
+        action: evaluation.action,
+        reason: evaluation.reason,
+        sellSizeShares: evaluation.sellSizeShares,
+        sellPrice: evaluation.sellPrice,
+        filled: false,
+      };
+    }
+
     const sellResult = await executeSellOrder(
       position,
       evaluation.sellSizeShares,
       evaluation.sellPrice,
       orderBook,
       liquidityUsd,
+      outcome.updatedAt,
     );
 
-    await updatePositionAfterExit(position.id, evaluation.nextExitState);
+    const exitStateToPersist =
+      sellResult.filled && evaluation.milestoneFlag
+        ? { ...evaluation.nextExitState, [evaluation.milestoneFlag]: true }
+        : evaluation.nextExitState;
+
+    await updatePositionAfterExit(position.id, exitStateToPersist);
 
     logger.info(
       {

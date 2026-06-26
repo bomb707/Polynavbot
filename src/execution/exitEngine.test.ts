@@ -107,7 +107,8 @@ describe("createExitEngine.evaluateExit", () => {
     expect(result.action).toBe("sell_partial");
     expect(result.reason).toBe("milestone_5x");
     expect(result.sellSizeShares).toBe(30);
-    expect(result.nextExitState.soldAt5x).toBe(true);
+    expect(result.milestoneFlag).toBe("soldAt5x");
+    expect(result.nextExitState.soldAt5x).toBe(false);
   });
 
   it("triggers 10x partial exit selling 30% of original size", () => {
@@ -126,7 +127,8 @@ describe("createExitEngine.evaluateExit", () => {
     expect(result.action).toBe("sell_partial");
     expect(result.reason).toBe("milestone_10x");
     expect(result.sellSizeShares).toBe(30);
-    expect(result.nextExitState.soldAt10x).toBe(true);
+    expect(result.milestoneFlag).toBe("soldAt10x");
+    expect(result.nextExitState.soldAt10x).toBe(false);
   });
 
   it("triggers 25x partial exit selling 20% of original size", () => {
@@ -148,7 +150,8 @@ describe("createExitEngine.evaluateExit", () => {
     expect(result.action).toBe("sell_partial");
     expect(result.reason).toBe("milestone_25x");
     expect(result.sellSizeShares).toBe(20);
-    expect(result.nextExitState.soldAt25x).toBe(true);
+    expect(result.milestoneFlag).toBe("soldAt25x");
+    expect(result.nextExitState.soldAt25x).toBe(false);
   });
 
   it("does not duplicate 5x exit when already sold", () => {
@@ -251,5 +254,111 @@ describe("createExitEngine.previewExits", () => {
     expect(pending[0]?.reason).toBe("milestone_5x");
     expect(placeSellLimitOrder).not.toHaveBeenCalled();
     expect(updateExitState).not.toHaveBeenCalled();
+  });
+});
+
+describe("createExitEngine.run", () => {
+  it("does not persist soldAt5x when sell is not filled", async () => {
+    const updateExitState = vi.fn();
+
+    const engine = createExitEngine({
+      config,
+      repositories: {
+        position: {
+          findOpen: vi.fn().mockResolvedValue([makePosition()]),
+          sumRealizedPnlSince: vi.fn().mockResolvedValue(0),
+          updateExitState,
+        },
+        market: {
+          findById: vi.fn().mockResolvedValue(makeMarket()),
+        },
+        outcome: {
+          findByTokenId: vi.fn().mockResolvedValue({
+            tokenId: "token-1",
+            liquidity: { toNumber: () => 5000 },
+            updatedAt: new Date(),
+          }),
+        },
+        order: {
+          findPendingSellByTokenId: vi.fn().mockResolvedValue(null),
+        },
+        trade: {
+          findByTokenId: vi.fn().mockResolvedValue([]),
+        },
+      } as never,
+      publicClient: {
+        getOrderBook: vi.fn().mockResolvedValue(orderBook),
+      } as never,
+      executionEngine: {
+        initialize: vi.fn(),
+        placeSellLimitOrder: vi.fn().mockResolvedValue({
+          status: "rejected",
+          rejectedReason: "Risk rejected",
+        }),
+      } as never,
+      paperTradingEngine: {
+        initialize: vi.fn(),
+        markToMarket: vi.fn(),
+      } as never,
+      riskEngine: {} as never,
+      feeService: createFeeService({ BUILDER_FEE_BPS: 0 }),
+      logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
+    });
+
+    await engine.run();
+
+    const persistedState = updateExitState.mock.calls[0]?.[1] as PositionExitState;
+    expect(persistedState.soldAt5x).toBe(false);
+  });
+
+  it("skips exit placement when pending SELL exists", async () => {
+    const placeSellLimitOrder = vi.fn();
+
+    const engine = createExitEngine({
+      config,
+      repositories: {
+        position: {
+          findOpen: vi.fn().mockResolvedValue([makePosition()]),
+          sumRealizedPnlSince: vi.fn().mockResolvedValue(0),
+          updateExitState: vi.fn(),
+        },
+        market: {
+          findById: vi.fn().mockResolvedValue(makeMarket()),
+        },
+        outcome: {
+          findByTokenId: vi.fn().mockResolvedValue({
+            tokenId: "token-1",
+            liquidity: { toNumber: () => 5000 },
+            updatedAt: new Date(),
+          }),
+        },
+        order: {
+          findPendingSellByTokenId: vi.fn().mockResolvedValue({ id: "pending-sell" }),
+        },
+        trade: {
+          findByTokenId: vi.fn().mockResolvedValue([]),
+        },
+      } as never,
+      publicClient: {
+        getOrderBook: vi.fn().mockResolvedValue(orderBook),
+      } as never,
+      executionEngine: {
+        initialize: vi.fn(),
+        placeSellLimitOrder,
+      } as never,
+      paperTradingEngine: {
+        initialize: vi.fn(),
+        markToMarket: vi.fn(),
+      } as never,
+      riskEngine: {} as never,
+      feeService: createFeeService({ BUILDER_FEE_BPS: 0 }),
+      logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
+    });
+
+    const summary = await engine.run();
+
+    expect(placeSellLimitOrder).not.toHaveBeenCalled();
+    expect(summary.exitsPlaced).toBe(1);
+    expect(summary.exitsFilled).toBe(0);
   });
 });

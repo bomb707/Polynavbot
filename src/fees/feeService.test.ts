@@ -129,4 +129,23 @@ describe("createFeeService", () => {
     expect(economics.grossProceedsUsd).toBe(5);
     expect(economics.netProceedsUsd).toBe(4.95);
   });
+
+  it("charges takerBaseFeeBps when feeRate is zero", () => {
+    const bpsOnly = createFeeService({ BUILDER_FEE_BPS: 0 });
+    const breakdown = bpsOnly.calculateTotalFee({
+      side: "BUY",
+      price: 0.5,
+      shares: 10,
+      liquidityRole: "taker",
+      feeParams: {
+        feesEnabled: true,
+        feeRate: 0,
+        takerOnly: true,
+        makerBaseFeeBps: 0,
+        takerBaseFeeBps: 100,
+      },
+    });
+    expect(breakdown.platformFeeUsd).toBe(0.05);
+    expect(breakdown.totalFeeUsd).toBe(0.05);
+  });
 });

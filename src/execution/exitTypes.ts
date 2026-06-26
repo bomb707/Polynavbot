@@ -33,6 +33,7 @@ export interface ExitEvaluation {
   reason: ExitReason;
   message: string;
   nextExitState: PositionExitState;
+  milestoneFlag?: keyof Pick<PositionExitState, "soldAt5x" | "soldAt10x" | "soldAt25x">;
 }
 
 export interface ExitActionRecord {

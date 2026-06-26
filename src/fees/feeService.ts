@@ -56,16 +56,32 @@ export function createFeeService(config: Pick<Config, "BUILDER_FEE_BPS">): IFeeS
   function calculatePlatformFee(input: TradeFeeInput): number {
     const { feeParams, liquidityRole, price, shares } = input;
 
-    if (!feeParams.feesEnabled || liquidityRole === "maker") {
+    if (!feeParams.feesEnabled || liquidityRole === "unknown") {
       return 0;
     }
 
-    if (liquidityRole === "unknown") {
+    if (liquidityRole === "maker") {
+      if (feeParams.takerOnly) {
+        return 0;
+      }
+      if (feeParams.makerBaseFeeBps > 0) {
+        const gross = shares * price;
+        return round5((gross * feeParams.makerBaseFeeBps) / 10000);
+      }
       return 0;
     }
 
-    const raw = shares * feeParams.feeRate * price * (1 - price);
-    return round5(raw);
+    const gross = shares * price;
+    if (feeParams.feeRate > 0) {
+      const raw = shares * feeParams.feeRate * price * (1 - price);
+      return round5(raw);
+    }
+
+    if (feeParams.takerBaseFeeBps > 0) {
+      return round5((gross * feeParams.takerBaseFeeBps) / 10000);
+    }
+
+    return 0;
   }
 
   function calculateBuilderFee(grossNotionalUsd: number, builderFeeBps?: number): number {

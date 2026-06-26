@@ -170,6 +170,7 @@ export function createBacktestEngine(deps: BacktestEngineDeps): IBacktestEngine 
             tokenSeries.meta,
             bar,
             priceHistory,
+            feeService,
           );
           if (entry.placed && entry.order) {
             portfolio.placeOrder(entry.order);

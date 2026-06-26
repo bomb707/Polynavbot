@@ -103,6 +103,25 @@ export function createPaperTradingEngine(
     return feeService.getMarketFeeParams(market);
   }
 
+  function grossCostBasisUsd(costBasisUsd: number, totalFeesPaidUsd: number): number {
+    return round8(costBasisUsd - totalFeesPaidUsd);
+  }
+
+  async function estimateExitFeeUsd(
+    marketId: string,
+    price: number,
+    size: number,
+  ): Promise<number> {
+    const feeParams = await loadMarketFeeParams(marketId);
+    return feeService.calculateTotalFee({
+      side: "SELL",
+      price,
+      shares: size,
+      liquidityRole: "taker",
+      feeParams,
+    }).totalFeeUsd;
+  }
+
   async function loadCashBalance(): Promise<void> {
     const netFlow = await repositories.trade.sumNetCashFlow("PAPER");
     cashBalanceUsd = round8(config.PAPER_STARTING_BALANCE_USD - netFlow);
@@ -131,7 +150,13 @@ export function createPaperTradingEngine(
       const newCost = round8(existingCost + totalCostUsd);
       const avgEntryPrice = round8(newCost / newSize);
       const currentValueUsd = round8(newSize * fillPrice);
-      const grossUnrealized = round8(currentValueUsd - newCost);
+      const newFeesPaid = round8(existingFees + totalFeeUsd);
+      const newGrossCost = round8(
+        grossCostBasisUsd(existingCost, existingFees) + fillPrice * fillSize,
+      );
+      const grossUnrealized = round8(currentValueUsd - newGrossCost);
+      const estimatedExitFee = await estimateExitFeeUsd(order.marketId, fillPrice, newSize);
+      const netUnrealized = round8(grossUnrealized - estimatedExitFee);
 
       return repositories.position.update(existing.id, {
         size: newSize,
@@ -139,12 +164,14 @@ export function createPaperTradingEngine(
         avgEntryPrice,
         currentPrice: fillPrice,
         currentValueUsd,
-        unrealizedPnlUsd: grossUnrealized,
+        unrealizedPnlUsd: netUnrealized,
         grossUnrealizedPnlUsd: grossUnrealized,
-        netUnrealizedPnlUsd: grossUnrealized,
-        totalFeesPaidUsd: round8(existingFees + totalFeeUsd),
+        netUnrealizedPnlUsd: netUnrealized,
+        totalFeesPaidUsd: newFeesPaid,
       });
     }
+
+    const estimatedExitFee = await estimateExitFeeUsd(order.marketId, fillPrice, fillSize);
 
     return repositories.position.create({
       marketId: order.marketId,
@@ -155,10 +182,10 @@ export function createPaperTradingEngine(
       currentPrice: fillPrice,
       size: fillSize,
       costBasisUsd: totalCostUsd,
-      currentValueUsd: totalCostUsd,
-      unrealizedPnlUsd: 0,
+      currentValueUsd: round8(fillSize * fillPrice),
+      unrealizedPnlUsd: round8(-totalFeeUsd - estimatedExitFee),
       grossUnrealizedPnlUsd: 0,
-      netUnrealizedPnlUsd: 0,
+      netUnrealizedPnlUsd: round8(-totalFeeUsd - estimatedExitFee),
       totalFeesPaidUsd: totalFeeUsd,
       realizedPnlUsd: 0,
       grossRealizedPnlUsd: 0,
@@ -183,11 +210,15 @@ export function createPaperTradingEngine(
 
     const existingSize = toNumber(existing.size);
     const avgEntryPrice = toNumber(existing.avgEntryPrice);
-    const costBasisPortion = round8(avgEntryPrice * fillSize);
-    const grossProceeds = round8(fillPrice * fillSize);
-    const grossRealizedIncrement = round8(grossProceeds - costBasisPortion);
-    const netRealizedIncrement = round8(netProceedsUsd - costBasisPortion);
+    const existingCost = toNumber(existing.costBasisUsd);
     const existingFees = toNumber(existing.totalFeesPaidUsd) ?? 0;
+    const grossCostBasis = grossCostBasisUsd(existingCost, existingFees);
+    const grossAvgEntry = existingSize > 0 ? grossCostBasis / existingSize : avgEntryPrice;
+    const grossCostPortion = round8(grossAvgEntry * fillSize);
+    const netCostPortion = round8(avgEntryPrice * fillSize);
+    const grossProceeds = round8(fillPrice * fillSize);
+    const grossRealizedIncrement = round8(grossProceeds - grossCostPortion);
+    const netRealizedIncrement = round8(netProceedsUsd - netCostPortion);
     const newGrossRealized = round8(toNumber(existing.grossRealizedPnlUsd) + grossRealizedIncrement);
     const newNetRealized = round8(toNumber(existing.netRealizedPnlUsd) + netRealizedIncrement);
     const remainingSize = round8(existingSize - fillSize);
@@ -202,8 +233,15 @@ export function createPaperTradingEngine(
     }
 
     const remainingCost = round8(avgEntryPrice * remainingSize);
+    const remainingGrossCost = round8(grossAvgEntry * remainingSize);
     const currentValueUsd = round8(remainingSize * fillPrice);
-    const grossUnrealized = round8(currentValueUsd - remainingCost);
+    const grossUnrealized = round8(currentValueUsd - remainingGrossCost);
+    const estimatedExitFee = await estimateExitFeeUsd(
+      existing.marketId,
+      fillPrice,
+      remainingSize,
+    );
+    const netUnrealized = round8(grossUnrealized - estimatedExitFee);
 
     const updated = await repositories.position.update(existing.id, {
       size: remainingSize,
@@ -213,9 +251,9 @@ export function createPaperTradingEngine(
       netRealizedPnlUsd: newNetRealized,
       currentPrice: fillPrice,
       currentValueUsd,
-      unrealizedPnlUsd: grossUnrealized,
+      unrealizedPnlUsd: netUnrealized,
       grossUnrealizedPnlUsd: grossUnrealized,
-      netUnrealizedPnlUsd: grossUnrealized,
+      netUnrealizedPnlUsd: netUnrealized,
       totalFeesPaidUsd: round8(existingFees + totalFeeUsd),
     });
 
@@ -284,7 +322,9 @@ export function createPaperTradingEngine(
 
       const feeParams = await loadMarketFeeParams(input.marketId);
       const liquidityRole =
-        input.side === "BUY" ? ("maker" as const) : ("maker" as const);
+        input.side === "BUY"
+          ? ("taker" as const)
+          : ("maker" as const);
 
       const feeInput = {
         side: input.side,
@@ -539,15 +579,19 @@ export function createPaperTradingEngine(
 
       const size = toNumber(position.size);
       const costBasis = toNumber(position.costBasisUsd);
+      const feesPaid = toNumber(position.totalFeesPaidUsd) ?? 0;
       const currentValueUsd = round8(size * currentPrice);
-      const grossUnrealized = round8(currentValueUsd - costBasis);
+      const grossCost = grossCostBasisUsd(costBasis, feesPaid);
+      const grossUnrealized = round8(currentValueUsd - grossCost);
+      const estimatedExitFee = await estimateExitFeeUsd(position.marketId, currentPrice, size);
+      const netUnrealized = round8(grossUnrealized - estimatedExitFee);
 
       return repositories.position.update(position.id, {
         currentPrice,
         currentValueUsd,
-        unrealizedPnlUsd: grossUnrealized,
+        unrealizedPnlUsd: netUnrealized,
         grossUnrealizedPnlUsd: grossUnrealized,
-        netUnrealizedPnlUsd: grossUnrealized,
+        netUnrealizedPnlUsd: netUnrealized,
       });
     },
 

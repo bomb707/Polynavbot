@@ -21,6 +21,7 @@ import {
   assertLiveTradingEnabled,
 } from "../config/liveTradingGuards.js";
 import type { ILogger } from "../logger/types.js";
+import { sanitizeError } from "../utils/sanitizeError.js";
 import {
   mapClobError,
   RejectedOrderError,
@@ -307,7 +308,7 @@ export function createClobClient(
       await sdk.getBalanceAllowance();
     } catch (error) {
       logger.warn(
-        { err: String(error) },
+        { err: sanitizeError(error) },
         "Balance/allowance check failed during CLOB init (non-fatal)",
       );
     }

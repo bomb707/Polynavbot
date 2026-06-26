@@ -1,6 +1,11 @@
 import type { AppContainer } from "../container.js";
+import { isPaperMode } from "../config/index.js";
 
 export async function runWsMonitor(container: AppContainer): Promise<void> {
+  if (!isPaperMode(container.config)) {
+    throw new Error("ws:monitor requires TRADING_MODE=paper");
+  }
+
   await container.db.connect();
   await container.wsMonitorService.start();
 
