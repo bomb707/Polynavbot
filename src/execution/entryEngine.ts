@@ -1,0 +1,238 @@
+import type { Config } from "../config/index.js";
+import { isPaperMode } from "../config/index.js";
+import type { IRepositories } from "../db/repositories/index.js";
+import type { ILogger } from "../logger/types.js";
+import type { IPublicClient } from "../polymarket/publicClient.js";
+import type { IPaperTradingEngine } from "../paper/paperTypes.js";
+import type { IRiskEngine } from "../risk/riskTypes.js";
+import type { IMarketScanner } from "../scanner/types.js";
+import type { ILongshotScorer } from "../strategy/longshotScorer.js";
+import { buildScoreInput, roundDownShares, toNumber } from "./entryHelpers.js";
+import type {
+  AcceptedEntry,
+  EntryCandidateRecord,
+  EntryRejectStage,
+  IEntryEngine,
+  RejectedEntry,
+} from "./entryTypes.js";
+import { computePassiveBidPrice } from "./passiveBid.js";
+
+export interface EntryEngineDeps {
+  config: Config;
+  scanner: IMarketScanner;
+  scorer: ILongshotScorer;
+  riskEngine: IRiskEngine;
+  paperTradingEngine: IPaperTradingEngine;
+  publicClient: IPublicClient;
+  repositories: IRepositories;
+  logger: ILogger;
+}
+
+export function createEntryEngine(deps: EntryEngineDeps): IEntryEngine {
+  const {
+    config,
+    scanner,
+    scorer,
+    riskEngine,
+    paperTradingEngine,
+    publicClient,
+    repositories,
+    logger,
+  } = deps;
+
+  function reject(
+    rejected: RejectedEntry[],
+    entry: Omit<RejectedEntry, "stage"> & { stage: EntryRejectStage },
+    riskReasons: string[],
+  ): void {
+    rejected.push(entry);
+    if (entry.stage === "risk") {
+      riskReasons.push(entry.reason);
+    }
+    logger.debug({ entry }, "Entry rejected");
+  }
+
+  return {
+    async run(options) {
+      if (!isPaperMode(config)) {
+        throw new Error("entry:paper requires TRADING_MODE=paper");
+      }
+
+      await paperTradingEngine.initialize();
+
+      const scan = await scanner.scanMarkets(options);
+      const candidates: EntryCandidateRecord[] = [];
+      const accepted: AcceptedEntry[] = [];
+      const rejected: RejectedEntry[] = [];
+      const riskRejectionReasons: string[] = [];
+      let totalNotionalUsd = 0;
+
+      for (const candidate of scan.candidates) {
+        const market = await repositories.market.findById(candidate.marketId);
+        const outcome = await repositories.outcome.findByTokenId(candidate.tokenId);
+
+        if (!market || !outcome) {
+          continue;
+        }
+
+        const orderBook = await publicClient.getOrderBook(candidate.tokenId);
+        if (!orderBook) {
+          reject(rejected, {
+            tokenId: candidate.tokenId,
+            question: candidate.question,
+            stage: "bid",
+            reason: "Order book unavailable",
+          }, riskRejectionReasons);
+          continue;
+        }
+
+        const scoreResult = scorer.score(
+          buildScoreInput(market, outcome, candidate, orderBook),
+        );
+
+        candidates.push({
+          tokenId: candidate.tokenId,
+          question: candidate.question,
+          outcomeName: candidate.outcomeName,
+          score: scoreResult.score,
+          decision: scoreResult.decision,
+        });
+
+        if (scoreResult.decision !== "entry_candidate") {
+          reject(rejected, {
+            tokenId: candidate.tokenId,
+            question: candidate.question,
+            stage: "score",
+            reason: `Decision: ${scoreResult.decision} (${scoreResult.reasons.join("; ")})`,
+          }, riskRejectionReasons);
+          continue;
+        }
+
+        const bidResult = computePassiveBidPrice(orderBook, config);
+        if ("rejected" in bidResult) {
+          reject(rejected, {
+            tokenId: candidate.tokenId,
+            question: candidate.question,
+            stage: "bid",
+            reason: bidResult.reason,
+          }, riskRejectionReasons);
+          continue;
+        }
+
+        let sizeUsd = scoreResult.suggestedSizeUsd;
+        let shares = roundDownShares(sizeUsd / bidResult.bidPrice);
+        const notionalFromShares = shares * bidResult.bidPrice;
+
+        if (
+          sizeUsd < config.MIN_ORDER_SIZE_USD ||
+          shares <= 0 ||
+          notionalFromShares < config.MIN_ORDER_SIZE_USD
+        ) {
+          reject(rejected, {
+            tokenId: candidate.tokenId,
+            question: candidate.question,
+            stage: "size",
+            reason: `Order size $${sizeUsd.toFixed(2)} below minimum $${config.MIN_ORDER_SIZE_USD}`,
+          }, riskRejectionReasons);
+          continue;
+        }
+
+        const riskResult = await riskEngine.checkOrder({
+          marketId: candidate.marketId,
+          outcomeId: candidate.outcomeId,
+          tokenId: candidate.tokenId,
+          side: "BUY",
+          limitPrice: bidResult.bidPrice,
+          sizeUsd,
+          isNewEntry: true,
+          spread: orderBook.spread,
+          liquidityUsd: toNumber(outcome.liquidity),
+          dataUpdatedAt: outcome.updatedAt,
+        });
+
+        if (!riskResult.allowed) {
+          reject(rejected, {
+            tokenId: candidate.tokenId,
+            question: candidate.question,
+            stage: "risk",
+            reason: riskResult.reason,
+          }, riskRejectionReasons);
+          continue;
+        }
+
+        if (riskResult.adjustedSizeUsd != null) {
+          sizeUsd = riskResult.adjustedSizeUsd;
+          shares = roundDownShares(sizeUsd / bidResult.bidPrice);
+          if (shares * bidResult.bidPrice < config.MIN_ORDER_SIZE_USD) {
+            reject(rejected, {
+              tokenId: candidate.tokenId,
+              question: candidate.question,
+              stage: "size",
+              reason: `Adjusted size $${sizeUsd.toFixed(2)} below minimum`,
+            }, riskRejectionReasons);
+            continue;
+          }
+        }
+
+        const signal = await repositories.signal.create({
+          marketId: candidate.marketId,
+          outcomeId: candidate.outcomeId,
+          tokenId: candidate.tokenId,
+          signalType: "LONGSHOT_ENTRY",
+          score: scoreResult.score,
+          reason: scoreResult.reasons.join("; "),
+          entryPrice: bidResult.bidPrice,
+          suggestedSizeUsd: sizeUsd,
+          status: "APPROVED",
+        });
+
+        const { order, rejectedReason } = await paperTradingEngine.placeLimitOrder({
+          marketId: candidate.marketId,
+          outcomeId: candidate.outcomeId,
+          tokenId: candidate.tokenId,
+          side: "BUY",
+          limitPrice: bidResult.bidPrice,
+          sizeUsd,
+          signalId: signal.id,
+          skipRiskCheck: true,
+          riskContext: {
+            spread: orderBook.spread,
+            liquidityUsd: toNumber(outcome.liquidity),
+            dataUpdatedAt: outcome.updatedAt,
+            isNewEntry: true,
+          },
+        });
+
+        if (rejectedReason || !order || order.status === "FAILED") {
+          reject(rejected, {
+            tokenId: candidate.tokenId,
+            question: candidate.question,
+            stage: "order",
+            reason: rejectedReason ?? "Order creation failed",
+          }, riskRejectionReasons);
+          continue;
+        }
+
+        accepted.push({
+          tokenId: candidate.tokenId,
+          question: candidate.question,
+          bidPrice: bidResult.bidPrice,
+          sizeUsd,
+          shares,
+          orderId: order.id,
+          signalId: signal.id,
+        });
+        totalNotionalUsd += sizeUsd;
+      }
+
+      return {
+        scan,
+        candidates,
+        accepted,
+        rejected,
+        totalNotionalUsd: Math.round(totalNotionalUsd * 100) / 100,
+        riskRejectionReasons: [...new Set(riskRejectionReasons)],
+      };
+    },
+  };
+}

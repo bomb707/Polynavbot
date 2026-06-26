@@ -217,24 +217,29 @@ export function createPaperTradingEngine(
       }
 
       const riskContext = input.riskContext ?? { isNewEntry: input.side === "BUY" };
-      const riskResult = await riskEngine.checkOrder({
-        marketId: input.marketId,
-        outcomeId: input.outcomeId,
-        tokenId: input.tokenId,
-        side: input.side,
-        limitPrice: input.limitPrice,
-        sizeUsd: input.sizeUsd,
-        isNewEntry: riskContext.isNewEntry,
-        spread: riskContext.spread,
-        liquidityUsd: riskContext.liquidityUsd,
-        dataUpdatedAt: riskContext.dataUpdatedAt,
-      });
+      let effectiveSizeUsd = input.sizeUsd;
 
-      if (!riskResult.allowed) {
-        return { rejectedReason: riskResult.reason };
+      if (!input.skipRiskCheck) {
+        const riskResult = await riskEngine.checkOrder({
+          marketId: input.marketId,
+          outcomeId: input.outcomeId,
+          tokenId: input.tokenId,
+          side: input.side,
+          limitPrice: input.limitPrice,
+          sizeUsd: input.sizeUsd,
+          isNewEntry: riskContext.isNewEntry,
+          spread: riskContext.spread,
+          liquidityUsd: riskContext.liquidityUsd,
+          dataUpdatedAt: riskContext.dataUpdatedAt,
+        });
+
+        if (!riskResult.allowed) {
+          return { rejectedReason: riskResult.reason };
+        }
+
+        effectiveSizeUsd = riskResult.adjustedSizeUsd ?? input.sizeUsd;
       }
 
-      const effectiveSizeUsd = riskResult.adjustedSizeUsd ?? input.sizeUsd;
       const size = round8(effectiveSizeUsd / input.limitPrice);
       const notionalUsd = round8(effectiveSizeUsd);
 

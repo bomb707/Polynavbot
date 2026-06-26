@@ -18,6 +18,7 @@ export interface PlacePaperLimitOrderInput {
   limitPrice: number;
   sizeUsd: number;
   signalId?: string | null;
+  skipRiskCheck?: boolean;
   riskContext?: OrderRiskContext;
 }
 

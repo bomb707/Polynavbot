@@ -15,7 +15,8 @@
     "lint": "eslint src --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "paper:run": "tsx src/index.ts paper:run"
+    "paper:run": "tsx src/index.ts paper:run",
+    "entry:paper": "tsx src/index.ts entry:paper"
   },
   "dependencies": {
     "@prisma/client": "^6.9.0",

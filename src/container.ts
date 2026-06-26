@@ -3,6 +3,8 @@ import { createDbClient, createRepositories } from "./db/client.js";
 import type { IDbClient, IRepositories } from "./db/types.js";
 import { createExecutionService } from "./execution/index.js";
 import type { IExecutionService } from "./execution/types.js";
+import { createEntryEngine } from "./execution/entryEngine.js";
+import type { IEntryEngine } from "./execution/entryTypes.js";
 import { createQueueManager } from "./jobs/queue.js";
 import { createRedisConnection } from "./jobs/redis.js";
 import type { IQueueManager } from "./jobs/queue.js";
@@ -46,6 +48,7 @@ export class AppContainer {
   private _positionStore?: IPositionStore;
   private _repositories?: IRepositories;
   private _longshotScorer?: ILongshotScorer;
+  private _entryEngine?: IEntryEngine;
 
   constructor(readonly config: Config) {}
 
@@ -159,6 +162,22 @@ export class AppContainer {
       this._longshotScorer = createLongshotScorer(this.config);
     }
     return this._longshotScorer;
+  }
+
+  get entryEngine(): IEntryEngine {
+    if (!this._entryEngine) {
+      this._entryEngine = createEntryEngine({
+        config: this.config,
+        scanner: this.scanner,
+        scorer: this.longshotScorer,
+        riskEngine: this.riskEngine,
+        paperTradingEngine: this.paperTradingEngine,
+        publicClient: this.publicClient,
+        repositories: this.repositories,
+        logger: this.logger,
+      });
+    }
+    return this._entryEngine;
   }
 
   get positionStore(): IPositionStore {

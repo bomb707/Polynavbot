@@ -1,51 +1,9 @@
-import type { Market, Outcome } from "@prisma/client";
-
 import type { AppContainer } from "../container.js";
 import { isPaperMode } from "../config/index.js";
-import type { CandidateOutcome } from "../scanner/types.js";
+import { buildScoreInput, toNumber } from "../execution/entryHelpers.js";
 import type { ScanOptions } from "../scanner/types.js";
-import type { LongshotScoreInput } from "../strategy/longshotTypes.js";
 import type { OrderBook } from "../polymarket/publicTypes.js";
 import type { PaperRunSummary } from "../paper/paperTypes.js";
-
-function toNumber(value: { toNumber(): number } | number | null | undefined): number | null {
-  if (value == null) {
-    return null;
-  }
-  return typeof value === "number" ? value : value.toNumber();
-}
-
-function buildScoreInput(
-  market: Market,
-  outcome: Outcome,
-  candidate: CandidateOutcome,
-  orderBook: OrderBook,
-): LongshotScoreInput {
-  return {
-    market: {
-      question: market.question,
-      category: market.category,
-      active: market.active,
-      closed: market.closed,
-      archived: market.archived,
-      enableOrderBook: market.enableOrderBook,
-      endDate: market.endDate,
-      outcomeCount: candidate.outcomeCount,
-      liquidityUsd: toNumber(outcome.liquidity),
-      volumeUsd: toNumber(outcome.volume),
-    },
-    outcome: {
-      tokenId: outcome.tokenId,
-      name: outcome.name,
-      side: outcome.side,
-      price: toNumber(outcome.currentPrice),
-    },
-    pricing: {
-      orderBook,
-      spread: orderBook.spread,
-    },
-  };
-}
 
 function midPrice(orderBook: OrderBook): number | null {
   if (orderBook.bestBid != null && orderBook.bestAsk != null) {
