@@ -24,7 +24,7 @@ pnpm install
 cp .env.example .env
 ```
 
-Edit `.env` if needed. Default values match the Docker Compose services.
+Edit `.env` if needed. Default values match the Docker Compose services and use `TRADING_MODE=paper` (safe default).
 
 ### 3. Start infrastructure
 
@@ -99,6 +99,37 @@ flowchart LR
   Container --> QueueManager
   Container --> DomainStubs
 ```
+
+## Environment Variables
+
+Configuration is validated at startup via Zod (`src/config/env.ts`). Copy [`.env.example`](.env.example) and adjust as needed.
+
+### Trading mode
+
+| Value | Description |
+|-------|-------------|
+| `paper` | Simulated trading only (default) |
+| `dry_run` | Evaluate signals without placing orders |
+| `live` | Live trading — requires all credential variables below |
+
+When `TRADING_MODE=live`, these variables are **required**:
+
+- `PRIVATE_KEY`
+- `DEPOSIT_WALLET_ADDRESS`
+- `POLY_API_KEY`
+- `POLY_API_SECRET`
+- `POLY_API_PASSPHRASE`
+
+For `paper` and `dry_run`, live credentials are optional and should remain unset or commented out.
+
+### Variable groups
+
+- **Application** — `NODE_ENV`, `LOG_LEVEL`, `TRADING_MODE`
+- **Infrastructure** — `DATABASE_URL`, `REDIS_URL`
+- **Polymarket API** — `POLY_CLOB_HOST`, `POLY_GAMMA_API_URL`, `POLY_DATA_API_URL`, WebSocket URLs, `POLY_CHAIN_ID`
+- **Strategy / risk** — spend limits, entry price bounds, liquidity filters (defaults provided in `.env.example`)
+
+Validation errors are grouped by section and printed at startup if `.env` is misconfigured.
 
 ## Safety
 
