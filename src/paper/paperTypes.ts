@@ -3,6 +3,13 @@ import type { OrderSide, OrderStatus, PaperOrder, Position } from "@prisma/clien
 import type { OrderBook } from "../polymarket/publicTypes.js";
 import type { ScanSummary } from "../scanner/types.js";
 
+export interface OrderRiskContext {
+  spread?: number | null;
+  liquidityUsd?: number | null;
+  dataUpdatedAt?: Date | null;
+  isNewEntry: boolean;
+}
+
 export interface PlacePaperLimitOrderInput {
   marketId: string;
   outcomeId: string;
@@ -11,6 +18,7 @@ export interface PlacePaperLimitOrderInput {
   limitPrice: number;
   sizeUsd: number;
   signalId?: string | null;
+  riskContext?: OrderRiskContext;
 }
 
 export interface PaperFillContext {
@@ -20,7 +28,7 @@ export interface PaperFillContext {
 }
 
 export interface PaperOrderResult {
-  order: PaperOrder;
+  order?: PaperOrder;
   rejectedReason?: string;
 }
 

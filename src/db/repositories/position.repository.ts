@@ -45,6 +45,7 @@ export interface IPositionRepository {
   findOpen(): Promise<Position[]>;
   findOpenByTokenId(tokenId: string): Promise<Position | null>;
   findByTokenId(tokenId: string): Promise<Position[]>;
+  sumRealizedPnlSince(since: Date): Promise<number>;
   update(id: string, data: UpdatePositionInput): Promise<Position>;
   close(id: string, data: ClosePositionInput): Promise<Position>;
 }
@@ -96,6 +97,19 @@ export function createPositionRepository(
         where: { tokenId },
         orderBy: { openedAt: "desc" },
       });
+    },
+
+    async sumRealizedPnlSince(since) {
+      const result = await prisma.position.aggregate({
+        where: { updatedAt: { gte: since } },
+        _sum: { realizedPnlUsd: true },
+      });
+
+      const total = result._sum.realizedPnlUsd;
+      if (total == null) {
+        return 0;
+      }
+      return typeof total === "number" ? total : total.toNumber();
     },
 
     update(id, data) {

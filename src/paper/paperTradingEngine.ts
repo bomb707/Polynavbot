@@ -5,6 +5,7 @@ import { isPaperMode } from "../config/index.js";
 import type { IRepositories } from "../db/repositories/index.js";
 import type { ILogger } from "../logger/types.js";
 import type { OrderBook } from "../polymarket/publicTypes.js";
+import type { IRiskEngine } from "../risk/riskTypes.js";
 import type {
   FillSimulationResult,
   IPaperTradingEngine,
@@ -17,6 +18,7 @@ export interface PaperTradingEngineDeps {
   config: Config;
   repositories: IRepositories;
   logger: ILogger;
+  riskEngine: IRiskEngine;
 }
 
 function toNumber(value: { toNumber(): number } | number): number {
@@ -87,7 +89,7 @@ function shouldFillSell(
 export function createPaperTradingEngine(
   deps: PaperTradingEngineDeps,
 ): IPaperTradingEngine {
-  const { config, repositories, logger } = deps;
+  const { config, repositories, logger, riskEngine } = deps;
   let cashBalanceUsd = config.PAPER_STARTING_BALANCE_USD;
 
   async function loadCashBalance(): Promise<void> {
@@ -211,18 +213,30 @@ export function createPaperTradingEngine(
       }
 
       if (input.limitPrice <= 0 || input.sizeUsd <= 0) {
-        const order = await repositories.order.createPaperOrder({
-          ...baseOrder,
-          price: input.limitPrice,
-          size: 0,
-          notionalUsd: 0,
-          status: "FAILED",
-        });
-        return { order, rejectedReason: "Invalid price or size" };
+        return { rejectedReason: "Invalid price or size" };
       }
 
-      const size = round8(input.sizeUsd / input.limitPrice);
-      const notionalUsd = round8(input.sizeUsd);
+      const riskContext = input.riskContext ?? { isNewEntry: input.side === "BUY" };
+      const riskResult = await riskEngine.checkOrder({
+        marketId: input.marketId,
+        outcomeId: input.outcomeId,
+        tokenId: input.tokenId,
+        side: input.side,
+        limitPrice: input.limitPrice,
+        sizeUsd: input.sizeUsd,
+        isNewEntry: riskContext.isNewEntry,
+        spread: riskContext.spread,
+        liquidityUsd: riskContext.liquidityUsd,
+        dataUpdatedAt: riskContext.dataUpdatedAt,
+      });
+
+      if (!riskResult.allowed) {
+        return { rejectedReason: riskResult.reason };
+      }
+
+      const effectiveSizeUsd = riskResult.adjustedSizeUsd ?? input.sizeUsd;
+      const size = round8(effectiveSizeUsd / input.limitPrice);
+      const notionalUsd = round8(effectiveSizeUsd);
 
       if (input.side === "BUY" && notionalUsd > cashBalanceUsd) {
         const order = await repositories.order.createPaperOrder({

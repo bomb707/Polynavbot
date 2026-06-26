@@ -177,11 +177,27 @@ export async function runPaperTrading(
       limitPrice: scoreResult.suggestedEntryPrice,
       sizeUsd: scoreResult.suggestedSizeUsd,
       signalId: signal.id,
+      riskContext: {
+        spread: orderBook.spread,
+        liquidityUsd: toNumber(outcome.liquidity),
+        dataUpdatedAt: outcome.updatedAt,
+        isNewEntry: true,
+      },
     });
+
+    if (rejectedReason) {
+      ordersRejected += 1;
+      continue;
+    }
+
+    if (!order) {
+      ordersRejected += 1;
+      continue;
+    }
 
     ordersPlaced += 1;
 
-    if (rejectedReason || order.status === "FAILED") {
+    if (order.status === "FAILED") {
       ordersRejected += 1;
       continue;
     }

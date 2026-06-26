@@ -1,6 +1,9 @@
 import type { ILogger } from "../logger/types.js";
 import type { IRiskManager } from "./types.js";
 
+export { createRiskEngine, type RiskEngineDeps } from "./riskEngine.js";
+export type { IRiskEngine, OrderRiskCheckInput, RiskCheckResult } from "./riskTypes.js";
+
 /** Future: position sizing, exposure limits, and kill switches. */
 export function createRiskManager(logger: ILogger): IRiskManager {
   return {

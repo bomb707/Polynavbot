@@ -5,6 +5,11 @@ import type { Config } from "../config/index.js";
 import type { IRepositories } from "../db/repositories/index.js";
 import { createPaperTradingEngine } from "./paperTradingEngine.js";
 import type { OrderBook } from "../polymarket/publicTypes.js";
+import type { IRiskEngine } from "../risk/riskTypes.js";
+
+const allowAllRiskEngine: IRiskEngine = {
+  checkOrder: vi.fn().mockResolvedValue({ allowed: true, reason: "Approved" }),
+};
 
 const baseConfig = {
   TRADING_MODE: "paper",
@@ -175,6 +180,7 @@ describe("createPaperTradingEngine", () => {
       config: baseConfig,
       repositories,
       logger: { info: vi.fn(), warn: vi.fn(), debug: vi.fn(), error: vi.fn() } as never,
+      riskEngine: allowAllRiskEngine,
     });
     await engine.initialize();
 
@@ -202,6 +208,7 @@ describe("createPaperTradingEngine", () => {
       config: baseConfig,
       repositories,
       logger: { info: vi.fn(), warn: vi.fn(), debug: vi.fn(), error: vi.fn() } as never,
+      riskEngine: allowAllRiskEngine,
     });
     await engine.initialize();
 
@@ -228,6 +235,7 @@ describe("createPaperTradingEngine", () => {
       config: { ...baseConfig, PAPER_STARTING_BALANCE_USD: 1 } as Config,
       repositories,
       logger: { info: vi.fn(), warn: vi.fn(), debug: vi.fn(), error: vi.fn() } as never,
+      riskEngine: allowAllRiskEngine,
     });
     await engine.initialize();
 
@@ -249,6 +257,7 @@ describe("createPaperTradingEngine", () => {
       config: baseConfig,
       repositories,
       logger: { info: vi.fn(), warn: vi.fn(), debug: vi.fn(), error: vi.fn() } as never,
+      riskEngine: allowAllRiskEngine,
     });
     await engine.initialize();
 
@@ -292,6 +301,7 @@ describe("createPaperTradingEngine", () => {
       config: baseConfig,
       repositories,
       logger: { info: vi.fn(), warn: vi.fn(), debug: vi.fn(), error: vi.fn() } as never,
+      riskEngine: allowAllRiskEngine,
     });
     await engine.initialize();
 
@@ -327,6 +337,7 @@ describe("createPaperTradingEngine", () => {
       config: baseConfig,
       repositories,
       logger: { info: vi.fn(), warn: vi.fn(), debug: vi.fn(), error: vi.fn() } as never,
+      riskEngine: allowAllRiskEngine,
     });
     await engine.initialize();
 
@@ -356,6 +367,7 @@ describe("createPaperTradingEngine", () => {
       config: baseConfig,
       repositories,
       logger: { info: vi.fn(), warn: vi.fn(), debug: vi.fn(), error: vi.fn() } as never,
+      riskEngine: allowAllRiskEngine,
     });
     await engine.initialize();
 

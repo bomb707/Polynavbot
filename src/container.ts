@@ -20,7 +20,9 @@ import type { IPublicClient } from "./polymarket/publicClient.js";
 import { createPositionStore } from "./positions/index.js";
 import type { IPositionStore } from "./positions/types.js";
 import { createRiskManager } from "./risk/index.js";
+import { createRiskEngine } from "./risk/riskEngine.js";
 import type { IRiskManager } from "./risk/types.js";
+import type { IRiskEngine } from "./risk/riskTypes.js";
 import { createMarketScanner } from "./scanner/marketScanner.js";
 import type { IMarketScanner } from "./scanner/types.js";
 import { createStrategy, createLongshotScorer } from "./strategy/index.js";
@@ -37,6 +39,7 @@ export class AppContainer {
   private _scanner?: IMarketScanner;
   private _strategy?: IStrategy;
   private _riskManager?: IRiskManager;
+  private _riskEngine?: IRiskEngine;
   private _execution?: IExecutionService;
   private _paperTrader?: IPaperTrader;
   private _paperTradingEngine?: IPaperTradingEngine;
@@ -114,6 +117,17 @@ export class AppContainer {
     return this._riskManager;
   }
 
+  get riskEngine(): IRiskEngine {
+    if (!this._riskEngine) {
+      this._riskEngine = createRiskEngine({
+        config: this.config,
+        repositories: this.repositories,
+        logger: this.logger,
+      });
+    }
+    return this._riskEngine;
+  }
+
   get execution(): IExecutionService {
     if (!this._execution) {
       this._execution = createExecutionService(this.logger);
@@ -134,6 +148,7 @@ export class AppContainer {
         config: this.config,
         repositories: this.repositories,
         logger: this.logger,
+        riskEngine: this.riskEngine,
       });
     }
     return this._paperTradingEngine;

@@ -27,6 +27,11 @@ export interface ITradeRepository {
   create(data: CreateTradeInput): Promise<Trade>;
   findByOrderId(orderId: string): Promise<Trade[]>;
   sumNotionalBySide(source: TradeSource, side: OrderSide): Promise<number>;
+  sumNotionalSince(
+    source: TradeSource,
+    side: OrderSide,
+    since: Date,
+  ): Promise<number>;
   sumRealizedPnl(): Promise<number>;
 }
 
@@ -68,6 +73,19 @@ export function createTradeRepository(prisma: PrismaClient): ITradeRepository {
     async sumNotionalBySide(source, side) {
       const result = await prisma.trade.aggregate({
         where: { source, side },
+        _sum: { notionalUsd: true },
+      });
+
+      return toNumber(result._sum.notionalUsd);
+    },
+
+    async sumNotionalSince(source, side, since) {
+      const result = await prisma.trade.aggregate({
+        where: {
+          source,
+          side,
+          timestamp: { gte: since },
+        },
         _sum: { notionalUsd: true },
       });
 
