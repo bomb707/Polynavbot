@@ -10,6 +10,7 @@ import { formatPositionsUpdateSummary, runPositionsUpdate } from "./positionsUpd
 import { formatScanSummary, runScan } from "./scan.js";
 import { runScheduler } from "./scheduler.js";
 import { runWorker } from "./worker.js";
+import { runWsMonitor } from "./wsMonitor.js";
 
 export function createCli(container: AppContainer): Command {
   const program = new Command();
@@ -163,6 +164,20 @@ export function createCli(container: AppContainer): Command {
         await runScheduler(container);
         await container.shutdown();
         process.exit(0);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(message);
+        await container.shutdown();
+        process.exit(1);
+      }
+    });
+
+  program
+    .command("ws:monitor")
+    .description("Run WebSocket price monitor for open positions")
+    .action(async () => {
+      try {
+        await runWsMonitor(container);
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         console.error(message);

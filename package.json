@@ -21,7 +21,8 @@
     "positions:update": "tsx src/index.ts positions:update",
     "backtest": "tsx src/index.ts backtest",
     "worker": "tsx src/index.ts worker",
-    "scheduler": "tsx src/index.ts scheduler"
+    "scheduler": "tsx src/index.ts scheduler",
+    "ws:monitor": "tsx src/index.ts ws:monitor"
   },
   "dependencies": {
     "@polymarket/clob-client-v2": "^1.0.6",
@@ -32,11 +33,13 @@
     "ioredis": "^5.6.1",
     "pino": "^9.7.0",
     "viem": "^2.53.1",
+    "ws": "^8.21.0",
     "zod": "^3.25.56"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
     "@types/node": "^22.15.30",
+    "@types/ws": "^8.18.1",
     "@typescript-eslint/eslint-plugin": "^8.33.1",
     "@typescript-eslint/parser": "^8.33.1",
     "eslint": "^9.28.0",

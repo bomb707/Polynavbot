@@ -81,6 +81,15 @@ export const envSchema = z
     POLY_API_KEY: z.string().min(1).optional(),
     POLY_API_SECRET: z.string().min(1).optional(),
     POLY_API_PASSPHRASE: z.string().min(1).optional(),
+
+    WS_ENABLED: z.coerce.boolean().default(false),
+    WS_PING_INTERVAL_MS: z.coerce.number().int().positive().default(10000),
+    WS_RECONNECT_BASE_MS: z.coerce.number().int().positive().default(1000),
+    WS_RECONNECT_MAX_MS: z.coerce.number().int().positive().default(30000),
+    WS_SNAPSHOT_INTERVAL_SECONDS: z.coerce.number().int().positive().default(60),
+    WS_EXIT_DEBOUNCE_MS: z.coerce.number().int().positive().default(2000),
+    WS_SUBSCRIPTION_REFRESH_MS: z.coerce.number().int().positive().default(60000),
+    WS_REST_RECONCILE_INTERVAL_SECONDS: z.coerce.number().int().positive().default(120),
   })
   .superRefine((data, ctx) => {
     if (data.MIN_ENTRY_PRICE >= data.MAX_ENTRY_PRICE) {

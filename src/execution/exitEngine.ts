@@ -5,6 +5,7 @@ import { isLiveMode, isPaperMode } from "../config/index.js";
 import type { IRepositories } from "../db/repositories/index.js";
 import type { PositionExitState } from "../db/repositories/position.repository.js";
 import type { ILogger } from "../logger/types.js";
+import { midPrice } from "../polymarket/orderBookPricing.js";
 import type { IPublicClient } from "../polymarket/publicClient.js";
 import type { OrderBook } from "../polymarket/publicTypes.js";
 import type { IPaperTradingEngine } from "../paper/paperTypes.js";
@@ -284,8 +285,116 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
     await repositories.position.updateExitState(positionId, exitState);
   }
 
+  async function evaluatePositionExit(position: Position): Promise<ExitActionRecord | null> {
+    const market = await repositories.market.findById(position.marketId);
+    const outcome = await repositories.outcome.findByTokenId(position.tokenId);
+    if (!market || !outcome) {
+      return null;
+    }
+
+    const orderBook = await publicClient.getOrderBook(position.tokenId);
+    if (!orderBook) {
+      return null;
+    }
+
+    const sellPriceResult = computePassiveSellPrice(orderBook);
+    const currentPrice =
+      midPrice(orderBook) ??
+      orderBook.bestBid ??
+      orderBook.bestAsk ??
+      toNumber(position.currentPrice) ??
+      toNum(position.avgEntryPrice);
+
+    if (isPaperMode(config)) {
+      await paperTradingEngine.markToMarket(position.tokenId, currentPrice);
+    }
+
+    const exitState = await resolveExitState(position, currentPrice);
+    const liquidityUsd = toNumber(outcome.liquidity);
+
+    const todayPnl = await repositories.position.sumRealizedPnlSince(
+      new Date(Date.now() - 24 * 60 * 60 * 1000),
+    );
+    const riskForced = todayPnl < -config.MAX_DAILY_LOSS_USD;
+
+    const evaluation = evaluateExit({
+      position,
+      exitState,
+      currentPrice,
+      orderBook,
+      market,
+      liquidityUsd,
+      riskForced,
+    });
+
+    if (evaluation.action === "hold") {
+      await updatePositionAfterExit(position.id, evaluation.nextExitState);
+      return {
+        tokenId: position.tokenId,
+        question: market.question,
+        action: "hold",
+        reason: evaluation.reason,
+        sellSizeShares: 0,
+        sellPrice: "sellPrice" in sellPriceResult ? sellPriceResult.sellPrice : currentPrice,
+        filled: false,
+      };
+    }
+
+    const sellResult = await executeSellOrder(
+      position,
+      evaluation.sellSizeShares,
+      evaluation.sellPrice,
+      orderBook,
+      liquidityUsd,
+    );
+
+    await updatePositionAfterExit(position.id, evaluation.nextExitState);
+
+    logger.info(
+      {
+        tokenId: position.tokenId,
+        action: evaluation.action,
+        reason: evaluation.reason,
+        filled: sellResult.filled,
+      },
+      "Exit evaluated",
+    );
+
+    return {
+      tokenId: position.tokenId,
+      question: market.question,
+      action: evaluation.action,
+      reason: evaluation.reason,
+      sellSizeShares: evaluation.sellSizeShares,
+      sellPrice: evaluation.sellPrice,
+      filled: sellResult.filled,
+      realizedPnlUsd: sellResult.filled ? sellResult.realizedPnlUsd : undefined,
+    };
+  }
+
   return {
     evaluateExit,
+
+    async runForToken(tokenId) {
+      await executionEngine.initialize();
+
+      if (isPaperMode(config)) {
+        await paperTradingEngine.initialize();
+      }
+
+      const position = await repositories.position.findOpenByTokenId(tokenId);
+      if (!position) {
+        return null;
+      }
+
+      const action = await evaluatePositionExit(position);
+
+      if (isLiveMode(config)) {
+        await executionEngine.syncTrades();
+      }
+
+      return action;
+    },
 
     async run() {
       await executionEngine.initialize();
@@ -302,99 +411,24 @@ export function createExitEngine(deps: ExitEngineDeps): IExitEngine {
       let totalRealizedPnlUsd = 0;
 
       for (const position of positions) {
-        const market = await repositories.market.findById(position.marketId);
-        const outcome = await repositories.outcome.findByTokenId(position.tokenId);
-        if (!market || !outcome) {
-          continue;
-        }
-
-        const orderBook = await publicClient.getOrderBook(position.tokenId);
-        if (!orderBook) {
+        const action = await evaluatePositionExit(position);
+        if (!action) {
           holds += 1;
           continue;
         }
 
-        const sellPriceResult = computePassiveSellPrice(orderBook);
-        const currentPrice =
-          orderBook.bestBid ??
-          orderBook.bestAsk ??
-          toNumber(position.currentPrice) ??
-          toNum(position.avgEntryPrice);
+        actions.push(action);
 
-        if (isPaperMode(config)) {
-          await paperTradingEngine.markToMarket(position.tokenId, currentPrice);
-        }
-
-        const exitState = await resolveExitState(position, currentPrice);
-        const liquidityUsd = toNumber(outcome.liquidity);
-
-        const todayPnl = await repositories.position.sumRealizedPnlSince(
-          new Date(Date.now() - 24 * 60 * 60 * 1000),
-        );
-        const riskForced = todayPnl < -config.MAX_DAILY_LOSS_USD;
-
-        const evaluation = evaluateExit({
-          position,
-          exitState,
-          currentPrice,
-          orderBook,
-          market,
-          liquidityUsd,
-          riskForced,
-        });
-
-        if (evaluation.action === "hold") {
-          await updatePositionAfterExit(position.id, evaluation.nextExitState);
+        if (action.action === "hold") {
           holds += 1;
-          actions.push({
-            tokenId: position.tokenId,
-            question: market.question,
-            action: "hold",
-            reason: evaluation.reason,
-            sellSizeShares: 0,
-            sellPrice: "sellPrice" in sellPriceResult ? sellPriceResult.sellPrice : currentPrice,
-            filled: false,
-          });
           continue;
         }
-
-        const sellResult = await executeSellOrder(
-          position,
-          evaluation.sellSizeShares,
-          evaluation.sellPrice,
-          orderBook,
-          liquidityUsd,
-        );
 
         exitsPlaced += 1;
-
-        if (sellResult.filled) {
+        if (action.filled) {
           exitsFilled += 1;
-          totalRealizedPnlUsd += sellResult.realizedPnlUsd;
+          totalRealizedPnlUsd += action.realizedPnlUsd ?? 0;
         }
-
-        await updatePositionAfterExit(position.id, evaluation.nextExitState);
-
-        actions.push({
-          tokenId: position.tokenId,
-          question: market.question,
-          action: evaluation.action,
-          reason: evaluation.reason,
-          sellSizeShares: evaluation.sellSizeShares,
-          sellPrice: evaluation.sellPrice,
-          filled: sellResult.filled,
-          realizedPnlUsd: sellResult.filled ? sellResult.realizedPnlUsd : undefined,
-        });
-
-        logger.info(
-          {
-            tokenId: position.tokenId,
-            action: evaluation.action,
-            reason: evaluation.reason,
-            filled: sellResult.filled,
-          },
-          "Exit evaluated",
-        );
       }
 
       if (isLiveMode(config)) {

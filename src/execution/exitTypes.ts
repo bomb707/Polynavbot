@@ -57,5 +57,6 @@ export interface ExitPaperSummary {
 
 export interface IExitEngine {
   run(): Promise<ExitPaperSummary>;
+  runForToken(tokenId: string): Promise<ExitActionRecord | null>;
   evaluateExit(input: ExitEvaluationInput): ExitEvaluation;
 }

@@ -10,10 +10,18 @@ export async function runWorker(container: AppContainer): Promise<void> {
 
   await container.db.connect();
   await container.redis.connect();
+
+  if (container.config.WS_ENABLED) {
+    await container.wsMonitorService.start();
+  }
+
   await startWorkers(container);
 
   const shutdown = async (signal: string) => {
     container.logger.info({ signal }, "Worker shutting down");
+    if (container.config.WS_ENABLED) {
+      await container.wsMonitorService.stop();
+    }
     await stopWorkers();
     await container.shutdown();
     process.exit(0);

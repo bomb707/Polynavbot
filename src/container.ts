@@ -23,6 +23,11 @@ import { createClobClient } from "./polymarket/clobClient.js";
 import type { IClobClient } from "./polymarket/clobTypes.js";
 import { createPublicClient } from "./polymarket/publicClient.js";
 import type { IPublicClient } from "./polymarket/publicClient.js";
+import { createPriceCache } from "./polymarket/priceCache.js";
+import type { IPriceCache } from "./polymarket/priceCache.js";
+import { createWsClient } from "./polymarket/wsClient.js";
+import type { IWsClient, IWsMonitorService } from "./polymarket/wsTypes.js";
+import { createWsMonitorService } from "./polymarket/wsMonitorService.js";
 import { createExecutionEngine } from "./execution/createExecutionEngine.js";
 import type { IExecutionEngine } from "./execution/executionEngineTypes.js";
 import { createPositionMonitor } from "./positions/positionMonitor.js";
@@ -62,6 +67,9 @@ export class AppContainer {
   private _entryEngine?: IEntryEngine;
   private _exitEngine?: IExitEngine;
   private _positionMonitor?: IPositionMonitor;
+  private _priceCache?: IPriceCache;
+  private _wsClient?: IWsClient;
+  private _wsMonitorService?: IWsMonitorService;
 
   constructor(readonly config: Config) {}
 
@@ -241,6 +249,36 @@ export class AppContainer {
       });
     }
     return this._positionMonitor;
+  }
+
+  get priceCache(): IPriceCache {
+    if (!this._priceCache) {
+      this._priceCache = createPriceCache();
+    }
+    return this._priceCache;
+  }
+
+  get wsClient(): IWsClient {
+    if (!this._wsClient) {
+      this._wsClient = createWsClient(this.config, this.logger);
+    }
+    return this._wsClient;
+  }
+
+  get wsMonitorService(): IWsMonitorService {
+    if (!this._wsMonitorService) {
+      this._wsMonitorService = createWsMonitorService({
+        config: this.config,
+        logger: this.logger,
+        repositories: this.repositories,
+        wsClient: this.wsClient,
+        priceCache: this.priceCache,
+        publicClient: this.publicClient,
+        exitEngine: this.exitEngine,
+        paperTradingEngine: this.paperTradingEngine,
+      });
+    }
+    return this._wsMonitorService;
   }
 
   get positionStore(): IPositionStore {
