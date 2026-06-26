@@ -12,5 +12,6 @@ export function createBacktestConfig(config: Config): BacktestConfig {
     startingCapitalUsd: config.BACKTEST_STARTING_CAPITAL_USD,
     seed: config.BACKTEST_SEED,
     feeMode: config.BACKTEST_FEE_MODE,
+    maxMarkets: config.BACKTEST_MAX_MARKETS,
   };
 }

@@ -33,6 +33,14 @@ export interface GetActiveMarketsResult {
   skipped: number;
 }
 
+export interface GetBacktestMarketsParams {
+  start: Date;
+  end: Date;
+  limit: number;
+  offset: number;
+  closed: boolean;
+}
+
 export interface OrderBookLevel {
   price: number;
   size: number;

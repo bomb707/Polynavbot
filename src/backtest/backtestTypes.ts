@@ -25,6 +25,7 @@ export interface BacktestConfig {
   startingCapitalUsd: number;
   seed: number;
   feeMode: BacktestFeeMode;
+  maxMarkets: number;
 }
 
 export interface PriceBar {

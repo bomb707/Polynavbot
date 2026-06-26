@@ -72,6 +72,7 @@ export const envSchema = z
     BACKTEST_MIN_LIQUIDITY_FOR_EXIT: z.coerce.number().positive().default(1000),
     BACKTEST_STARTING_CAPITAL_USD: z.coerce.number().positive().default(500),
     BACKTEST_SEED: z.coerce.number().int().default(42),
+    BACKTEST_MAX_MARKETS: z.coerce.number().int().positive().default(100),
 
     LIVE_TRADING_CONFIRMATION: z.string().min(1).optional(),
     POLY_SIGNATURE_TYPE: z.coerce.number().int().min(0).max(3).default(3),

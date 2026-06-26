@@ -16,6 +16,7 @@ import type {
   ActivityItem,
   GetActiveMarketsParams,
   GetActiveMarketsResult,
+  GetBacktestMarketsParams,
   NormalizedMarket,
   NormalizedOutcome,
   OrderBook,
@@ -33,6 +34,7 @@ export interface IPublicClient {
     endTs: number,
     interval: string,
   ): Promise<PriceHistoryPoint[]>;
+  getBacktestMarkets(start: Date, end: Date, maxMarkets: number): Promise<NormalizedMarket[]>;
   getUserActivity(
     walletAddress: string,
     limit: number,
@@ -46,6 +48,10 @@ export interface IPublicClient {
   fetchActiveMarketsRaw(params: GetActiveMarketsParams): Promise<unknown[]>;
   getClobMarketInfo(conditionId: string): Promise<ClobMarketInfo | null>;
 }
+
+const GAMMA_MARKETS_PAGE_SIZE = 100;
+/** CLOB /prices-history rejects ranges longer than ~15 days. */
+const CLOB_PRICE_HISTORY_MAX_CHUNK_SECONDS = 14 * 24 * 60 * 60;
 
 function toNumber(value: unknown): number | null {
   if (value === null || value === undefined) {
@@ -281,7 +287,112 @@ export function createPublicClient(
     return { tokenId, bids, asks, bestBid, bestAsk, spread };
   };
 
-  const getPricesHistory = async (
+  const buildBacktestMarketsUrl = (params: GetBacktestMarketsParams): URL => {
+    const url = new URL("/markets", config.POLY_GAMMA_API_URL);
+    url.searchParams.set("limit", String(params.limit));
+    url.searchParams.set("offset", String(params.offset));
+    url.searchParams.set("closed", String(params.closed));
+    url.searchParams.set("end_date_min", params.start.toISOString());
+    url.searchParams.set("start_date_max", params.end.toISOString());
+    return url;
+  };
+
+  const fetchBacktestMarketsPage = async (
+    params: GetBacktestMarketsParams,
+  ): Promise<NormalizedMarket[]> => {
+    const url = buildBacktestMarketsUrl(params);
+    const payload = await http.fetchJson<unknown>(url.toString());
+    const rawMarkets = extractGammaMarkets(payload);
+    const markets: NormalizedMarket[] = [];
+
+    for (const rawMarket of rawMarkets) {
+      const normalized = normalizeMarket(rawMarket);
+      if (normalized?.enableOrderBook) {
+        markets.push(normalized);
+      }
+    }
+
+    return markets;
+  };
+
+  const getBacktestMarkets = async (
+    start: Date,
+    end: Date,
+    maxMarkets: number,
+  ): Promise<NormalizedMarket[]> => {
+    const seen = new Set<string>();
+    const markets: NormalizedMarket[] = [];
+
+    for (const closed of [false, true]) {
+      let offset = 0;
+
+      while (markets.length < maxMarkets) {
+        const page = await fetchBacktestMarketsPage({
+          start,
+          end,
+          limit: GAMMA_MARKETS_PAGE_SIZE,
+          offset,
+          closed,
+        });
+
+        if (page.length === 0) {
+          break;
+        }
+
+        for (const market of page) {
+          if (seen.has(market.polymarketMarketId)) {
+            continue;
+          }
+          seen.add(market.polymarketMarketId);
+          markets.push(market);
+          if (markets.length >= maxMarkets) {
+            break;
+          }
+        }
+
+        if (page.length < GAMMA_MARKETS_PAGE_SIZE) {
+          break;
+        }
+
+        offset += GAMMA_MARKETS_PAGE_SIZE;
+      }
+
+      if (markets.length >= maxMarkets) {
+        break;
+      }
+    }
+
+    return markets;
+  };
+
+  const parsePriceHistoryPayload = (payload: unknown): PriceHistoryPoint[] => {
+    if (
+      payload !== null &&
+      typeof payload === "object" &&
+      "error" in payload &&
+      typeof (payload as { error?: unknown }).error === "string"
+    ) {
+      return [];
+    }
+
+    const parsed = rawPriceHistorySchema.safeParse(payload);
+    if (!parsed.success) {
+      return [];
+    }
+
+    return parsed.data.history
+      .map((point) => {
+        const timestamp = new Date(Number(point.t) * 1000);
+        const price = Number(point.p);
+        if (Number.isNaN(timestamp.getTime()) || Number.isNaN(price)) {
+          return null;
+        }
+        return { timestamp, price };
+      })
+      .filter((point): point is PriceHistoryPoint => point !== null);
+  };
+
+  const fetchPricesHistoryChunk = async (
     tokenId: string,
     startTs: number,
     endTs: number,
@@ -301,25 +412,41 @@ export function createPublicClient(
       return [];
     }
 
-    const parsed = rawPriceHistorySchema.safeParse(payload);
-    if (!parsed.success) {
-      logger.warn(
-        { tokenId, issues: parsed.error.issues },
-        "Invalid price history response",
-      );
+    const points = parsePriceHistoryPayload(payload);
+    if (points.length === 0 && interval !== "max") {
+      return fetchPricesHistoryChunk(tokenId, startTs, endTs, "max");
+    }
+
+    return points;
+  };
+
+  const getPricesHistory = async (
+    tokenId: string,
+    startTs: number,
+    endTs: number,
+    interval: string,
+  ): Promise<PriceHistoryPoint[]> => {
+    if (endTs <= startTs) {
       return [];
     }
 
-    return parsed.data.history
-      .map((point) => {
-        const timestamp = new Date(Number(point.t) * 1000);
-        const price = Number(point.p);
-        if (Number.isNaN(timestamp.getTime()) || Number.isNaN(price)) {
-          return null;
-        }
-        return { timestamp, price };
-      })
-      .filter((point): point is PriceHistoryPoint => point !== null);
+    if (endTs - startTs <= CLOB_PRICE_HISTORY_MAX_CHUNK_SECONDS) {
+      return fetchPricesHistoryChunk(tokenId, startTs, endTs, interval);
+    }
+
+    const byTs = new Map<number, PriceHistoryPoint>();
+    let chunkStart = startTs;
+
+    while (chunkStart < endTs) {
+      const chunkEnd = Math.min(chunkStart + CLOB_PRICE_HISTORY_MAX_CHUNK_SECONDS, endTs);
+      const chunk = await fetchPricesHistoryChunk(tokenId, chunkStart, chunkEnd, interval);
+      for (const point of chunk) {
+        byTs.set(point.timestamp.getTime(), point);
+      }
+      chunkStart = chunkEnd;
+    }
+
+    return [...byTs.values()].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
   };
 
   const getUserActivity = async (
@@ -431,6 +558,7 @@ export function createPublicClient(
     getMarketBySlug,
     getOrderBook,
     getPricesHistory,
+    getBacktestMarkets,
     getUserActivity,
     getClobMarketInfo,
     normalizeMarket,

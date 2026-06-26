@@ -55,6 +55,7 @@ describe("createDataLoader", () => {
         minLiquidityForExit: 1000,
         startingCapitalUsd: 500,
         seed: 42,
+        maxMarkets: 100,
       },
       logger: { info: vi.fn(), debug: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
       publicClient: {
@@ -101,6 +102,8 @@ describe("createDataLoader", () => {
             liquidity: { toNumber: () => 5000 },
             volume: { toNumber: () => 1000 },
           }),
+          listAllTokenRefs: vi.fn().mockResolvedValue([]),
+          findTokenRefsForBacktest: vi.fn().mockResolvedValue([]),
         },
       } as never,
     });
@@ -108,5 +111,104 @@ describe("createDataLoader", () => {
     const dataset = await loader.loadBacktestDataset(start, end);
     expect(dataset.series).toHaveLength(1);
     expect(dataset.series[0]?.bars.length).toBe(2);
+  });
+
+  it("falls back to Gamma API when snapshots and DB outcomes are empty", async () => {
+    const { createDataLoader } = await import("./dataLoader.js");
+
+    const start = new Date("2025-01-01T00:00:00.000Z");
+    const end = new Date("2025-01-02T00:00:00.000Z");
+
+    const loader = createDataLoader({
+      config: {
+        interval: "1h",
+        slippageBps: 50,
+        fillProbability: 0.7,
+        assumedSpread: 0.02,
+        topOfBookDepthUsd: 25,
+        minLiquidityForExit: 1000,
+        startingCapitalUsd: 500,
+        seed: 42,
+        maxMarkets: 10,
+        feeMode: "mixed",
+      },
+      logger: { info: vi.fn(), debug: vi.fn(), warn: vi.fn(), error: vi.fn() } as never,
+      publicClient: {
+        getBacktestMarkets: vi.fn().mockResolvedValue([
+          {
+            polymarketMarketId: "pm-1",
+            conditionId: "cond-1",
+            question: "Will X win?",
+            slug: "will-x-win",
+            category: "politics",
+            active: true,
+            closed: false,
+            archived: false,
+            enableOrderBook: true,
+            endDate: new Date("2027-01-01"),
+            outcomes: [
+              {
+                tokenId: "token-1",
+                name: "Yes",
+                side: "YES",
+                price: 0.02,
+                outcomeIndex: 0,
+              },
+            ],
+          },
+        ]),
+        getPricesHistory: vi.fn().mockResolvedValue([
+          { timestamp: new Date("2025-01-01T00:00:00.000Z"), price: 0.02 },
+        ]),
+      } as never,
+      repositories: {
+        snapshot: {
+          findDistinctTokensInRange: vi.fn().mockResolvedValue([]),
+          findByTokenInRange: vi.fn().mockResolvedValue([]),
+        },
+        market: {
+          findById: vi.fn().mockResolvedValue({
+            id: "market-1",
+            question: "Will X win?",
+            category: "politics",
+            endDate: new Date("2027-01-01"),
+            active: true,
+            closed: false,
+            archived: false,
+            enableOrderBook: true,
+          }),
+          upsertByPolymarketId: vi.fn().mockResolvedValue({
+            id: "market-1",
+            question: "Will X win?",
+            category: "politics",
+            endDate: new Date("2027-01-01"),
+            active: true,
+            closed: false,
+            archived: false,
+            enableOrderBook: true,
+          }),
+        },
+        outcome: {
+          listAllTokenRefs: vi.fn().mockResolvedValue([]),
+          findTokenRefsForBacktest: vi.fn().mockResolvedValue([]),
+          findByTokenId: vi.fn().mockResolvedValue({
+            id: "outcome-1",
+            tokenId: "token-1",
+            name: "Yes",
+            liquidity: { toNumber: () => 5000 },
+            volume: { toNumber: () => 1000 },
+          }),
+          upsertByTokenId: vi.fn().mockResolvedValue({
+            id: "outcome-1",
+            tokenId: "token-1",
+            name: "Yes",
+          }),
+        },
+      } as never,
+    });
+
+    const dataset = await loader.loadBacktestDataset(start, end);
+    expect(dataset.series).toHaveLength(1);
+    expect(dataset.series[0]?.bars).toHaveLength(1);
   });
 });

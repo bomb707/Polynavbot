@@ -10,7 +10,8 @@
     "minLiquidityForExit": 1000,
     "startingCapitalUsd": 500,
     "seed": 42,
-    "feeMode": "mixed"
+    "feeMode": "mixed",
+    "maxMarkets": 20
   },
   "metrics": {
     "totalRoi": 0,
@@ -32,6 +33,979 @@
     "losingTrades": 0
   },
   "trades": [],
-  "equityCurve": [],
+  "equityCurve": [
+    {
+      "timestamp": "2026-06-26T17:03:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:04:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:04:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:05:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:05:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:06:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:06:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:07:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:07:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:08:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:09:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:09:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:10:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:10:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:11:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:11:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:12:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:12:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:12:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:12:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:12:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:13:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:13:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:14:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:14:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:15:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:15:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:15:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:16:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:16:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:17:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:17:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:18:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:18:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:19:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:19:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:20:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:20:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:20:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:20:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:21:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:21:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:22:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:22:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:23:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:24:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:24:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:25:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:25:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:26:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:26:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:27:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:27:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:28:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:28:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:29:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:29:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:30:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:30:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:30:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:31:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:31:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:32:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:32:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:33:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:34:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:34:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:34:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:35:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:35:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:36:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:36:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:37:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:37:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:38:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:38:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:38:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:38:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:39:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:39:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:40:17.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:40:18.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:41:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:41:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:42:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:42:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:43:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:43:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:44:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:44:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:45:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:45:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:46:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:46:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:47:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:47:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:48:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:48:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:48:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:48:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:49:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:49:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:50:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:50:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:50:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:51:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:51:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:52:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:52:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:53:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:53:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:54:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:54:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:54:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:55:15.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:55:16.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:56:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:56:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:57:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:57:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:58:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:58:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T17:59:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:00:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:00:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:00:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:00:08.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:00:09.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:01:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:02:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:02:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:03:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:03:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:04:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:04:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:05:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:05:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:05:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:06:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:06:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:07:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:08:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:08:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:09:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:09:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:10:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:10:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:11:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:11:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:12:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:12:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:13:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:13:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:14:03.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:14:05.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:14:06.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:14:07.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:15:17.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:15:18.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:15:19.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:16:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    },
+    {
+      "timestamp": "2026-06-26T18:17:04.000Z",
+      "equityUsd": 500,
+      "cashUsd": 500,
+      "deployedUsd": 0
+    }
+  ],
   "tokensTraded": 0
 }
