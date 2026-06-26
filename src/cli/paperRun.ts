@@ -2,21 +2,9 @@ import type { AppContainer } from "../container.js";
 import { isPaperMode } from "../config/index.js";
 import { buildScoreInput, toNumber } from "../execution/entryHelpers.js";
 import type { ScanOptions } from "../scanner/types.js";
+import { midPrice } from "../polymarket/orderBookPricing.js";
 import type { OrderBook } from "../polymarket/publicTypes.js";
 import type { PaperRunSummary } from "../paper/paperTypes.js";
-
-function midPrice(orderBook: OrderBook): number | null {
-  if (orderBook.bestBid != null && orderBook.bestAsk != null) {
-    return (orderBook.bestBid + orderBook.bestAsk) / 2;
-  }
-  if (orderBook.bestAsk != null) {
-    return orderBook.bestAsk;
-  }
-  if (orderBook.bestBid != null) {
-    return orderBook.bestBid;
-  }
-  return null;
-}
 
 export function formatPaperRunSummary(summary: PaperRunSummary): string {
   const lines = [

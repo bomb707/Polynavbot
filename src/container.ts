@@ -21,6 +21,8 @@ import { createPolymarketClient } from "./polymarket/index.js";
 import type { IPolymarketClient } from "./polymarket/types.js";
 import { createPublicClient } from "./polymarket/publicClient.js";
 import type { IPublicClient } from "./polymarket/publicClient.js";
+import { createPositionMonitor } from "./positions/positionMonitor.js";
+import type { IPositionMonitor } from "./positions/positionMonitorTypes.js";
 import { createPositionStore } from "./positions/index.js";
 import type { IPositionStore } from "./positions/types.js";
 import { createRiskManager } from "./risk/index.js";
@@ -52,6 +54,7 @@ export class AppContainer {
   private _longshotScorer?: ILongshotScorer;
   private _entryEngine?: IEntryEngine;
   private _exitEngine?: IExitEngine;
+  private _positionMonitor?: IPositionMonitor;
 
   constructor(readonly config: Config) {}
 
@@ -195,6 +198,20 @@ export class AppContainer {
       });
     }
     return this._exitEngine;
+  }
+
+  get positionMonitor(): IPositionMonitor {
+    if (!this._positionMonitor) {
+      this._positionMonitor = createPositionMonitor({
+        config: this.config,
+        repositories: this.repositories,
+        publicClient: this.publicClient,
+        paperTradingEngine: this.paperTradingEngine,
+        exitEngine: this.exitEngine,
+        logger: this.logger,
+      });
+    }
+    return this._positionMonitor;
   }
 
   get positionStore(): IPositionStore {

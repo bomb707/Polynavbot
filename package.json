@@ -17,7 +17,8 @@
     "test": "vitest run",
     "paper:run": "tsx src/index.ts paper:run",
     "entry:paper": "tsx src/index.ts entry:paper",
-    "exit:paper": "tsx src/index.ts exit:paper"
+    "exit:paper": "tsx src/index.ts exit:paper",
+    "positions:update": "tsx src/index.ts positions:update"
   },
   "dependencies": {
     "@prisma/client": "^6.9.0",
