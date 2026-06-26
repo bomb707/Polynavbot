@@ -262,25 +262,6 @@ export function createMarketScanner(deps: MarketScannerDeps): IMarketScanner {
     limit: number,
     offset: number,
   ): Promise<{ rawMarkets: unknown[] }> => {
-    // #region agent log
-    fetch("http://localhost:7674/ingest/42e99566-2b71-4b77-875a-f5c34280b036", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Debug-Session-Id": "79ebf4",
-      },
-      body: JSON.stringify({
-        sessionId: "79ebf4",
-        runId: "pre-fix",
-        hypothesisId: "H1",
-        location: "marketScanner.ts:scanMarketPage",
-        message: "fetching market page",
-        data: { limit, offset, exceedsMax: offset >= GAMMA_MARKETS_MAX_OFFSET },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
-
     if (offset >= GAMMA_MARKETS_MAX_OFFSET) {
       logger.info(
         { offset, maxOffset: GAMMA_MARKETS_MAX_OFFSET },
@@ -297,24 +278,6 @@ export function createMarketScanner(deps: MarketScannerDeps): IMarketScanner {
       return { rawMarkets };
     } catch (error) {
       if (isGammaOffsetLimitError(error)) {
-        // #region agent log
-        fetch("http://localhost:7674/ingest/42e99566-2b71-4b77-875a-f5c34280b036", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Debug-Session-Id": "79ebf4",
-          },
-          body: JSON.stringify({
-            sessionId: "79ebf4",
-            runId: "pre-fix",
-            hypothesisId: "H3",
-            location: "marketScanner.ts:scanMarketPage",
-            message: "caught gamma offset limit 422",
-            data: { offset, status: 422 },
-            timestamp: Date.now(),
-          }),
-        }).catch(() => {});
-        // #endregion
         logger.info(
           { offset },
           "Gamma API offset limit reached (422), stopping pagination",
@@ -412,29 +375,6 @@ export function createMarketScanner(deps: MarketScannerDeps): IMarketScanner {
         break;
       }
     }
-
-    // #region agent log
-    fetch("http://localhost:7674/ingest/42e99566-2b71-4b77-875a-f5c34280b036", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Debug-Session-Id": "79ebf4",
-      },
-      body: JSON.stringify({
-        sessionId: "79ebf4",
-        runId: "pre-fix",
-        hypothesisId: "H2",
-        location: "marketScanner.ts:scanMarkets",
-        message: "scan complete",
-        data: {
-          marketsScanned,
-          candidatesFound: candidates.length,
-          pagesAttempted: Math.min(maxPages, Math.ceil(GAMMA_MARKETS_MAX_OFFSET / limitPerPage)),
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
 
     candidates.sort((a, b) => b.outcomeCount - a.outcomeCount);
 

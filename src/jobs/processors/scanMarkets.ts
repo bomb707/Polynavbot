@@ -1,7 +1,7 @@
 import type { Job } from "bullmq";
 
 import type { AppContainer } from "../../container.js";
-import { createDefaultJobOptions } from "../jobOptions.js";
+import { createDefaultJobOptions, sanitizeBullMqJobId } from "../jobOptions.js";
 import { withIdempotencyLock } from "../idempotency.js";
 import { withJobLog } from "../jobLog.js";
 import { QUEUE_NAMES } from "../queueNames.js";
@@ -20,6 +20,7 @@ export function createScanMarketsProcessor(container: AppContainer) {
           const summary = await scanner.scanMarkets();
           const scanRunId = jobId;
           const evaluateQueue = queueManager.getQueue(QUEUE_NAMES.EVALUATE_ENTRY);
+          const evaluateJobId = sanitizeBullMqJobId(`evaluate-entry__${scanRunId}`);
 
           await evaluateQueue.add(
             "evaluate-entry",
@@ -29,7 +30,7 @@ export function createScanMarketsProcessor(container: AppContainer) {
             },
             {
               ...createDefaultJobOptions(container.config),
-              jobId: `evaluate-entry:${scanRunId}`,
+              jobId: evaluateJobId,
             },
           );
 

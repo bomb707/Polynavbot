@@ -241,6 +241,12 @@ pnpm build
 pnpm start -- health
 ```
 
+# Terminal 1 — processes jobs (scan, entry, exit, position updates)
+pnpm worker
+
+# Terminal 2 — schedules recurring jobs
+pnpm scheduler
+
 ## License
 
 Private — not for public distribution.
