@@ -72,19 +72,20 @@ pnpm paper:run --max-pages 1 --limit-per-page 20
 | `pnpm exit:paper` | Exit only — partial exits, trailing stop, etc. |
 | `pnpm positions:update` | Mark open positions to market |
 | `pnpm report` | Write `reports/latest.md`, `latest.json`, `trades.csv` |
+| `pnpm dashboard` | Live browser dashboard (auto-refreshing) |
 | `pnpm scan` | Scan markets only (no trading) |
 
 All paper commands require `TRADING_MODE=paper`.
 
 ### Continuous paper trading (scheduled jobs)
 
-Run in two terminals:
+Run the worker continuously. Register schedules once with `pnpm scheduler` (it exits after writing cron jobs to Redis):
 
 ```bash
-# Terminal 1 — process jobs
+# Terminal 1 — keep running (processes jobs)
 pnpm worker
 
-# Terminal 2 — enqueue recurring scan/entry/exit jobs
+# One-time — register recurring scan/entry/exit jobs
 pnpm scheduler
 ```
 
@@ -98,7 +99,23 @@ WS_ENABLED=true
 pnpm ws:monitor
 ```
 
-### Portfolio report
+### Live dashboard
+
+Run alongside `pnpm worker` in a separate terminal:
+
+```bash
+pnpm dashboard
+```
+
+Open **http://127.0.0.1:3847** in your browser. The page auto-refreshes every 10 seconds (configurable).
+
+```bash
+pnpm dashboard --port 3847 --refresh 5
+```
+
+Shows portfolio summary, open positions, recent signals/trades, pending exits, and risk rejections.
+
+### Portfolio report (one-shot)
 
 ```bash
 pnpm report
@@ -131,6 +148,7 @@ Fee modes: `maker_only`, `taker_only`, `mixed` (default), `actual_if_available`.
 | `pnpm exit:paper` | Paper exit engine |
 | `pnpm positions:update` | Update position marks |
 | `pnpm report` | Generate portfolio reports |
+| `pnpm dashboard` | Live browser dashboard |
 | `pnpm backtest` | Historical backtest |
 | `pnpm worker` | BullMQ worker (paper mode) |
 | `pnpm scheduler` | Register scheduled jobs (paper mode) |
@@ -161,6 +179,7 @@ src/
 ├── paper/         # Paper trading simulator
 ├── backtest/      # Historical backtest engine
 ├── report/        # Terminal and file reports
+├── dashboard/     # Live HTTP dashboard
 ├── positions/     # Position monitor
 ├── jobs/          # Redis + BullMQ workers
 ├── cli/           # Commander CLI commands

@@ -4,6 +4,7 @@ import type { AppContainer } from "../container.js";
 import { isLiveMode } from "../config/index.js";
 import { formatTerminalDashboard } from "../report/reportFormatter.js";
 import { runBacktest } from "./backtest.js";
+import { runDashboard } from "./dashboard.js";
 import { formatEntryPaperSummary, runEntryPaper } from "./entryPaper.js";
 import { formatExitPaperSummary, runExitPaper } from "./exitPaper.js";
 import { runHealthCheck } from "./health.js";
@@ -209,6 +210,25 @@ export function createCli(container: AppContainer): Command {
         await runScheduler(container);
         await container.shutdown();
         process.exit(0);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(message);
+        await container.shutdown();
+        process.exit(1);
+      }
+    });
+
+  program
+    .command("dashboard")
+    .description("Run a live portfolio dashboard in the browser")
+    .option("--port <n>", "HTTP port", "3847")
+    .option("--refresh <seconds>", "Auto-refresh interval in seconds", "10")
+    .action(async (options: { port: string; refresh: string }) => {
+      try {
+        await runDashboard(container, {
+          port: Number(options.port),
+          refreshSeconds: Number(options.refresh),
+        });
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         console.error(message);

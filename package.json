@@ -23,7 +23,8 @@
     "worker": "tsx src/index.ts worker",
     "scheduler": "tsx src/index.ts scheduler",
     "ws:monitor": "tsx src/index.ts ws:monitor",
-    "report": "tsx src/index.ts report"
+    "report": "tsx src/index.ts report",
+    "dashboard": "tsx src/index.ts dashboard"
   },
   "dependencies": {
     "@polymarket/clob-client-v2": "^1.0.6",
