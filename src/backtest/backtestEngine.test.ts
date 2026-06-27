@@ -110,6 +110,8 @@ const config = {
   BACKTEST_STARTING_CAPITAL_USD: 500,
   BACKTEST_SEED: 1,
   BACKTEST_MAX_MARKETS: 100,
+  BACKTEST_FEE_MODE: "mixed",
+  BUILDER_FEE_BPS: 0,
   LONGSHOT_ENTRY_THRESHOLD: 70,
   NO_ENTRY_ENABLED: false,
   TAIL_NO_ENTRY_THRESHOLD: 60,
@@ -132,5 +134,12 @@ describe("createBacktestEngine", () => {
     expect(result.metrics.totalTrades).toBeGreaterThan(0);
     expect(result.equityCurve.length).toBeGreaterThan(0);
     expect(result.tokensTraded).toBeGreaterThanOrEqual(1);
+
+    const cashFromTrades = result.trades.reduce(
+      (cash, trade) => cash + (trade.side === "SELL" ? trade.notionalUsd : -trade.notionalUsd),
+      config.BACKTEST_STARTING_CAPITAL_USD,
+    );
+    expect(result.metrics.finalEquityUsd).toBeCloseTo(cashFromTrades, 2);
+    expect(result.metrics.unrealizedPnlUsd).toBe(0);
   });
 });

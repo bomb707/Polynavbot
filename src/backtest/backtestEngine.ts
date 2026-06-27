@@ -227,6 +227,15 @@ export function createBacktestEngine(deps: BacktestEngineDeps): IBacktestEngine 
         );
       }
 
+      const endBarsByToken = new Map<string, PriceBar>();
+      for (const tokenId of portfolio.positions.keys()) {
+        const lastBar = seriesMap.get(tokenId)?.bars.at(-1);
+        if (lastBar) {
+          endBarsByToken.set(tokenId, lastBar);
+        }
+      }
+      portfolio.recordEquity(options.end, endBarsByToken, backtestConfig);
+
       let openUnrealized = 0;
       for (const [tokenId, position] of portfolio.positions.entries()) {
         const tokenSeries = seriesMap.get(tokenId);
@@ -238,10 +247,13 @@ export function createBacktestEngine(deps: BacktestEngineDeps): IBacktestEngine 
         openUnrealized += bid * position.sizeShares - position.costBasisUsd;
       }
 
-      const lastEquity = portfolio.equityCurve.at(-1)?.equityUsd ?? portfolio.cashUsd;
+      const finalEquityUsd =
+        portfolio.positions.size === 0
+          ? portfolio.cashUsd
+          : (portfolio.equityCurve.at(-1)?.equityUsd ?? portfolio.cashUsd);
       const metrics = computeMetrics({
         startingCapitalUsd: backtestConfig.startingCapitalUsd,
-        finalEquityUsd: lastEquity,
+        finalEquityUsd,
         trades: portfolio.trades,
         equityCurve: portfolio.equityCurve,
         openUnrealizedUsd: openUnrealized,
